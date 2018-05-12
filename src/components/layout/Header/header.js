@@ -44,24 +44,18 @@ const Header = (props) => {
   const EmeraldTitle = () => {
     return (
       <div>
-        <span style={{color: muiTheme.palette.primary1Color}}>Emerald </span>
-        <span style={{color: muiTheme.palette.secondaryTextColor}}>Wallet</span>
+        <span style={{color: muiTheme.palette.primary1Color}}>webchain</span>
+        <span style={{color: muiTheme.palette.alternateTextColor}}>.network</span>
       </div>
     );
   };
 
   const BlockDisplay = () => {
     const displayProgress = parseInt(100 - progress, 10);
-    const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : separateThousands(network.currentBlock.height, ' ');
+    const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : `${separateThousands(network.currentBlock.height, ' ')} BLOCKS`;
     return (
       <div style={{marginTop: showProgress ? '7px' : null}}>
-        <FlatButton
-          disabled={true}
-          label={label}
-          style={{color: muiTheme.palette.secondaryTextColor, lineHeight: 'inherit'}}
-          labelStyle={styles.buttons.label}
-          icon={<BlockIcon style={{color: muiTheme.palette.secondaryTextColor}}/>}
-        />
+        <div style={{color: muiTheme.palette.alternateTextColor}}>{label}</div>
         {showProgressBar(showProgress)}
       </div>
     );
@@ -71,27 +65,32 @@ const Header = (props) => {
     <FlatButton
       hoverColor="transparent"
       onTouchTap={ openSettings }
-      style={{color: muiTheme.palette.secondaryTextColor}}
+      style={{color: muiTheme.palette.primary1Color}}
       label="Settings"
       labelStyle={styles.buttons.label}
-      icon={<SettingsIcon style={{color: muiTheme.palette.secondaryTextColor}}/>}
+      icon={<SettingsIcon style={{color: muiTheme.palette.primary1Color}}/>}
     />);
 
   return (
     <div>
       <AppBar
         title={<EmeraldTitle />}
-        style={{backgroundColor: muiTheme.palette.alternateTextColor, borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
-        titleStyle={{fontSize: '16px'}}
+        style={{backgroundColor: '#141417', borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
+        titleStyle={{fontSize: '1.4rem'}}
         showMenuIconButton={false}
         iconStyleRight={styles.appBarRight}
         zDepth={0}
-        iconElementRight={
-          <div style={styles.appBarRight}>
-            <Total />
-            <BlockDisplay />
-            <Status />
-            <SettingsButton />
+        children={
+          <div style={{display: 'flex', flex: '1.5 1 0%', justifyContent: 'space-between'}}>
+            <div style={styles.appBarRight}>
+              <Total />
+              <span style={{color: '#7d7d7e', fontSize: '1.5rem', padding: '0 1rem'}}>|</span>
+              <BlockDisplay />
+            </div>
+            <div style={styles.appBarRight}>
+              <Status />
+              <SettingsButton />
+            </div>
           </div>
         }
       />

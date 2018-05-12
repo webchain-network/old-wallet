@@ -42,7 +42,7 @@ function getStyles(props) {
       height: muiTheme.spacing.desktopToolbarHeight, /* gagarin55: this is extremely important hack to align DropDownMenu vertically */
     },
     label: {
-      color: muiTheme.palette.secondaryTextColor,
+      color: muiTheme.palette.primary1Color,
       fontSize: '16px',
       paddingRight: '10px',
     },
@@ -61,7 +61,7 @@ class NetworkSelectorRender extends React.Component {
     } else {
       icon =
         <span>
-          <NetworkIcon style={{color: muiTheme.palette.secondaryTextColor}}/>
+          <NetworkIcon style={{color: muiTheme.palette.primary1Color}}/>
         </span>;
     }
 

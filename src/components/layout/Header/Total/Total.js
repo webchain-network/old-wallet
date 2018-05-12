@@ -14,11 +14,10 @@ type Props = {
 };
 
 const Total = ({ total, muiTheme }: Props) => {
-  const totalFormatted = `${total} ETC`;
+  const totalFormatted = `${total} WEB`;
   return (
     <div className={styles.container}>
-      <div><EtcSimple style={{color: muiTheme.palette.secondaryTextColor}}/></div>
-      <div className={styles.label} style={{color: muiTheme.palette.secondaryTextColor}}>{totalFormatted}</div>
+      <div className={styles.label} style={{color: muiTheme.palette.alternateTextColor}}>{totalFormatted}</div>
     </div>
   );
 };
