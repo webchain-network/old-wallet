@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build:
+    macos:
+      xcode: "9.0"
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install software
+          command: |
+              npm -v
+              node -v
+              curl -sL https://raw.githubusercontent.com/ethereumproject/janus/master/get.sh | bash
+
+      - run:
+          name: Tests and linting
+          command: |
+              npm i
+              npm run test
+              npm run lint
+
+      - run:
+          name: Download Emerald-CLI
+          command: |
+              npm run getemerald
+
+      - run:
+          name: Build distributive
+          command: |
+              export PATH=$PATH:$PWD/janusbin
+              export APP_VERSION_GIT_TAG="$(janus version -format 'TAG_OR_NIGHTLY')"
+              echo "Building app version $APP_VERSION_GIT_TAG"
+              npm run dist
+
+      - deploy:
+          name: Deploy to builds.etcdevteam.com
+          command: |
+              export PATH=$PATH:$PWD/janusbin
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  .circleci/deploy.sh
+              fi

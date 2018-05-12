@@ -1,0 +1,35 @@
+{
+    "spacing": {
+        "iconSize": 24,
+        "desktopGutter": 24,
+        "desktopGutterMore": 32,
+        "desktopGutterLess": 16,
+        "desktopGutterMini": 8,
+        "desktopKeylineIncrement": 64,
+        "desktopDropDownMenuItemHeight": 32,
+        "desktopDropDownMenuFontSize": 15,
+        "desktopDrawerMenuItemHeight": 48,
+        "desktopSubheaderHeight": 48,
+        "desktopToolbarHeight": 56
+    },
+    "fontFamily": "Rubik, Roboto, sans-serif",
+    "borderRadius": 1,
+    "palette": {
+        "primary1Color": "#2196f3",
+        "primary2Color": "#2196f3",
+        "primary3Color": "#B1BFB7",
+        "accent1Color": "#F41A2D",
+        "accent2Color": "#B1BFB7",
+        "accent3Color": "#B1BFB7",
+        "textColor": "#222222",
+        "secondaryTextColor": "#B1BFB7",
+        "alternateTextColor": "#fff",
+        "canvasColor": "#F7F9F8",
+        "borderColor": "#EAEFEC",
+        "disabledColor": "#EAEFEC",
+        "pickerHeaderColor": "#B1BFB7",
+        "clockCircleColor": "rgba(0, 0, 0, 0.07)",
+        "shadowColor": "#EAEFEC"
+    },
+    "themeName": "Webchain Theme"
+}
