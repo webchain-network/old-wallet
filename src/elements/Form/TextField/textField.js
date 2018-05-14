@@ -10,6 +10,7 @@ const defaultStyle = {
 
 const container = {
   boxSizing: 'border-box',
+  backgroundColor: '#fff',
   border: '1px solid',
   borderColor: '#DDDDDD',
   borderRadius: '1px',

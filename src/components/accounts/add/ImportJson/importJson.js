@@ -52,7 +52,7 @@ class ImportJson extends React.Component {
       const { file, fileError } = this.state;
 
       return (
-        <Form caption={ t('import.title') } backButton={ <DashboardButton onClick={ onDashboard } label={backLabel}/> } style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
+        <Form caption={ t('import.title') } backButton={ <DashboardButton onClick={ onDashboard } label={backLabel}/> }>
           {fileError && (
             <Row>
               <div style={ formStyles.left }/>

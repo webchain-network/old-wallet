@@ -48,7 +48,7 @@ export class Form extends React.Component {
   render() {
     const { children, caption, backButton, style } = this.props;
     return (
-      <Card style={style}>
+      <div style={style}>
         <div className={ formStyles.form }>
           <div style={styles.formRow}>
             <div style={styles.left}>
@@ -64,6 +64,6 @@ export class Form extends React.Component {
             {children}
           </div>
         </div>
-      </Card>);
+      </div>);
   }
 }

@@ -64,10 +64,12 @@ export class Account extends React.Component {
                   <ButtonGroup>
                     <SecondaryMenu account={account} />
                     <Button
+                      primary
                       label="Add WEB"
                       onClick={ this.onAddEtcClick }
                     />
                     <Button
+                      primary
                       label="Send"
                       disabled={ !account.get('balance') }
                       onClick={ this.onSendClick }

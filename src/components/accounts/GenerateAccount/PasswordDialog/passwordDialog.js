@@ -94,11 +94,7 @@ class PasswordDialog extends React.Component {
         <Row>
           <div style={ formStyles.left }/>
           <div style={ formStyles.right }>
-            <Warning fullWidth={ true }>
-              <WarningHeader>Don&#39;t forget it.</WarningHeader>
-              <WarningText>If you forget password, you will lose your account with all
-                            funds.</WarningText>
-            </Warning>
+            <span style={{color: '#CF3B3B', fontSize: '14px'}}>If you forget password, you will lose your account with all funds.</span>
           </div>
         </Row>
 

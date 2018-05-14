@@ -29,7 +29,7 @@ export class ImportPrivateKey extends React.Component {
   render() {
     const { onBack, error, handleSubmit, submitting, muiTheme } = this.props;
     return (
-      <Form caption="Import Private Key" backButton={ <DashboardButton onClick={ onBack }/> } style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
+      <Form caption="Import Private Key" backButton={ <DashboardButton onClick={ onBack }/> }>
         <Row>
           <div style={formStyles.left}/>
           <div style={formStyles.right}>
@@ -55,10 +55,7 @@ export class ImportPrivateKey extends React.Component {
         <Row>
           <div style={formStyles.left}/>
           <div style={formStyles.right}>
-            <Warning fullWidth={ true }>
-              <WarningHeader>Don&#39;t forget it.</WarningHeader>
-              <WarningText>If you forget this password, you will lose access to the account and its funds.</WarningText>
-            </Warning>
+            <span style={{color: '#CF3B3B', fontSize: '14px'}}>If you forget this password, you will lose access to the account and its funds.</span>
           </div>
         </Row>
         <Row>
