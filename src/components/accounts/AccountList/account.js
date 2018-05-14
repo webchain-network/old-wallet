@@ -43,7 +43,7 @@ export class Account extends React.Component {
                   <div style={{marginLeft: '10px'}}>
                     {balance && <AccountBalance
                       balance={ balance }
-                      symbol="ETC"
+                      symbol="WEB"
                       showFiat={ showFiat }
                     />}
                     {!balance && 'loading...'}
@@ -64,7 +64,7 @@ export class Account extends React.Component {
                   <ButtonGroup>
                     <SecondaryMenu account={account} />
                     <Button
-                      label="Add ETC"
+                      label="Add WEB"
                       onClick={ this.onAddEtcClick }
                     />
                     <Button

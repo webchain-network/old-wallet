@@ -11,7 +11,7 @@ test('It can select without an account balance', () => {
     tokens: fromJS({}),
   };
   const result = selectBalance(state, account);
-  expect(result).toEqual({symbol: 'ETC'});
+  expect(result).toEqual({symbol: 'WEB'});
 });
 
 describe('traceValidate', () => {

@@ -128,8 +128,8 @@ class Services {
 
   startNoneRpc() {
     return new Promise((resolve, reject) => {
-      log.info('use NONE Geth');
-      this.notify.error('Ethereum connection type is not configured');
+      log.info('use NONE Webchaind');
+      this.notify.error('Webchain connection type is not configured');
       resolve(new NoneGeth());
     });
   }
@@ -177,14 +177,14 @@ class Services {
     return new Promise((resolve, reject) => {
       const gethDownloader = newGethDownloader(this.notify, getBinDir());
       gethDownloader.downloadIfNotExists().then(() => {
-        this.notify.info('Launching Geth backend');
+        this.notify.info('Launching Webchaind backend');
         this.gethStatus = STATUS.STARTING;
         this.geth = new LocalGeth(getBinDir(), getLogDir(), this.setup.chain.name, 8545);
 
         this.geth.launch().then((geth) => {
           geth.on('exit', (code) => {
             this.gethStatus = STATUS.NOT_STARTED;
-            log.error(`geth process exited with code: ${code}`);
+            log.error(`webchaind process exited with code: ${code}`);
           });
           if (geth.pid > 0) {
             waitRpc(this.geth.getUrl()).then((clientVersion) => {
@@ -193,19 +193,19 @@ class Services {
               this.setup.geth.url = this.geth.getUrl();
               this.setup.geth.type = 'local';
 
-              this.notify.info('Local Geth RPC API is ready');
+              this.notify.info('Local Webchaind RPC API is ready');
               this.notify.chain(this.setup.chain.name, this.setup.chain.id);
               this.notifyEthRpcStatus();
 
               resolve(this.geth);
             }).catch(reject);
           } else {
-            reject(new Error('Geth not launched'));
+            reject(new Error('Webchaind not launched'));
           }
         }).catch(reject);
       }).catch((err) => {
-        log.error('Unable to download Geth', err);
-        this.notify.info(`Unable to download Geth: ${err}`);
+        log.error('Unable to download Webchaind', err);
+        this.notify.info(`Unable to download Webchaind: ${err}`);
         reject(err);
       });
     });
@@ -224,7 +224,7 @@ class Services {
       return this.startAutoRpc();
     }
     return new Promise((resolve, reject) => {
-      reject(new Error(`Invalid Geth launch type ${this.setup.geth.launchType}`));
+      reject(new Error(`Invalid Webchaind launch type ${this.setup.geth.launchType}`));
     });
   }
 

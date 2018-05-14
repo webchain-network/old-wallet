@@ -74,7 +74,7 @@ const SignTx = muiThemeable()((props) => {
         <HorizontalAddressWithIdentity accountId={to} />
       </div>
       <div style={{ paddingTop: '35px', display: 'flex', justifyContent: 'center' }}>
-        <span style={{ color: props.muiTheme.palette.secondaryTextColor }}>Plus a {fee.getDecimalized()} ETC fee for 21000 GAS</span>
+        <span style={{ color: props.muiTheme.palette.secondaryTextColor }}>Plus a {fee.getDecimalized()} WEB fee for 21000 GAS</span>
       </div>
       <Divider style={{ marginTop: '35px' }} />
       <Form style={{ marginTop: '0' }}>

@@ -23,7 +23,7 @@ const getGasPrice = (state) => state.network.get('gasPrice');
 export const selectBalance = (state, account) => {
   if (!account.get('balance')) {
     return {
-      symbol: 'ETC',
+      symbol: 'WEB',
     };
   }
   const tokens = state.tokens.get('tokens');
@@ -40,7 +40,7 @@ export const selectBalance = (state, account) => {
     };
   }
   return {
-    symbol: 'ETC',
+    symbol: 'WEB',
     value: new TokenUnits(account.get('balance').value(), 18),
   };
 };
@@ -75,7 +75,7 @@ const CreateTx = connect(
       }
     },
     onChangeToken: (event, value, prev) => {
-      // if switching from ETC to token, change default gas
+      // if switching from WEB to token, change default gas
       if (prev.length < 1 && !(address(value))) {
         dispatch(change('createTx', 'gas', DefaultTokenGas));
       } else if (!(address(prev)) && value.length < 1) {
@@ -131,7 +131,7 @@ const CreateTx = connect(
           to: data.to,
           value: toHex(etherToWei(data.value)),
         };
-        tx.symbol = 'ETC';
+        tx.symbol = 'WEB';
       }
 
       if (ownProps.onCreateTransaction) {

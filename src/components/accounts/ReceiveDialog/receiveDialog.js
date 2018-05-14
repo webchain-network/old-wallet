@@ -36,12 +36,12 @@ const ReceiveDialog = ({ account, onClose }) => {
             <CloseButton onClick={ onClose } />
           </div>
           <div style={{marginTop: '30px', marginLeft: '30px'}}>
-            <div className={ classes.headerText }>Top up your account with ETC</div>
+            <div className={ classes.headerText }>Top up your account with WEB</div>
             <div>
               <AccountAddress id={ address } style={ styles.address }/>
             </div>
             <div className={ classes.note }>
-              Share your account address and use it to top up your account with ETC from any other service.
+              Share your account address and use it to top up your account with WEB from any other service.
               It may take some time for your coins be deposited.
             </div>
           </div>

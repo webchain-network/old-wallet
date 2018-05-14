@@ -244,7 +244,7 @@ export const CreateTxForm = (props) => {
         <div style={styles.right}>
           <AccountBalance
             balance={fee}
-            symbol="ETC"
+            symbol="WEB"
             precision={6}
             fiatStyle={textFiat}
             coinsStyle={textEtc}

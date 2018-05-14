@@ -61,7 +61,7 @@ export const TxView = (props) => {
     <TableRow selectable={false}>
       <TableRowColumn style={{ ...tables.mediumStyle, paddingLeft: '0', ...styles.tablePadding }}>
         {txValue && <AccountBalance
-          symbol="ETC"
+          symbol="WEB"
           showFiat={ showFiat }
           balance={ txValue }
           onClick={ openTx }

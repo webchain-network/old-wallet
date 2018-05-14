@@ -32,7 +32,7 @@ const getGasPrice = (state) => state.network.get('gasPrice');
 export const selectBalance = (state, account) => {
   if (!account.get('balance')) {
     return {
-      symbol: 'ETC',
+      symbol: 'WEB',
     };
   }
   const tokens = state.tokens.get('tokens');
@@ -49,7 +49,7 @@ export const selectBalance = (state, account) => {
     };
   }
   return {
-    symbol: 'ETC',
+    symbol: 'WEB',
     value: new TokenUnits(account.get('balance').value(), 18),
   };
 };
@@ -166,7 +166,7 @@ export default connect(
       from: selector(state, 'from') || ownProps.account.get('id'),
       showFiat: launcher.selectors.getChainName(state).toLowerCase() === 'mainnet',
       accounts: accounts.selectors.getAll(state, Immutable.List()),
-      tokens: allTokens.unshift(Immutable.fromJS({ address: '', symbol: 'ETC' })),
+      tokens: allTokens.unshift(Immutable.fromJS({ address: '', symbol: 'WEB' })),
       isToken: Address.isValid(selector(state, 'token')),
       fiatRate,
       fiatCurrency,

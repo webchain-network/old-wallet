@@ -68,7 +68,7 @@ export const TransactionShow = (props: Props) => {
           <div style={{display: 'flex'}}>
             <div>
               <div className={ classes.value }>
-                { transaction.get('value') ? `${new Wei(transaction.get('value')).getEther()} ETC` : '--' }
+                { transaction.get('value') ? `${new Wei(transaction.get('value')).getEther()} WEB` : '--' }
               </div>
               {showFiat && <div className={ classes.value }>
                 { fiatAmount }

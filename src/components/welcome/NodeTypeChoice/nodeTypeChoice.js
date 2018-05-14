@@ -10,10 +10,11 @@ import FullNodeLogo from './fullNodeLogo';
 import RemoteNodeLogo from './remoteNodeLogo';
 
 import classes from './nodeTypeChoice.scss';
+import theme from '../../../theme.json';
 
 const NodeTypeChoice = ({ useFullNode, useRemoteNode }) => {
   return (
-    <Card>
+    <Card style={{backgroundColor: theme.palette.canvasColor}}>
       <div className={ classes.container }>
         <div className={ classes.title }>Select how you're going to connect to the network</div>
         <div className={ classes.optionsContainer }>

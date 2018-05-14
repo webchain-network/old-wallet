@@ -13,9 +13,10 @@ import './main.scss';
 const maxWidth = '1150px';
 
 const Render = translate('common')(({ muiTheme, ...props }) => {
+  document.body.style.backgroundColor = muiTheme.palette.canvasColor;
   return (
-    <div style={{height: '100%', backgroundColor: muiTheme.palette.canvasColor}}>
-      {props.screen !== 'paper-wallet' && (!props.launcherType || props.launcherType !== 'none') && <Header />}
+    <div style={{height: '100%'}}>
+      {props.screen !== 'paper-wallet' && (!props.launcherType || props.launcherType !== 'none') && !props.connecting && <Header />}
       <div style={{margin: '20px auto', maxWidth}}>
         <Screen />
       </div>
@@ -30,6 +31,7 @@ const Main = connect(
   (state, ownProps) => ({
     screen: state.wallet.screen.get('screen'),
     launcherType: state.launcher.getIn(['geth', 'type']),
+    connecting: state.launcher.get('connecting')
   }),
   (dispatch, ownProps) => ({})
 )(Render);

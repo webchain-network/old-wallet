@@ -21,7 +21,7 @@ const log = createLogger('index');
 const muiTheme = getMuiTheme(theme);
 
 function start() {
-  log.info('Starting Emerald Wallet...');
+  log.info('Starting Webchain Wallet...');
 
   // set document background to theme canvas color
   const canvasColor = theme.palette.canvasColor;

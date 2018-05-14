@@ -29,17 +29,17 @@ const Landing = ({ onGenerate, onImportJson, onImportPrivateKey, onLedger, onLed
           <Row style={{padding: 0, margin: 0}}>
             <Col style={{backgroundColor: muiTheme.palette.canvasColor, padding: 0}} xs={12}>
               <div style={{display: 'flex', alignItems: 'center', marginLeft: '80px', marginTop: '60px'}}>
-                <div style={{fontWeight: '500', marginLeft: '80px', color: muiTheme.palette.primary1Color}}>WELCOME TO EMERALD WALLET</div>
+                <div style={{fontWeight: '500', marginLeft: '80px', color: muiTheme.palette.textColor}}>WELCOME TO WEBCHAIN WALLET</div>
               </div>
               <br />
               <div style={{marginLeft: '150px', padding: '10px', maxWidth: '700px'}}>
-                <span style={{color: muiTheme.palette.primary3Color, fontWeight: '200'}}>
+                <span style={{color: muiTheme.palette.secondaryTextColor}}>
       Emerald Wallet runs on the Ethereum Classic platform. Ethereum Classic is a decentralized platform that runs smart contracts: applications that run exactly as programmed without any possibility of downtime, censorship, fraud or third party interference.
                 </span>
                 <br />
                 <br />
-                <a href="http://ethereumclassic.org">
-                  <Button label="More about ethereum classic" />
+                <a href="https://webchain.network/">
+                  <Button label="More about Webchain" />
                 </a>
                 <br />
                 <br />
@@ -53,7 +53,7 @@ const Landing = ({ onGenerate, onImportJson, onImportPrivateKey, onLedger, onLed
                 <div style={styles.addAccountButtons}>
                   <FlatButton primary onClick={onImportJson} label="From Keystore File (UTC/JSON)" />
                   <FlatButton primary onClick={onImportPrivateKey} label="From Private key" />
-                  <FlatButton primary onClick={connected ? onLedger : onLedgerWait} label="Ledger Nano S" />
+                  {/* <FlatButton primary onClick={connected ? onLedger : onLedgerWait} label="Ledger Nano S" /> */}
                 </div>
               </div>
             </Col>

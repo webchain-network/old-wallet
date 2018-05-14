@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 import CircularProgress from 'material-ui/CircularProgress';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import { Logo as LogoIcon } from 'emerald-js-ui/lib/icons';
+import { LogoIcon } from '../../elements/Icons';
 import InitialSetup from './initialSetup';
 import version from '../../version';
 
@@ -13,7 +13,7 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
   let messageBlock = null;
   if (message) {
     const messageStyle = {
-      color: '#999',
+      color: '#00c2fc',
     };
     if (level === 3) {
       messageStyle.color = '#f66';
@@ -25,8 +25,8 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
   const body = <div>
     <Row center="xs">
       <Col xs={12} style={{fontSize: '42px'}}>
-        <span style={{color: muiTheme.palette.primary1Color}}>Emerald </span>
-        <span style={{color: muiTheme.palette.secondaryTextColor}}>Wallet</span>
+        <span style={{color: muiTheme.palette.primary1Color}}>webchain</span>
+        <span style={{color: muiTheme.palette.alternateTextColor}}>.wallet</span>
       </Col>
     </Row>
     <Row center="xs" style={{paddingTop: '40px', height: '40px'}}>
@@ -48,8 +48,9 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
     );
   }
 
+  document.body.style.backgroundColor = '#141417';
   return (
-    <Grid id="welcome-screen" style={{maxWidth: '1150px'}}>
+    <Grid id="welcome-screen" style={{maxWidth: '1150px', backgroundColor: '#141417'}}>
       <Row center="xs" middle="xs" style={{paddingTop: '6%'}}>
         <Col xs>
           <LogoIcon width="250" height="250" />

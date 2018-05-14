@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 
 const url = (cur) => `https://min-api.cryptocompare.com/data/price?fsym=${cur}&extraParams=emerald&tsyms=USD,EUR,RUB,CNY,KRW`;
-const currency = 'ETC';
+const currency = 'WEB';
 
 export class MarketApi {
   call() {
