@@ -9,6 +9,8 @@ import { LogoIcon } from '../../elements/Icons';
 import InitialSetup from './initialSetup';
 import version from '../../version';
 
+import logoText from '../../logoText.png';
+
 const Render = ({ message, level, ready, needSetup, muiTheme }) => {
   let messageBlock = null;
   if (message) {
@@ -24,9 +26,8 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
 
   const body = <div>
     <Row center="xs">
-      <Col xs={12} style={{fontSize: '42px'}}>
-        <span style={{color: muiTheme.palette.primary1Color}}>webchain</span>
-        <span style={{color: muiTheme.palette.alternateTextColor}}>.wallet</span>
+      <Col xs={12}>
+        <img src={logoText} style={{height: '42px'}} />
       </Col>
     </Row>
     <Row center="xs" style={{paddingTop: '40px', height: '40px'}}>

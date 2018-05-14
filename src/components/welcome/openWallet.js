@@ -19,7 +19,7 @@ const Render = ({ save, muiTheme }) => {
             Welcome to Webchain Wallet<br/>
           </p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis malesuada ipsum. Donec varius sollicitudin ipsum, sed malesuada nunc pharetra nec.
+            Webchain is a transparent, web-mineable blockchain platform, made to support Decentralized Applications (DApps), where websites can serve as a hardware-independent alternative to secure ERC20 & ERC223 smart contracts​.
           </p>
         </div>
       </Col>

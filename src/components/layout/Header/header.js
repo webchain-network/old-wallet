@@ -5,6 +5,7 @@ import SyncWarning from '../../../containers/SyncWarning';
 import Status from './Status';
 import Total from './Total';
 import { separateThousands } from '../../../lib/convert';
+import logoText from '../../../logoText.png';
 
 const styles = {
   appBarRight: {
@@ -44,8 +45,7 @@ const Header = (props) => {
   const EmeraldTitle = () => {
     return (
       <div>
-        <span style={{color: muiTheme.palette.primary1Color}}>webchain</span>
-        <span style={{color: muiTheme.palette.alternateTextColor}}>.network</span>
+        <img src={logoText} style={{height: '1.4rem'}}/>
       </div>
     );
   };
@@ -76,7 +76,6 @@ const Header = (props) => {
       <AppBar
         title={<EmeraldTitle />}
         style={{backgroundColor: '#141417', borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
-        titleStyle={{fontSize: '1.4rem'}}
         showMenuIconButton={false}
         iconStyleRight={styles.appBarRight}
         zDepth={0}

@@ -45,7 +45,7 @@ export const Terms = ({ onAgree, muiTheme }) => {
                             YOU EXPRESSLY UNDERSTAND AND AGREE THAT AUTHORS SHALL NOT BE LIABLE FOR ANY DIRECT,
                             INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES, INCLUDING BUT NOT
                             LIMITED TO, DAMAGES FOR LOSS OF PROFITS, GOODWILL, USE, DATA OR OTHER INTANGIBLE LOSSES
-                            (EVEN IF AUTHORS OR ETHEREUM CLASSIC MEMBERS HAS BEEN ADVISED OF THE POSSIBILITY OF
+                            (EVEN IF AUTHORS OR WEBCHAIN NETWORK MEMBERS HAS BEEN ADVISED OF THE POSSIBILITY OF
                             SUCH DAMAGES) RELATED TO THE SOFTWARE, including, for example: (i) the use or the inability
                             to use the SOFTWARE; (ii) the cost of procurement of substitute goods and services
                             resulting from any goods,

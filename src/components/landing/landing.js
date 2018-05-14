@@ -34,7 +34,7 @@ const Landing = ({ onGenerate, onImportJson, onImportPrivateKey, onLedger, onLed
               <br />
               <div style={{marginLeft: '150px', padding: '10px', maxWidth: '700px'}}>
                 <span style={{color: muiTheme.palette.secondaryTextColor}}>
-      Emerald Wallet runs on the Ethereum Classic platform. Ethereum Classic is a decentralized platform that runs smart contracts: applications that run exactly as programmed without any possibility of downtime, censorship, fraud or third party interference.
+                  Webchain Wallet runs on the webchain network, which is a decentralized platform based on Ethereum Classic. Webchain is a ERC20 & ERC223 Smart Contracts and DApps enabled blockchain, secured by Websites and Internet of Things.
                 </span>
                 <br />
                 <br />
