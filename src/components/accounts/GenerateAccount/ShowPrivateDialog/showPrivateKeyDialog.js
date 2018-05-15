@@ -26,12 +26,12 @@ const ShowPrivateDialog = (props) => {
       <Row>
         <div style={ formStyles.left }/>
         <div style={ formStyles.right }>
-          <Warning>
-            <WarningHeader>Keep it in safety</WarningHeader>
-            <WarningText>
-                            If someone gains access to your unencrypted private key, they will be able to access your account and funds without a password.
-            </WarningText>
-          </Warning>
+          <div style={{color: '#CF3B3B', fontSize: '14px'}}>
+            <div style={{fontWeight: '500'}}>Keep it in safety</div>
+            <div style={{margin: '5px 0 10px 0'}}>
+              If someone gains access to your unencrypted private key, they will be able to access your account and funds without a password.
+            </div>
+          </div>
         </div>
       </Row>
 

@@ -88,7 +88,6 @@ const Header = (props) => {
             </div>
             <div style={styles.appBarRight}>
               <Status />
-              <SettingsButton />
             </div>
           </div>
         }

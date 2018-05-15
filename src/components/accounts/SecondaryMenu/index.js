@@ -54,8 +54,8 @@ const SecondaryMenu = ({ account, onPrint, onExport, onHide, onUnhide, chain, mu
               primaryText='PRINT'
               onTouchTap={ onPrint(chain) }/> }
 
-      { !account.get('hidden') && renderHide(chain, account, onHide, colors) }
-      { account.get('hidden') && renderUnhide(chain, account, onUnhide) }
+      {/* { !account.get('hidden') && renderHide(chain, account, onHide, colors) }
+      { account.get('hidden') && renderUnhide(chain, account, onUnhide) } */}
 
     </IconMenu>
   );

@@ -19,10 +19,10 @@ export class NewMnemonic extends React.Component {
         <Row>
           <div style={formStyles.left}/>
           <div style={formStyles.right}>
-            <Warning fullWidth={ true }>
-              <WarningHeader>Keep this phrase in a safe place.</WarningHeader>
-              <WarningText>If you lose this phrase you will not be able to recover your account.</WarningText>
-            </Warning>
+            <div style={{color: '#CF3B3B', fontSize: '14px'}}>
+              <div style={{fontWeight: '500'}}>Keep this phrase in a safe place.</div>
+              <div style={{margin: '5px 0 10px 0'}}>If you lose this phrase you will not be able to recover your account.</div>
+            </div>
           </div>
         </Row>
         <Row>
@@ -31,7 +31,7 @@ export class NewMnemonic extends React.Component {
           <div style={ formStyles.right }>
             <div style={{width: '100%'}}>
               <div>Mnemonic phrase</div>
-              <div>
+              <div style={{backgroundColor: '#fff'}}>
                 <Input
                   disabled={ true }
                   value={ mnemonic }

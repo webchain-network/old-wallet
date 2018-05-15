@@ -12,6 +12,7 @@ const baseStyle = {
   lineHeight: '24px',
   paddingLeft: '10px',
   paddingRight: '10px',
+  backgroundColor: '#fff'
 };
 
 export const SelectField = (props: { style: Object }) => {

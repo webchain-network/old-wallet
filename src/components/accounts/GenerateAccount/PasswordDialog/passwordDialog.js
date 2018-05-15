@@ -87,17 +87,10 @@ class PasswordDialog extends React.Component {
                   error={ passphraseError }
                 />
               </div>
+              <div style={{color: '#CF3B3B', fontSize: '14px', marginTop: '5px'}}>If you forget password, you will lose your account with all funds.</div>
             </div>
           </div>
         </Row>
-
-        <Row>
-          <div style={ formStyles.left }/>
-          <div style={ formStyles.right }>
-            <span style={{color: '#CF3B3B', fontSize: '14px'}}>If you forget password, you will lose your account with all funds.</span>
-          </div>
-        </Row>
-
         <Row>
           <div style={formStyles.left} />
           <div style={formStyles.right}>

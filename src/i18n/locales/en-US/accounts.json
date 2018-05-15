@@ -5,17 +5,17 @@
             "title": "Account Description:",
             "address": "Address:",
             "sentTransactions": "Sent Transactions:",
-            "etherBalance": "Ether Balance:",
+            "etherBalance": "WEB Balance:",
             "tokenBalances": "Token Balances:"
         },
         "send": "Send",
-        "value": "{{value}} Ether"
+        "value": "{{value}} WEB"
     },
     "list": {
         "title": "ACCOUNTS",
-        "subtitle": "List of addresses you're controlling on Ethereum Classic blockchain",
+        "subtitle": "List of addresses you're controlling on Webchain Network blockchain",
         "create": "Create Account",
-        "popupMenuLabel": "ACCOUNTS AND TOKENS"
+        "popupMenuLabel": "ACCOUNTS"
     },
     "add": {
         "title": "Add Account",
@@ -29,7 +29,7 @@
         },
         "import": {
             "title": "Import JSON",
-            "subtitle": "Import key from Parity/Geth in JSON format"
+            "subtitle": "Import key from Webchaind in JSON format"
         },
         "importPrivateKey": {
             "title": "Import Private Key",

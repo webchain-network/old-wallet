@@ -11,7 +11,7 @@ class ExtendedMenuItem extends React.Component {
   render() {
     const {muiTheme, checked, onClick, net} = this.props;
     const networkType = net.geth.type === 'local' ? 'Full Node' : 'Light Node';
-    const textColor = checked ? muiTheme.palette.primary1Color : muiTheme.palette.secondaryTextColor;
+    const textColor = checked ? muiTheme.palette.primary1Color : muiTheme.palette.alternateTextColor;
     return (
       <div
         onClick={onClick}
@@ -19,7 +19,6 @@ class ExtendedMenuItem extends React.Component {
           cursor: 'pointer',
           padding: '5px 80px 5px 40px',
           fontSize: '14px',
-          borderLeft: checked ? `5px solid ${muiTheme.palette.primary1Color}` : '',
           marginLeft: checked ? '' : '5px',
           lineHeight: '20px',
         }}
@@ -56,7 +55,7 @@ class NetworkSelectorRender extends React.Component {
     if (connecting) { // shanejonas: the wrapping span's here are to get around some coloring issues with material-ui's dropdown + iconbutton
       icon =
         <span>
-          <NetworkDisconnectedIcon style={{color: muiTheme.palette.secondaryTextColor}}/>
+          <NetworkDisconnectedIcon style={{color: muiTheme.palette.alternateTextColor}}/>
         </span>;
     } else {
       icon =
@@ -82,13 +81,11 @@ class NetworkSelectorRender extends React.Component {
         style={ styles.main }
         underlineStyle={{ display: 'none' }}
         menuStyle={{
-          border: `1px solid ${muiTheme.palette.borderColor}`,
-          backgroundColor: muiTheme.palette.alternateTextColor,
+          backgroundColor: '#141417',
           color: muiTheme.palette.secondaryTextColor,
           paddingTop: '12px',
           paddingBottom: '12px',
           maxWidth: '280px',
-          boxShadow: `${muiTheme.palette.secondaryTextColor} 0px 0px 50px 0px`,
         }}
         iconStyle={{left: '-40px', marginLeft: '20px', stroke: muiTheme.palette.secondaryTextColor, color: muiTheme.palette.secondaryTextColor}}
         iconButton={icon}

@@ -37,6 +37,7 @@ class HdPath extends React.Component {
           onUpdateInput={ this.onUpdateInput }
           underlineShow={ false }
           fullWidth={ true }
+          menuStyle={{backgroundColor: '#fff'}}
         />
       </div>
     );

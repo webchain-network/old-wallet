@@ -55,10 +55,10 @@ export class ImportMnemonic extends React.Component {
         <Row>
           <div style={formStyles.left}/>
           <div style={formStyles.right}>
-            <Warning fullWidth={ true }>
-              <WarningHeader>Don&#39;t forget it.</WarningHeader>
-              <WarningText>If you forget this password, you will lose access to the account and its funds.</WarningText>
-            </Warning>
+            <div style={{color: '#CF3B3B', fontSize: '14px'}}>
+              <div style={{fontWeight: '500'}}>Don&#39;t forget it.</div>
+              <div style={{margin: '5px 0 10px 0'}}>If you forget this password, you will lose access to the account and its funds.</div>
+            </div>
           </div>
         </Row>
         <Row>
@@ -81,7 +81,7 @@ export class ImportMnemonic extends React.Component {
           <div style={ formStyles.right }>
             <div style={{width: '100%'}}>
               <div className={ styles.mnemonicLabel }>HD derivation path</div>
-              <div>
+              <div style={{backgroundColor: '#fff'}}>
                 <Field
                   name="hdpath"
                   component={ HdPathFormField }

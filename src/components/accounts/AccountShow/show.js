@@ -79,13 +79,13 @@ export class AccountShow extends React.Component {
                 </div>
               </Row>
 
-              <Row>
+              {/* <Row>
                 <div style={ styles.left }>
                 </div>
                 <div style={ styles.right }>
                   <TokenBalances balances={ tokensBalances }/>
                 </div>
-              </Row>
+              </Row> */}
 
               <Row>
                 <div style={styles.left}>

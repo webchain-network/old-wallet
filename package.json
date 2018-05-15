@@ -1,19 +1,8 @@
 {
-  "name": "EmeraldWallet",
+  "name": "WebchainWallet",
   "private": false,
-  "author": {
-    "name": "Igor Artamonov",
-    "email": "splix@etcdevteam.com"
-  },
-  "contributors": [
-    "Igor Artamonov <splix@etcdevteam.com>",
-    "Elaine Ou <elaine@ethereumclassic.org>",
-    "gagarin55 <gagarin55@protonmail.com>",
-    "Isaac Ardis",
-    "Shane Jonas <jonas.shane@gmail.com>"
-  ],
   "version": "0.10.0",
-  "description": "Emerald - Ethereum Classic Wallet",
+  "description": "Webchain - Webchain Network Wallet",
   "main": "./electron/main.js",
   "moduleRoots": [
     "src/lib"
@@ -44,20 +33,20 @@
     "react-component",
     "material design",
     "material-ui",
-    "ethereum",
-    "ethereum classic",
+    "webchain",
+    "webchain network",
     "etc",
     "dapp"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ETCDEVTeam/emerald-wallet.git"
+    "url": "https://github.com/webchain-network/webchain-wallet.git"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ETCDEVTeam/emerald-wallet/issues"
+    "url": "https://github.com/webchain-network/webchain-wallet/issues"
   },
-  "homepage": "https://github.com/ETCDEVTeam/emerald-wallet",
+  "homepage": "https://github.com/webchain-network/webchain-wallet",
   "dependencies": {
     "bignumber.js": "4.0.0",
     "classnames": "^2.2.5",
@@ -156,7 +145,7 @@
     "webpack-dev-server": "2.4.2"
   },
   "build": {
-    "appId": "com.ethereumclassic.emeraldwallet",
+    "appId": "com.webchainnetwork.webchainwallet",
     "artifactName": "${productName}-${os}-${arch}-${env.APP_VERSION_GIT_TAG}.${ext}",
     "compression": "normal",
     "asar": true,

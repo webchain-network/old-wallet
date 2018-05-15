@@ -49,13 +49,8 @@ export class ImportPrivateKey extends React.Component {
                   validate={ [required, minLength(8)] }
                 />
               </div>
+              <div style={{color: '#CF3B3B', fontSize: '14px', marginTop: '5px'}}>If you forget this password, you will lose access to the account and its funds.</div>
             </div>
-          </div>
-        </Row>
-        <Row>
-          <div style={formStyles.left}/>
-          <div style={formStyles.right}>
-            <span style={{color: '#CF3B3B', fontSize: '14px'}}>If you forget this password, you will lose access to the account and its funds.</span>
           </div>
         </Row>
         <Row>

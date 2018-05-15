@@ -90,55 +90,61 @@ class DashboardMenu extends React.Component {
           targetOrigin={{horizontal: 'left', vertical: 'top'}}
           onRequestClose={this.handleRequestClose}
         >
-          <List style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
-            <ListItem
+          <List style={{backgroundColor: '#141417'}}>
+            {/* <ListItem
               primaryText="Ledger Nano S"
               secondaryText="Use Ledger hardware key to manage signatures"
               onClick={importLedger}
               leftIcon={<LedgerIcon />}
-            />
+            /> */}
             <ListItem
               primaryText={t('add.generate.title')}
               secondaryText={t('add.generate.subtitle')}
               onClick={ generate }
-              leftIcon={<KeypairIcon />}
+              leftIcon={<KeypairIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
             <ListItem
               primaryText={t('add.mnemonic.title')}
               secondaryText={t('add.mnemonic.subtitle')}
               onClick={ createMnemonic }
-              leftIcon={<AddIcon />}
+              leftIcon={<AddIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
 
             <ListItem
               primaryText={t('add.import.title')}
               secondaryText={t('add.import.subtitle')}
               onClick={ importJson }
-              leftIcon={<DownloadIcon />}
+              leftIcon={<DownloadIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
             <ListItem
               primaryText={ t('add.importPrivateKey.title') }
               secondaryText={ t('add.importPrivateKey.subtitle') }
               onClick={importPrivateKey}
-              leftIcon={<KeyIcon />}
+              leftIcon={<KeyIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
             <ListItem
               primaryText={ t('add.importMnemonic.title') }
               secondaryText={ t('add.importMnemonic.subtitle') }
               onClick={ importMnemonic }
-              leftIcon={<DownloadIcon />}
+              leftIcon={<DownloadIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
-            <ListItem
+            {/* <ListItem
               primaryText={ t('add.token.title') }
               secondaryText={ t('add.token.subtitle') }
               onClick={ this.handleAddToken }
               leftIcon={<TokenIcon />}
-            />
+            /> */}
             <ListItem
               primaryText="Address Book"
               secondaryText="View and edit contacts"
               onClick={ addressBook }
-              leftIcon={<BookIcon />}
+              leftIcon={<BookIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
             />
           </List>
         </Popover>

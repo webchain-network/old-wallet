@@ -26,7 +26,7 @@ const ReceiveDialog = ({ account, onClose }) => {
       onRequestClose={ onClose }>
       <div className={ classes.container }>
         <div>
-          <div className={ classes.title }>Add Ether</div>
+          <div className={ classes.title }>Add WEB</div>
           <div style={{marginTop: '30px' }}>
             <QRCode value={ address } size={ qrCodeSize }/></div>
         </div>
