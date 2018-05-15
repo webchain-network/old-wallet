@@ -170,7 +170,12 @@ export const CreateTxForm = (props) => {
             validate={[required, number]}
             value={parseFloat(value)}
           />
-          <Field
+          <div style={styles.right}>
+            <div style={styles.fieldName}>
+              WEB
+            </div>
+          </div>
+          {/* <Field
             name="token"
             style={{ marginLeft: '19px', maxWidth: '125px' }}
             component={SelectField}
@@ -187,7 +192,7 @@ export const CreateTxForm = (props) => {
                 primaryText={it.get('symbol')}
               />
             )}
-          </Field>
+          </Field> */}
 
           {/* {isToken &&*/}
           {/* <Field name="isTransfer"*/}
@@ -220,7 +225,7 @@ export const CreateTxForm = (props) => {
         </div>
       </Row>
 
-      <Row>
+      {/* <Row>
         <div style={styles.left}>
           <div style={styles.fieldName}>
             Gas Limit
@@ -236,7 +241,7 @@ export const CreateTxForm = (props) => {
             validate={[required, number, positive]}
           />
         </div>
-      </Row>
+      </Row> */}
       <Row>
         <div style={styles.left}>
           <div style={styles.fieldName}>Transaction Fee</div>

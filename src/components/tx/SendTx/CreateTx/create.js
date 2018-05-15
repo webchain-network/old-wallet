@@ -69,11 +69,11 @@ const CreateTx = connect(
         dispatch(change('createTx', 'value', value));
       }
     },
-    onChangeGasLimit: (event, value) => {
-      if (value) {
-        dispatch(change('createTx', 'gas', value));
-      }
-    },
+    // onChangeGasLimit: (event, value) => {
+    //   if (value) {
+    //     dispatch(change('createTx', 'gas', value));
+    //   }
+    // },
     onChangeToken: (event, value, prev) => {
       // if switching from WEB to token, change default gas
       if (prev.length < 1 && !(address(value))) {
