@@ -13,9 +13,9 @@ const Render = ({ rpcType, terms }) => {
 
   if (terms !== 'v1') {
     step = <Terms/>;
-  // } else if (rpcType === 'none') {
-  //   activeStep = 1;
-  //   step = <NodeTypeChoice/>;
+  } else if (rpcType === 'none') {
+    activeStep = 1;
+    step = <NodeTypeChoice/>;
   } else {
     activeStep = 1;
     step = <OpenWallet/>;
@@ -27,11 +27,11 @@ const Render = ({ rpcType, terms }) => {
       <StepLabel>User Agreement</StepLabel>
     </Step>
   );
-  // steps.push(
-  //   <Step key="select-rpc">
-  //     <StepLabel>Select RPC type</StepLabel>
-  //   </Step>
-  // );
+  steps.push(
+    <Step key="select-rpc">
+      <StepLabel>Select RPC type</StepLabel>
+    </Step>
+  );
   steps.push(
     <Step key="open-wallet">
       <StepLabel>Open Wallet</StepLabel>

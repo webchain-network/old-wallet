@@ -7,8 +7,6 @@ import FlatButton from 'material-ui/FlatButton';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import launcher from 'store/launcher';
 import { waitForServicesRestart } from 'store/store';
-import { useRpc } from '../../store/launcher/launcherActions';
-import { MainnetLocal } from '../../lib/rpc/gethProviders';
 
 const Render = ({ save, muiTheme }) => {
   return (
@@ -43,9 +41,6 @@ const OpenWallet = connect(
   }),
   (dispatch, ownProps) => ({
     save: () => {
-      // Use mainnet local by default, as we don't have remote nodes yet
-      dispatch(useRpc(MainnetLocal));
-
       dispatch(launcher.actions.saveSettings());
       waitForServicesRestart();
     },

@@ -2,10 +2,10 @@ export const Networks = [
   {
     geth: {
       type: 'local',
-      url: 'http://127.0.0.1:8545',
+      url: 'http://127.0.0.1:39573',
     },
     chain: {
-      id: 61,
+      id: 101,
       name: 'mainnet',
     },
     title: 'Mainnet',
@@ -13,15 +13,27 @@ export const Networks = [
   },
   {
     geth: {
-      type: 'local',
-      url: 'http://127.0.0.1:8545',
+      type: 'remote',
+      url: 'http://node1.webchain.network:39573',
     },
     chain: {
-      id: 62,
-      name: 'morden',
+      id: 101,
+      name: 'mainnet',
     },
-    title: 'Morden Testnet',
-    id: 'local/morden',
+    title: 'Mainnet (Node 1)',
+    id: 'node1/mainnet',
+  },
+  {
+    geth: {
+      type: 'remote',
+      url: 'http://node2.webchain.network:39573',
+    },
+    chain: {
+      id: 101,
+      name: 'mainnet',
+    },
+    title: 'Mainnet (Node 2)',
+    id: 'node2/mainnet',
   },
 ];
 

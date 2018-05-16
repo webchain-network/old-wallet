@@ -14,19 +14,19 @@ class LocalGeth {
     this.bin = bin;
     this.logDir = logDir;
     this.network = network || 'morden';
-    this.rpcPort = rpcPort || 8545;
+    this.rpcPort = rpcPort || 39573;
   }
 
   launch() {
     return new Promise((resolve, reject) => {
-      log.info(`Starting Geth... [bin: ${this.bin} network: ${this.network}, port: ${this.rpcPort}]`);
-      const bin = path.join(this.bin, `geth${suffix}`);
+      log.info(`Starting Webchaind... [bin: ${this.bin} network: ${this.network}, port: ${this.rpcPort}]`);
+      const bin = path.join(this.bin, `webchaind${suffix}`);
       fs.access(bin, fs.constants.X_OK, (err) => {
         if (err) {
           log.error(`File ${bin} doesn't exist or app doesn't have execution flag`);
           reject(err);
         } else {
-          const logTarget = path.join(this.logDir, 'geth'); // this shall be a dir
+          const logTarget = path.join(this.logDir, 'webchaind'); // this shall be a dir
           const options = [
             '--chain', this.network,
             '--rpc',
@@ -39,7 +39,7 @@ class LocalGeth {
 
           const env = Object.assign({}, process.env, {PATH: `${process.env.PATH}:.`});
 
-          log.debug(`Geth options: [${options}]`);
+          log.debug(`Webchaind options: [${options}]`);
           this.proc = spawn(bin, options, { env });
           resolve(this.proc);
         }
@@ -48,7 +48,7 @@ class LocalGeth {
   }
 
   shutdown() {
-    log.info('Shutting down Local Geth');
+    log.info('Shutting down Local Webchaind');
     return new Promise((resolve, reject) => {
       if (!this.proc) {
         resolve('not_started');
@@ -59,7 +59,7 @@ class LocalGeth {
         this.proc = null;
       });
       this.proc.on('error', (err) => {
-        log.error('Failed to shutdown Local Geth', err);
+        log.error('Failed to shutdown Local Webchaind', err);
         reject(err);
       });
       this.proc.kill();

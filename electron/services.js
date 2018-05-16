@@ -8,7 +8,7 @@ const { getBinDir, getLogDir, isValidChain } = require('./utils');
 
 require('es6-promise').polyfill();
 
-const LOCAL_RPC_URL = 'http://localhost:8545';
+const LOCAL_RPC_URL = 'http://localhost:39573';
 
 const SERVICES = {
   CONNECTOR: 'connector',
@@ -162,7 +162,7 @@ class Services {
         this.notifyEthRpcStatus();
 
 
-        resolve(new LocalGeth(null, getLogDir(), this.setup.chain.name, 8545));
+        resolve(new LocalGeth(null, getLogDir(), this.setup.chain.name, 39573));
       }).catch((e) => {
         log.error(e);
         log.info("Can't find existing RPC. Try to launch");
@@ -179,7 +179,7 @@ class Services {
       gethDownloader.downloadIfNotExists().then(() => {
         this.notify.info('Launching Webchaind backend');
         this.gethStatus = STATUS.STARTING;
-        this.geth = new LocalGeth(getBinDir(), getLogDir(), this.setup.chain.name, 8545);
+        this.geth = new LocalGeth(getBinDir(), getLogDir(), this.setup.chain.name, 39573);
 
         this.geth.launch().then((geth) => {
           geth.on('exit', (code) => {
