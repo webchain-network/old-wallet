@@ -1,5 +1,9 @@
 {
   "name": "WebchainWallet",
+  "author": {
+    "name": "Webchain Network",
+    "email": "support@webchain.network"
+  },
   "private": false,
   "version": "0.10.0",
   "description": "Webchain - Webchain Network Wallet",
@@ -146,7 +150,7 @@
   },
   "build": {
     "appId": "com.webchainnetwork.webchainwallet",
-    "artifactName": "${productName}-${os}-${arch}-${env.APP_VERSION_GIT_TAG}.${ext}",
+    "artifactName": "${productName}-${os}-${arch}.${ext}",
     "compression": "normal",
     "asar": true,
     "extraResources": [
