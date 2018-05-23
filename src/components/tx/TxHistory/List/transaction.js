@@ -21,7 +21,7 @@ export default connect(
     const fromAccount = getAccount(ownProps.tx.get('from'));
 
     return {
-      showFiat: launcher.selectors.getChainName(state).toLowerCase() === 'mainnet',
+      showFiat: false,
       currentBlockHeight: state.network.getIn(['currentBlock', 'height']),
       tx: ownProps.tx,
       toAccount,

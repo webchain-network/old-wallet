@@ -164,7 +164,7 @@ export default connect(
       },
       to,
       from: selector(state, 'from') || ownProps.account.get('id'),
-      showFiat: launcher.selectors.getChainName(state).toLowerCase() === 'mainnet',
+      showFiat: false,
       accounts: accounts.selectors.getAll(state, Immutable.List()),
       tokens: allTokens.unshift(Immutable.fromJS({ address: '', symbol: 'WEB' })),
       isToken: Address.isValid(selector(state, 'token')),
