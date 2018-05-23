@@ -51,7 +51,7 @@ export const TransactionShow = (props: Props) => {
   const backButtonLabel = account ? 'Account' : 'Dashboard';
   const backButton = <DashboardButton label={ backButtonLabel } onClick={ () => goBack(account) }/>;
   return (
-    <Form caption="Ethereum Classic Transfer" backButton={ backButton } style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
+    <Form caption="Webchain Network Transfer" backButton={ backButton } style={{border: `1px solid ${muiTheme.palette.borderColor}`, backgroundColor: muiTheme.palette.alternateTextColor}}>
       <Row>
         <div style={styles.left}>
           <div style={fieldNameStyle}>Date</div>

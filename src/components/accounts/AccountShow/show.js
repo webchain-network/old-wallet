@@ -60,7 +60,7 @@ export class AccountShow extends React.Component {
 
     return (
       <div>
-        <div style={{display: 'flex', alignItems: 'stretch', border: `1px solid ${muiTheme.palette.borderColor}`}}>
+        <div style={{display: 'flex', alignItems: 'stretch', border: `1px solid ${muiTheme.palette.borderColor}`, backgroundColor: muiTheme.palette.alternateTextColor}}>
           <div style={{flexGrow: 1}}>
             <Form caption="Account" backButton={ <DashboardButton onClick={ goBack }/> }>
               <Row>
@@ -142,7 +142,7 @@ export class AccountShow extends React.Component {
             </Form>
           </div>
           <div className={ classes.qrCodeContainer }>
-            <QRCode value={ account.get('id') } />
+            <QRCode value={ account.get('id') } size={ 250 }/>
           </div>
         </div>
         <div className={ classes.transContainer }>
