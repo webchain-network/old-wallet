@@ -1,4 +1,4 @@
-Emerald - Ethereum Classic Wallet
+Webchain - Webchain Network Wallet
 =================================
 
 :rootdir: .
@@ -8,16 +8,6 @@ Emerald - Ethereum Classic Wallet
 
 ifdef::env-github,env-browser[:badges:]
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
-
-ifdef::badges[]
-image:https://circleci.com/gh/ETCDEVTeam/emerald-wallet.svg?style=svg["CircleCI", link="https://circleci.com/gh/ETCDEVTeam/emerald-wallet"]
-image:https://badges.gitter.im/ethereumproject/emerald-wallet.svg[link="https://gitter.im/ethereumproject/emerald-wallet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
-image:https://travis-ci.org/ETCDEVTeam/emerald-wallet.png?branch=master[Travis CI Build Status, link=https://travis-ci.org/ETCDEVTeam/emerald-wallet]
-image:https://img.shields.io/github/license/ethereumproject/emerald-wallet.svg?maxAge=2592000["License", link="https://github.com/ethereumproject/emerald-wallet/blob/master/LICENSE"]
-image:https://ci.appveyor.com/api/projects/status/5u1j94oml44whqx6?svg=true[AppVeyor Build Status, link=https://ci.appveyor.com/project/etcdevteam/emerald-wallet/]
-image:https://codecov.io/gh/ETCDEVTeam/emerald-wallet/branch/master/graph/badge.svg[Codecov, link=https://codecov.io/gh/ETCDEVTeam/emerald-wallet]
-endif::[]
-
 
 ## Development instructions
 The supported version of `node` is `v6`. If you run into build errors, please make sure that you are using NodeV6 by running `node --version`.
@@ -37,8 +27,12 @@ $ npm run setup
 ```
 
 
-#### Emerald and geth
-##### Emerald
+#### Webchaind and emerald
+##### Webchaind
+If webchaind isn't available in your project directory, upon launching the app, it automatically
+be downloaded and placed in your project base dir.
+
+##### emerald
 If you haven't got `emerald` already installed on your system, you can execute `./dependencies.sh`
 to automatically `rustup` and use `cargo` to install `emerald-cli` and move it to the
 project's base dir. Note: this command is idempotent __for rust and cargo__ (it won't
@@ -46,15 +40,9 @@ try to install cargo if you've already got it), but it will
 use cargo's `-f` flag to force install `emerald-cli` and copy that version to the
 project directory.
 
-##### Geth
-If geth isn't available in your project directory, upon launching the app, it automatically
-be downloaded and placed in your project base dir.
-
-
 ### Run for development
 
-Firstly: a couple things aren't working right. If you can fix either of these issues,
-@whilei will buy you a beer.
+Firstly: a couple things aren't working right.
 
 - _Issue 1_: `webpack-dev-server` isn't working right with the current babel-webpack-electron-izing
   setup. So you've got to do your development in Electron for now. Which means you can't run `npm run start:web`. Bummer.
@@ -75,20 +63,20 @@ $ npm run start:electron
 
 ### Logs
 
-#### Emerald logs
-Electron and Emerald logs persisted in:
+#### Wallet logs
+Electron and Webchain logs persisted in:
 
- * OSX: `~/Library/Logs/EmeraldWallet/log.log`
- * Linux: `~/.config/EmeraldWallet/log.log`
+ * OSX: `~/Library/Logs/WebchainWallet/log.log`
+ * Linux: `~/.config/WebchainWallet/log.log`
 
 
-#### Geth logs
-During development, you'll find geth's logs in `./logs` right in the project base directory.
+#### Webchaind logs
+During development, you'll find webchaind logs in `./logs` right in the project base directory.
 
 In production, logs will be nestled in
 
- * OSX: `~/Library/Application Support/EmeraldWallet/`
- * Windows: `%USERPROFILE%\AppData\Roaming\EmeraldWallet\logs`
+ * OSX: `~/Library/Application Support/WebchainWallet/`
+ * Windows: `%USERPROFILE%\AppData\Roaming\WebchainWallet\logs`
 
 ### Building alternatively
 
@@ -120,9 +108,9 @@ both OSX and Linux at the same time.
 Some preliminary things to try in case you run into issues:
 
 - Clear out any persisted settings or userdata from previous trials
- * OSX: `~/Library/Application Support/EmeraldWallet`
- * Linux: `~/.config/EmeraldWallet`
- * Windows: `%APPDATA%\EmeraldWallet`
+ * OSX: `~/Library/Application Support/WebchainWallet`
+ * Linux: `~/.config/WebchainWallet`
+ * Windows: `%APPDATA%\WebchainWallet`
 
 
 
@@ -138,7 +126,7 @@ npm test
 ```
 
 ## Contact
-Chat with us via https://gitter.im/ethereumproject/emerald-wallet[Gitter]
+Chat with us via https://gitter.im/webchain-network/public[Gitter]
 
 ## License
 
