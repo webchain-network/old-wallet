@@ -52,7 +52,6 @@ const Landing = ({ onGenerate, onImportJson, onImportPrivateKey, onLedger, onLed
                 <div style={styles.addAccount}>Add Account</div>
                 <div style={styles.addAccountButtons}>
                   <FlatButton primary onClick={onImportJson} label="From Keystore File (UTC/JSON)" />
-                  <FlatButton primary onClick={onImportPrivateKey} label="From Private key" />
                   {/* <FlatButton primary onClick={connected ? onLedger : onLedgerWait} label="Ledger Nano S" /> */}
                 </div>
               </div>

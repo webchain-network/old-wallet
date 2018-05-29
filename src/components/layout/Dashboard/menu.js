@@ -120,13 +120,6 @@ class DashboardMenu extends React.Component {
               style={{color: '#fff'}}
             />
             <ListItem
-              primaryText={ t('add.importPrivateKey.title') }
-              secondaryText={ t('add.importPrivateKey.subtitle') }
-              onClick={importPrivateKey}
-              leftIcon={<KeyIcon style={{color: '#fff'}}/>}
-              style={{color: '#fff'}}
-            />
-            <ListItem
               primaryText={ t('add.importMnemonic.title') }
               secondaryText={ t('add.importMnemonic.subtitle') }
               onClick={ importMnemonic }
