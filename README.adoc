@@ -126,7 +126,7 @@ npm test
 ```
 
 ## Contact
-The team can provide you instant attention on our [discord channel](https://discordapp.com/invite/86nTHtf) or on [gitter chat](https://gitter.im/webchain-network/public)
+The team can provide you instant attention on our https://discordapp.com/invite/86nTHtf[discord channel] or on https://gitter.im/webchain-network/public[gitter chat]
 
 ## License
 
