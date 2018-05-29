@@ -20,7 +20,7 @@ export function loadSettings() {
         show: showHiddenAccounts,
       });
 
-      const numConfirmations = localStorage.getItem('numConfirmations') || 12;
+      const numConfirmations = 2;
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
         numConfirmations: parseInt(numConfirmations, 10),

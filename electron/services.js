@@ -35,7 +35,7 @@ const LAUNCH_TYPE = {
 const DEFAULT_SETUP = {
   connector: {
     launchType: LAUNCH_TYPE.LOCAL_RUN,
-    url: 'http://127.0.0.1:1920',
+    url: 'http://127.0.0.1:20224',
   },
 
   geth: {

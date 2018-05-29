@@ -111,6 +111,8 @@ class LocalConnector {
           const options = [
             '-v',
             'server',
+            '127.0.0.1',
+            '20224'
           ];
           log.debug(`Emerald bin: ${bin}, args: ${options}`);
           this.proc = spawn(bin, options);

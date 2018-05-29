@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 import CircularProgress from 'material-ui/CircularProgress';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import theme from '../../theme.json';
 
 import { LogoIcon } from '../../elements/Icons';
 import InitialSetup from './initialSetup';
@@ -38,6 +39,7 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
   </div>;
 
   if (needSetup) {
+    document.body.style.backgroundColor = theme.palette.canvasColor;
     return (
       <Grid id="welcome-screen">
         <Row>
