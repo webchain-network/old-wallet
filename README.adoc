@@ -10,7 +10,7 @@ ifdef::env-github,env-browser[:badges:]
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 ## Development instructions
-The supported version of `node` is `v6`. If you run into build errors, please make sure that you are using NodeV6 by running `node --version`.
+The supported `node` version is `v6`. If you run into building errors, please make sure that you are using NodeV6 by running `node --version`. 
 
 `package.json`: This is where scripts that get run when you use `npm run blah` get defined.
 It'll be helpful to have an idea of what's available and where the magic `npm run` commands
@@ -29,7 +29,7 @@ $ npm run setup
 
 #### Webchaind and emerald
 ##### Webchaind
-If webchaind isn't available in your project directory, upon launching the app, it automatically
+If webchaind isn't available in your project directory, upon launching the app, it will automatically
 be downloaded and placed in your project base dir.
 
 ##### emerald
@@ -71,16 +71,16 @@ Electron and Webchain logs persisted in:
 
 
 #### Webchaind logs
-During development, you'll find webchaind logs in `./logs` right in the project base directory.
+During development, you'll find webchaind logs in `./logs` right within the project base directory.
 
-In production, logs will be nestled in
+On production, logs will be nestled in
 
  * OSX: `~/Library/Application Support/WebchainWallet/`
  * Windows: `%USERPROFILE%\AppData\Roaming\WebchainWallet\logs`
 
 ### Building alternatively
 
-You can also use a variety of alternate build options, eg.
+You can also use a variety of alternative building options, eg.
 
 ```
 $ npm run build:all:nowatch
@@ -96,7 +96,7 @@ $ npm run dist
 ```
 
 This command will build for _your current system_. Note that there are configurations for
-several systems (OSX, Linux, Windows) specified in the `"build"` field of `package.json`, but the `dist` command will by default only build for the system it's on.
+several systems (OSX, Linux, Windows) specified on the `"build"` field of `package.json`, but the `dist` command will (by default) only build for the system it's on.
 
 Note: If you're developing on OSX and have a developer signing identity on your machine, you can
 optionally disable that with `CSC_IDENTITY_AUTO_DISCOVERY=false`.
@@ -126,7 +126,7 @@ npm test
 ```
 
 ## Contact
-Chat with us via https://gitter.im/webchain-network/public[Gitter]
+The team can provide you instant attention on our [discord channel](https://discordapp.com/invite/86nTHtf) or on [gitter chat](https://gitter.im/webchain-network/public)
 
 ## License
 
