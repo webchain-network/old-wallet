@@ -20,7 +20,7 @@ export function loadSettings() {
         show: showHiddenAccounts,
       });
 
-      const numConfirmations = 2;
+      const numConfirmations = 5;
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
         numConfirmations: parseInt(numConfirmations, 10),

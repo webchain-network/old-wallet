@@ -74,6 +74,11 @@ module.exports = function (window) {
         click() { window.webContents.reload(); },
       },
       {
+        label: 'Developer Tools',
+        accelerator: 'Alt+Command+I',
+        click() { window.toggleDevTools(); },
+      },
+      {
         label: 'Open Logs',
         click() {
           shell.openItem(logger.transports.file.file);

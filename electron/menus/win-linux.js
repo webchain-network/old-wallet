@@ -30,6 +30,11 @@ module.exports = function (window) {
           click: () => { window.setFullScreen(!window.isFullScreen()); },
         },
         {
+          label: 'Toggle &Developer Tools',
+          accelerator: 'Alt+Ctrl+I',
+          click: () => { window.toggleDevTools(); },
+        },
+        {
           label: 'Open Logs',
           click() {
             shell.openItem(logger.transports.file.file);
