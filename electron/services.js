@@ -238,16 +238,16 @@ class Services {
         this.connectorStatus = STATUS.STARTING;
         emerald.on('exit', (code) => {
           this.connectorStatus = STATUS.NOT_STARTED;
-          log.error(`Emerald Connector process exited with code: ${code}`);
+          log.error(`Webchain Connector process exited with code: ${code}`);
           this.connector.proc = null;
         });
         emerald.on('uncaughtException', (e) => {
           log.error((e && e.stack) ? e.stack : e);
         });
         const logTargetDir = getLogDir();
-        log.debug('Emerald log target dir:', logTargetDir);
+        log.debug('Webchain log target dir:', logTargetDir);
         emerald.stderr.on('data', (data) => {
-          log.debug(`[emerald] ${data}`); // always log emerald data
+          log.debug(`[webchain-cli] ${data}`); // always log emerald data
           if (/Connector started on/.test(data)) {
             this.connectorStatus = STATUS.READY;
             this.notifyConnectorStatus();

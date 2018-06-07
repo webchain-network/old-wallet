@@ -7,10 +7,10 @@ release/
 npm-debug.log
 app/
 dist/
-emerald
 webchaind
 logs/
 coverage/
 flow-typed/
 
 package-lock.json
+webchain-cli
