@@ -39,7 +39,6 @@ const Render = ({ message, level, ready, needSetup, muiTheme }) => {
   </div>;
 
   if (needSetup) {
-    document.body.style.backgroundColor = theme.palette.canvasColor;
     return (
       <Grid id="welcome-screen">
         <Row>

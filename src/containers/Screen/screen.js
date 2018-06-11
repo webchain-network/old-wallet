@@ -22,6 +22,7 @@ import Settings from '../../components/settings';
 import PaperWallet from '../PaperWallet';
 import ExportPaperWallet from '../../components/accounts/ExportPaperWallet';
 import GenerateAccount from '../../components/accounts/GenerateAccount';
+import theme from '../../theme.json';
 
 import WalletScreen from '../../store/wallet/screen';
 

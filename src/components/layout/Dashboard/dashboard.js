@@ -52,6 +52,7 @@ const Dashboard = (props) => {
     );
   }
 
+  document.body.style.backgroundColor = theme.palette.canvasColor;
   return (
     <div>
       <Header />
