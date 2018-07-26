@@ -103,14 +103,26 @@ class LocalConnector {
   migrateToWebchainDir() {
     return new Promise((resolve, reject) => {
       const appData = (process.env.APPDATA || os.homedir());
-      const emeraldHomeDir = `${appData}/.emerald`;
-      const webchainHomeDir = `${appData}/.webchain-vault`;
-      fs.access(webchainHomeDir, fs.constants.F_OK, err => {
-        if (err)
-          fs.copy(emeraldHomeDir, webchainHomeDir, err => {
-            if (err) log.error(err);
+      const emeraldHomeDir = path.join(appData, '.emerald');
+      const webchainHomeDir = path.join(appData, '.webchain-vault');
+      fs.access(webchainHomeDir, fs.constants.F_OK, (err) => {
+        if (err) {
+          fs.access(emeraldHomeDir, fs.constants.F_OK, (err1) => {
+            if (err1) {
+              resolve();
+            } else {
+              fs.copy(emeraldHomeDir, webchainHomeDir, (err2) => {
+                if (err2) {
+                  log.error(err2);
+                } else {
+                  resolve();
+                }
+              });
+            }
           });
-        resolve();
+        } else {
+          resolve();
+        }
       });
     });
   }
@@ -127,7 +139,7 @@ class LocalConnector {
             '-v',
             'server',
             '127.0.0.1',
-            '20224'
+            '20224',
           ];
           log.debug(`Webchain-cli bin: ${bin}, args: ${options}`);
           this.proc = spawn(bin, options);
