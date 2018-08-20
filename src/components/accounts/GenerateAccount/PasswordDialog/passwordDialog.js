@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Warning, WarningHeader, WarningText } from 'emerald-js-ui';
+import { Button, Warning, WarningHeader, WarningText, Page } from 'emerald-js-ui';
 import { Field, reduxForm } from 'redux-form';
 import TextField from 'elements/Form/TextField';
 import { required } from 'lib/validators';
-import { Form, Row, styles as formStyles } from 'elements/Form';
+import { Row, styles as formStyles } from 'elements/Form';
 import PasswordInput from 'elements/PasswordInput';
-import DashboardButton from 'components/common/DashboardButton';
+import { Back } from 'emerald-js-ui/lib/icons3';
 import Advice from './advice';
 import styles from './passwordDialog.scss';
 import getLoadingIcon from '../getLoadingIcon';
@@ -68,11 +68,11 @@ class PasswordDialog extends React.Component {
   }
 
   render() {
-    const { onDashboard, t, backLabel } = this.props;
+    const { onDashboard, t } = this.props;
     const { passphraseError } = this.state;
 
     return (
-      <Form caption={ t('generate.title') } backButton={ <DashboardButton onClick={ onDashboard } label={backLabel}/> }>
+      <Page title={ t('generate.title') } leftIcon={<Back onClick={onDashboard} />}>
         <Row>
           <div style={ formStyles.left }/>
           <div style={ formStyles.right }>
@@ -87,10 +87,21 @@ class PasswordDialog extends React.Component {
                   error={ passphraseError }
                 />
               </div>
-              <div style={{color: '#CF3B3B', fontSize: '14px', marginTop: '5px'}}>If you forget password, you will lose your account with all funds.</div>
             </div>
           </div>
         </Row>
+
+        <Row>
+          <div style={ formStyles.left }/>
+          <div style={ formStyles.right }>
+            <Warning fullWidth={ true }>
+              <WarningHeader>Don&#39;t forget it.</WarningHeader>
+              <WarningText>If you forget password, you will lose your account with all
+                funds.</WarningText>
+            </Warning>
+          </div>
+        </Row>
+
         <Row>
           <div style={formStyles.left} />
           <div style={formStyles.right}>
@@ -113,7 +124,7 @@ class PasswordDialog extends React.Component {
             <Advice
               title="Advice"
               text={ <div>You can use a word or phrase as password. Write it in short text.<br/>
-                        Only you know where password is. It is safer than write a password only.
+                Only you know where password is. It is safer than write a password only.
               </div>}
             />
           </div>
@@ -130,7 +141,7 @@ class PasswordDialog extends React.Component {
             />
           </div>
         </Row>
-      </Form>
+      </Page>
     );
   }
 }
