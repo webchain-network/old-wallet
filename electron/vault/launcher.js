@@ -1,6 +1,6 @@
 const { spawn, spawnSync } = require('child_process');
 const path = require('path');
-const fs = require('fs-extra');
+const fs = require('fs');
 const os = require('os');
 
 const { checkExists } = require('../utils');
