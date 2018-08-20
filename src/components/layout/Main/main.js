@@ -30,7 +30,7 @@ const Render = translate('common')(({ muiTheme, ...props }) => {
 const Main = connect(
   (state, ownProps) => ({
     screen: state.wallet.screen.get('screen'),
-    launcherType: state.launcher.getIn(['geth', 'type'])
+    launcherType: state.launcher.getIn(['geth', 'type']),
   }),
   (dispatch, ownProps) => ({})
 )(Render);

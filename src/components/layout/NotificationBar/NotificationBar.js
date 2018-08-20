@@ -1,21 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Snackbar from 'material-ui/Snackbar';
-import { orange300, red900 } from 'material-ui/styles/colors';
+import { orange300 } from 'material-ui/styles/colors';
 import screen from 'store/wallet/screen';
-
-const colors = {
-  success: '#47B04B',
-  error: red900,
-  info: '#171717',
-  warning: orange300,
-};
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
 
 class NotificationBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
+    this.onActionClick = this.onActionClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,16 +21,40 @@ class NotificationBar extends React.Component {
     }
   }
 
+  onActionClick() {
+    this.props.onActionClick(this.props.notificationActionToDispatchOnActionClick);
+  }
+
   render() {
+    const { muiTheme } = this.props;
+    const colors = {
+      success: muiTheme.palette.primary1Color,
+      error: muiTheme.palette.accent1Color,
+      info: muiTheme.palette.textColor,
+      warning: orange300,
+    };
     return (
       <Snackbar
         bodyStyle={{
-          backgroundColor: colors[this.props.notificationType || 'info'],
+          backgroundColor: muiTheme.palette.alternateTextColor,
+          boxShadow: `${muiTheme.palette.shadowColor} 0px 0px 50px 0px`,
+        }}
+        contentStyle={{
+          color: colors[this.props.notificationType],
+        }}
+        style={{
+          bottom: 'auto',
+          top: '-55px',
+          left: 'auto',
+          right: 0,
+          transform: this.state.open ? 'translate3d(0, 85px, 0)' : 'translate3d(0, 0, 0)',
         }}
         open={this.state.open}
         message={this.props.notificationMessage || ''}
         autoHideDuration={this.props.notificationDuration || 3000}
         onRequestClose={this.props.onRequestClose}
+        action={this.props.notificationActionText}
+        onActionClick={this.onActionClick}
       />
     );
   }
@@ -47,10 +66,15 @@ export default connect(
     notificationMessage: state.wallet.screen.get('notificationMessage'),
     notificationDuration: state.wallet.screen.get('notificationDuration'),
     notificationType: state.wallet.screen.get('notificationType'),
+    notificationActionText: state.wallet.screen.get('notificationActionText'),
+    notificationActionToDispatchOnActionClick: state.wallet.screen.get('notificationActionToDispatchOnActionClick'),
   }),
   (dispatch, ownProps) => ({
     onRequestClose: () => {
       dispatch(screen.actions.closeNotification());
     },
+    onActionClick: (action) => {
+      dispatch(action);
+    },
   })
-)(NotificationBar);
+)(muiThemeable()(NotificationBar));
