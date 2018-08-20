@@ -1,3 +1,4 @@
+// @flow
 import createLogger from '../../../utils/logger';
 
 const log = createLogger('screenActions');
@@ -10,21 +11,19 @@ export function gotoScreen(screen, item = null) {
   };
 }
 
-export function showError(msg) {
+export function showError(msg: Error) {
   log.error('Show error', msg);
-  if (typeof msg === 'object') {
-    msg = msg.message;
-  }
+
   return {
     type: 'SCREEN/ERROR',
-    message: msg,
+    error: msg,
   };
 }
 
 export function closeError() {
   return {
     type: 'SCREEN/ERROR',
-    message: null,
+    error: null,
   };
 }
 
@@ -50,13 +49,19 @@ export function catchError(dispatch) {
   };
 }
 
+export const openLink = (linkUrl) => ({
+  type: 'SCREEN/OPEN_LINK',
+  linkUrl,
+});
 
-export function showNotification(message, notificationType, duration) {
+export function showNotification(message, notificationType, duration, actionText, actionToDispatchOnActionClick) {
   return {
     type: 'SCREEN/NOTIFICATION_SHOW',
     message,
     notificationType,
     duration,
+    actionText,
+    actionToDispatchOnActionClick,
   };
 }
 
