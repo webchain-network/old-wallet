@@ -97,16 +97,18 @@ export function loadTokenDetails(tokenAddress: string): () => Promise<any> {
 
 export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
   return (dispatch, getState, api) => {
+    const contractCallBase = {to: tokenAddress};
+
     return Promise.all([
-      api.geth.eth.call(tokenAddress, tokenContract.functionToData('totalSupply')),
-      api.geth.eth.call(tokenAddress, tokenContract.functionToData('decimals')),
-      api.geth.eth.call(tokenAddress, tokenContract.functionToData('symbol')),
-    ]).then((results) => {
+      api.geth.eth.call({ ...contractCallBase, data: tokenContract.functionToData('totalSupply') }),
+      api.geth.eth.call({ ...contractCallBase, data: tokenContract.functionToData('decimals') }),
+      api.geth.eth.call({ ...contractCallBase, data: tokenContract.functionToData('symbol') }),
+    ]).then(([totalSupply, decimals, symbol]) => {
       return {
         address: tokenAddress,
-        totalSupply: results[0],
-        decimals: results[1],
-        symbol: parseString(results[2]),
+        totalSupply,
+        decimals,
+        symbol: parseString(symbol),
       };
     });
   };
@@ -118,30 +120,32 @@ export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
  *
  * @param address
  */
-export function loadTokensBalances(address: string) {
+export function loadTokensBalances(addresses: string) {
   return (dispatch: any, getState: any, api: any) => {
     const tokens = getState().tokens.get('tokens').toJS();
     // build batch call request
-    const batch = tokens.map((token) => {
-      return {
-        id: token.address,
+    const batch = [];
+    tokens.forEach((token) => addresses.forEach((addr) => {
+      batch.push({
+        id: `${addr}+${token.address}`,
         to: token.address,
-        data: tokenContract.functionToData('balanceOf', { _owner: address }),
-      };
-    });
+        data: tokenContract.functionToData('balanceOf', { _owner: addr }),
+      });
+    }));
 
     return api.geth.ext.batchCall(batch).then((results) => {
-      const balances = tokens.map((token) => {
-        return {
+      const tokenBalances = [];
+      tokens.forEach((token) => addresses.forEach((addr) => {
+        tokenBalances.push({
           tokenAddress: token.address,
-          amount: results[token.address].result,
-        };
-      });
+          accountAddress: addr,
+          amount: results[`${addr}+${token.address}`].result,
+        });
+      }));
 
       dispatch({
         type: ActionTypes.SET_TOKENS_BALANCES,
-        accountId: address,
-        balances,
+        tokenBalances,
       });
     });
   };
@@ -184,15 +188,13 @@ export function addToken(token: TokenInfo) {
         address: token.address,
         name: token.symbol,
       });
-      return dispatch({
-        type: ActionTypes.SET_INFO,
-        address: token.address,
-        totalSupply: token.totalSupply,
-        decimals: token.decimals,
-        symbol: token.symbol,
-      });
+      return dispatch(loadTokenDetails(token.address));
     });
   };
+}
+
+export function removeToken(address: string) {
+  return (dispatch, getState, api) => dispatch({ type: ActionTypes.REMOVE_TOKEN, address });
 }
 
 // FIXME: deprecated
