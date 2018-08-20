@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { DropDownMenu, IconButton } from 'material-ui';
+import { DropDownMenu } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Network as NetworkIcon, NetworkDisconnected as NetworkDisconnectedIcon } from 'emerald-js-ui/lib/icons3';
 import { Networks, findNetwork } from '../../../../lib/networks';
@@ -19,6 +19,7 @@ class ExtendedMenuItem extends React.Component {
           cursor: 'pointer',
           padding: '5px 80px 5px 40px',
           fontSize: '14px',
+          borderLeft: checked ? `5px solid ${muiTheme.palette.primary1Color}` : '',
           marginLeft: checked ? '' : '5px',
           lineHeight: '20px',
         }}

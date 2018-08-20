@@ -6,14 +6,17 @@ import Total from './';
 
 function createStore() {
   return {
-    getState: () => {
+    subscribe() {},
+    getState() {
       return {
+        wallet: {
+          settings: fromJS({}),
+        },
         accounts: fromJS({
-          accounts: [{
-            balance: new Wei(1000000000000000),
-          }, {
-            balance: new Wei(2000000000000000),
-          }],
+          accounts: [
+            {balance: new Wei(1000000000000000)},
+            {balance: new Wei(2000000000000000)},
+          ],
         }),
       };
     },

@@ -120,18 +120,26 @@ class DashboardMenu extends React.Component {
               style={{color: '#fff'}}
             />
             <ListItem
+              primaryText={ t('add.importPrivateKey.title') }
+              secondaryText={ t('add.importPrivateKey.subtitle') }
+              onClick={importPrivateKey}
+              leftIcon={<KeyIcon style={{color: '#fff'}}/>}
+              style={{color: '#fff'}}
+            />
+            <ListItem
               primaryText={ t('add.importMnemonic.title') }
               secondaryText={ t('add.importMnemonic.subtitle') }
               onClick={ importMnemonic }
               leftIcon={<DownloadIcon style={{color: '#fff'}}/>}
               style={{color: '#fff'}}
             />
-            {/* <ListItem
+            <ListItem
               primaryText={ t('add.token.title') }
               secondaryText={ t('add.token.subtitle') }
               onClick={ this.handleAddToken }
-              leftIcon={<TokenIcon />}
-            /> */}
+              leftIcon={<TokenIcon style={{color: '#fff'}} />}
+              style={{color: '#fff'}}
+            />
             <ListItem
               primaryText="Address Book"
               secondaryText="View and edit contacts"

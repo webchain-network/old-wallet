@@ -23,7 +23,7 @@ const styles = {
 };
 
 const Header = (props) => {
-  const { openSettings, muiTheme, network, showProgress, progress, tip } = props;
+  const { openSettings, muiTheme, network, showProgress, progress, tip, showFiat } = props;
 
   const showProgressBar = (show) => {
     if (!show) {
@@ -52,10 +52,16 @@ const Header = (props) => {
 
   const BlockDisplay = () => {
     const displayProgress = parseInt(100 - progress, 10);
-    const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : `${separateThousands(network.currentBlock.height, ' ')} BLOCKS`;
+    const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : separateThousands(network.currentBlock.height, ' ');
     return (
       <div style={{marginTop: showProgress ? '7px' : null}}>
-        <div style={{color: muiTheme.palette.alternateTextColor}}>{label}</div>
+        <FlatButton
+          disabled={true}
+          label={label}
+          style={{color: muiTheme.palette.secondaryTextColor, lineHeight: 'inherit'}}
+          labelStyle={styles.buttons.label}
+          icon={<BlockIcon style={{color: muiTheme.palette.secondaryTextColor}}/>}
+        />
         {showProgressBar(showProgress)}
       </div>
     );
