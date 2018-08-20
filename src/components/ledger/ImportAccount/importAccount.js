@@ -1,41 +1,38 @@
 // @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { Button, ButtonGroup } from 'emerald-js-ui';
+import { AddCircle as AddIcon } from 'emerald-js-ui/lib/icons3';
 import DashboardButton from 'components/common/DashboardButton';
-import { Form, styles as formStyles, Row } from 'elements/Form';
-import ledger from 'store/ledger';
-import screen from 'store/wallet/screen';
 import HDPath from 'components/common/HdPath';
+import { Form, Row, styles as formStyles } from 'elements/Form';
 import AddrList from './addrlist';
 import Pager from './pager';
-import WaitDialog from '../WaitDialog';
-import Buttons from './buttons';
 
-import styles from './importAccount.scss';
+import styles from './ImportAccount.scss';
 
 type Props = {
-  init: Function,
+  onInit: Function,
   onBackScreen: ?Function,
-  connected: boolean,
   hdbase: string,
 }
 
 class ImportAccount extends React.Component<Props> {
   componentDidMount() {
-    if (this.props.init) {
-      this.props.init();
+    if (this.props.onInit) {
+      this.props.onInit();
     }
   }
 
   render() {
-    const { connected, hdbase, changeBaseHD, onBackScreen, onDashboard, muiTheme } = this.props;
-    if (!connected) {
-      return (<WaitDialog />);
-    }
+    const { hdbase, changeBaseHD, muiTheme, selected } = this.props;
+    const { onAddSelected, onCancel, onDashboard } = this.props;
     return (
-      <Form caption="Import Ledger hardware account" backButton={<DashboardButton onClick={onDashboard} />} style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
+      <Form
+        caption="Import Ledger hardware account"
+        backButton={<DashboardButton onClick={onDashboard} />}
+        style={{border: `1px solid ${muiTheme.palette.borderColor}`}}
+      >
         <Row>
           <div style={formStyles.left}>
             <div style={formStyles.fieldName}>HD derivation path</div>
@@ -49,29 +46,25 @@ class ImportAccount extends React.Component<Props> {
           <div className={styles.row}><AddrList /></div>
         </Row>
         <Row>
-          <div className={styles.row}><Buttons onBackScreen={onBackScreen} /></div>
+          <div className={styles.row}>
+            <ButtonGroup>
+              <Button
+                label="Add Selected"
+                disabled={!selected}
+                primary={true}
+                onClick={onAddSelected}
+                icon={<AddIcon />}
+              />
+              <Button
+                label="Cancel"
+                onClick={onCancel}
+              />
+            </ButtonGroup>
+          </div>
         </Row>
       </Form>
     );
   }
 }
 
-export default connect(
-  (state, ownProps) => ({
-    hdbase: state.ledger.getIn(['hd', 'base']),
-    connected: state.ledger.get('connected'),
-  }),
-  (dispatch, ownProps) => ({
-    changeBaseHD: (hdpath: string) => {
-      dispatch(ledger.actions.setBaseHD(hdpath));
-      dispatch(ledger.actions.getAddresses());
-    },
-    init: () => dispatch(ledger.actions.getAddresses()),
-    onDashboard: () => {
-      if (ownProps.onBackScreen) {
-        return dispatch(screen.actions.gotoScreen(ownProps.onBackScreen));
-      }
-      dispatch(screen.actions.gotoScreen('home'));
-    },
-  })
-)(muiThemeable()(ImportAccount));
+export default muiThemeable()(ImportAccount);
