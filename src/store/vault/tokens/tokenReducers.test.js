@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable';
 import BigNumber from 'bignumber.js';
 import reducer from './tokenReducers';
 import ActionTypes from './actionTypes';
@@ -37,8 +38,7 @@ describe('tokenReducer', () => {
     // do
     state = reducer(state, {
       type: ActionTypes.SET_TOKENS_BALANCES,
-      accountId: '0x123456789',
-      balances: [{ tokenAddress: '0x1123', amount: '0x01'}],
+      tokenBalances: [{ accountAddress: '0x123456789', tokenAddress: '0x1123', amount: '0x01'}],
     });
 
     // assert
