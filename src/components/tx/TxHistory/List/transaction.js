@@ -6,7 +6,7 @@ import launcher from '../../../../store/launcher';
 import accounts from '../../../../store/vault/accounts';
 import wallet from '../../../../store/wallet';
 import screen from '../../../../store/wallet/screen';
-import { refreshTransaction } from '../../../../store/wallet/history/historyActions';
+import WalletHistory from '../../../../store/wallet/history';
 
 import TxView from './TxView';
 
@@ -20,12 +20,16 @@ export default connect(
     const toAccount = getAccount(ownProps.tx.get('to'));
     const fromAccount = getAccount(ownProps.tx.get('from'));
 
+    const token = state.tokens.get('tokens').find((t) => t.get('address') === ownProps.tx.get('to'));
+
+    const showFiat = !token && launcher.selectors.getChainName(state).toLowerCase() === 'mainnet';
     return {
-      showFiat: false,
+      showFiat,
       currentBlockHeight: state.network.getIn(['currentBlock', 'height']),
       tx: ownProps.tx,
       toAccount,
       fromAccount,
+      token,
       numConfirmations: state.wallet.settings.get('numConfirmations'),
     };
   },
@@ -43,7 +47,7 @@ export default connect(
     },
     refreshTx: () => {
       const hash = ownProps.tx.get('hash');
-      dispatch(refreshTransaction(hash));
+      dispatch(WalletHistory.actions.refreshTransaction(hash));
     },
   })
 )(TxView);
