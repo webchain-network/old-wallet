@@ -5,7 +5,7 @@ import { loadTokensBalances } from '../tokens/tokenActions';
 import screen from '../../wallet/screen';
 import history from '../../wallet/history';
 import launcher from '../../launcher';
-
+import network from '../../network';
 import ActionTypes from './actionTypes';
 import createLogger from '../../../utils/logger';
 
@@ -37,7 +37,7 @@ export function loadAccountBalance(address: string) {
     // Tokens
     const tokens = getState().tokens;
     if (!tokens.get('loading')) {
-      dispatch(loadTokensBalances(address));
+      dispatch(loadTokensBalances([address]));
     }
   };
 }
@@ -48,24 +48,16 @@ export function loadAccountBalance(address: string) {
 function fetchBalances(addresses: Array<string>) {
   return (dispatch, getState, api) => {
     api.geth.ext.getBalances(addresses).then((balances) => {
-      addresses.forEach((address) => {
-        if (balances[address]) {
-          dispatch({
-            type: ActionTypes.SET_BALANCE,
-            accountId: address,
-            value: balances[address],
-          });
-        }
+      dispatch({
+        type: ActionTypes.SET_BALANCES,
+        accountBalances: addresses.map((addr) => ({ accountId: addr, balance: balances[addr] })),
       });
-    });
 
-    // ERC20 Tokens
-    const tokens = getState().tokens;
-    if (!tokens.get('loading')) {
-      addresses.forEach((address) => {
-        dispatch(loadTokensBalances(address));
-      });
-    }
+      const tokens = getState().tokens;
+      if (!tokens.get('loading')) {
+        dispatch(loadTokensBalances(addresses));
+      }
+    });
   };
 }
 
@@ -104,7 +96,7 @@ export function loadAccountsList() {
         accounts: result,
       });
       dispatch(fetchHdPaths());
-      dispatch(fetchBalances(result.map((account) => account.address)));
+      return dispatch(fetchBalances(result.map((account) => account.address)));
     });
   };
 }
@@ -151,12 +143,12 @@ export function createAccount(passphrase: string, name: string = '', description
           name,
           description,
         });
+        dispatch(network.actions.loadAddressesTransactions([result]));
         dispatch(loadAccountBalance(result));
         return result;
       }).catch(screen.actions.catchError(dispatch));
   };
 }
-
 export function updateAccount(address: string, name: string, description?: string) {
   return (dispatch, getState, api) => {
     const chain = currentChain(getState());
@@ -239,7 +231,7 @@ export function sendTransaction(from: string, passphrase: string, to: ?string, g
   const passPhrase = passphrase || ''; // for HW key
   return (dispatch, getState, api) => {
     const chain = currentChain(getState());
-    getNonce(api, from)
+    return getNonce(api, from)
       .then(withNonce(originalTx))
       .then((tx) =>
         signTx(api, tx, passPhrase, chain)
@@ -306,6 +298,7 @@ export function importJson(data, name: string, description: string) {
           type: ActionTypes.ADD_ACCOUNT,
           accountId: result,
         });
+        dispatch(network.actions.loadAddressesTransactions([result]));
         dispatch(loadAccountBalance(result));
         return result;
       }
@@ -327,6 +320,7 @@ export function importMnemonic(passphrase: string, mnemonic: string, hdPath: str
           type: ActionTypes.ADD_ACCOUNT,
           accountId: result,
         });
+        dispatch(network.actions.loadAddressesTransactions([result]));
         dispatch(loadAccountBalance(result));
         return result;
       }
@@ -353,7 +347,10 @@ export function loadPendingTransactions() {
           (addrs.includes(t.to) || addrs.includes(t.from))
         );
         // TODO: dependency on wallet/history module
-        dispatch(history.actions.processPending(txes));
+        if (txes.length === 0) { return; }
+
+        dispatch(history.actions.trackTxs(txes));
+
         for (const tx of txes) {
           const disp = {
             type: ActionTypes.PENDING_BALANCE,
