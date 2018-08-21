@@ -215,7 +215,7 @@ export default connect(
       openAccount: ownProps.openAccount,
       showRepeat,
       repeatTx: ownProps.repeatTx,
-      showFiat: false,
+      showFiat: launcher.selectors.getChainName(state).toLowerCase() === 'mainnet',
       transaction: Tx,
       account,
       rates,

@@ -88,7 +88,7 @@ const Header = (props) => {
         children={
           <div style={{display: 'flex', flex: '1.5 1 0%', justifyContent: 'space-between'}}>
             <div style={styles.appBarRight}>
-              <Total />
+              <Total showFiat={showFiat} />
               <span style={{color: '#7d7d7e', fontSize: '1.5rem', padding: '0 1rem'}}>|</span>
               <BlockDisplay />
             </div>

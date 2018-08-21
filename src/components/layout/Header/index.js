@@ -11,7 +11,7 @@ export default muiThemeable()(connect(
     const tip = state.network.getIn(['sync', 'highestBlock'], -1);
     const progress = (curBlock / tip) * 100;
     const invalidNumber = Number.isNaN(progress) || (!Number.isFinite(progress));
-    const showFiat = false;
+    const showFiat = Launcher.selectors.getChainName(state).toLowerCase() === 'mainnet';
 
     return {
       network: state.network.toJS(),

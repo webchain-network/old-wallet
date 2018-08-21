@@ -181,7 +181,7 @@ export default connect(
     }
 
     return {
-      showFiat: false,
+      showFiat: launcher.selectors.getChainName(state) === 'mainnet',
       tokensBalances,
       account,
       transactions,

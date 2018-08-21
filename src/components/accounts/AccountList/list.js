@@ -49,7 +49,7 @@ AccountList.propTypes = {
 export default connect(
   (state, ownProps) => ({
     accounts: state.accounts.get('accounts', Immutable.List()),
-    showFiat: false,
+    showFiat: launcher.selectors.getChainName(state).toLowerCase() === 'mainnet',
   }),
   (dispatch, ownProps) => ({
     openAccount: (account) => {

@@ -71,11 +71,13 @@ export class Account extends React.Component {
                     <Button
                       label="Add WEB"
                       onClick={ this.onAddEtcClick }
+                      style={{background: "rgb(33, 150, 243)"}}
                     />
                     <Button
                       label="Send"
                       disabled={ !account.get('balance') }
                       onClick={ this.onSendClick }
+                      style={{background: "rgb(33, 150, 243)"}}
                     />
                   </ButtonGroup>
                 </div>
