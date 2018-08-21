@@ -63,10 +63,11 @@ describe('tokenReducer', () => {
     state = reducer(state, {
       type: ActionTypes.SET_TOKEN_BALANCE,
       accountId: 'id1',
-      token: {
+      token: fromJS({
         address: '0x2',
         decimals: '0x2',
-      },
+        symbol: 'BEC',
+      }),
       value: '0x1',
     });
 
@@ -77,11 +78,11 @@ describe('tokenReducer', () => {
     state = reducer(state, {
       type: ActionTypes.SET_TOKEN_BALANCE,
       accountId: 'id1',
-      token: {
+      token: fromJS({
         address: '0x2',
         decimals: '0x2',
         symbol: 'BEC',
-      },
+      }),
       value: '0x2',
     });
     expect(state.get('balances').get('id1').first().get('symbol')).toEqual('BEC');
