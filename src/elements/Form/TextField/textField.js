@@ -8,19 +8,6 @@ const defaultStyle = {
   lineHeight: '24px',
 };
 
-const container = {
-  boxSizing: 'border-box',
-  backgroundColor: '#fff',
-  border: '1px solid',
-  borderColor: '#DDDDDD',
-  borderRadius: '1px',
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  display: 'flex',
-  alignItems: 'center',
-};
-
-
 type Props = {
   rightIcon: Element<typeof Icon>,
   leftIcon: Element,
@@ -30,6 +17,18 @@ type Props = {
 }
 
 export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...other }: Props) => {
+  const container = {
+    boxSizing: 'border-box',
+    border: '1px solid',
+    backgroundColor: '#fff',
+    borderColor: '#DDDDDD',
+    borderRadius: '1px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
+    display: 'flex',
+    alignItems: 'center',
+  };
+
   if (other.fullWidth) {
     container.width = '100%';
   }
@@ -43,7 +42,7 @@ export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...ot
   const textFieldStyle = invalid ? {...defaultStyle, color: '#BC0000' } : defaultStyle;
   return (
     <div style={ containerStyle }>
-      { leftIcon } <ReduxFormTextField { ...other } style={{...fieldStyle, ...textFieldStyle}} />{ rightIcon }
+      { leftIcon } <ReduxFormTextField errorStyle={{bottom: '-4px'}} { ...other } style={{...fieldStyle, ...textFieldStyle}} />{ rightIcon }
     </div>
   );
 };
