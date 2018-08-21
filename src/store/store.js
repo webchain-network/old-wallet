@@ -20,29 +20,12 @@ import { readConfig, listenElectron, connecting, loadClientVersion } from './lau
 import launcherReducers from './launcher/launcherReducers';
 import walletReducers from './wallet/walletReducers';
 import deployedTokens from '../lib/deployedTokens';
-
+import getWalletVersion from '../utils/get-wallet-version';
 import createLogger from '../utils/logger';
+import reduxLogger from '../utils/redux-logger';
+import reduxMiddleware from './middleware';
 
 const log = createLogger('store');
-
-const stateTransformer = (state) => ({
-  accounts: state.accounts.toJS(),
-  addressBook: state.addressBook.toJS(),
-  tokens: state.tokens.toJS(),
-  network: state.network.toJS(),
-  launcher: state.launcher.toJS(),
-  ledger: state.ledger.toJS(),
-  form: state.form,
-  wallet: {
-    history: state.wallet.history.toJS(),
-    screen: state.wallet.screen.toJS(),
-    settings: state.wallet.settings.toJS(),
-  },
-});
-
-const loggerMiddleware = createReduxLogger({
-  stateTransformer,
-});
 
 const reducers = {
   accounts: accounts.reducer,
@@ -62,34 +45,55 @@ const reducers = {
  *
  * @param _api
  */
-export const createStore = (_api) => createReduxStore(
-  combineReducers(reducers),
-  applyMiddleware(
+export const createStore = (_api) => {
+  const storeMiddleware = [
+    reduxMiddleware.promiseCatchAll,
     thunkMiddleware.withExtraArgument(_api),
-    loggerMiddleware
-  )
-);
+  ];
+
+  if (process.env.NODE_ENV !== 'test') {
+    storeMiddleware.push(reduxLogger);
+  }
+
+  return createReduxStore(
+    combineReducers(reducers),
+    applyMiddleware(...storeMiddleware)
+  );
+};
 
 export const store = createStore(api);
 
 function refreshAll() {
-  store.dispatch(accounts.actions.loadPendingTransactions());
-  store.dispatch(history.actions.refreshTrackedTransactions());
-  store.dispatch(network.actions.loadHeight());
-  store.dispatch(accounts.actions.loadAccountsList());
+  let promises = [
+    store.dispatch(accounts.actions.loadPendingTransactions()),
+    store.dispatch(network.actions.loadHeight(false)),
+    store.dispatch(accounts.actions.loadAccountsList()),
+    store.dispatch(history.actions.refreshTrackedTransactions()),
+  ];
 
   const state = store.getState();
+
   if (state.launcher.getIn(['geth', 'type']) === 'local') {
-    store.dispatch(network.actions.loadPeerCount());
-    store.dispatch(network.actions.loadSyncing());
+    promises = promises.concat([
+      store.dispatch(network.actions.loadPeerCount()),
+      store.dispatch(network.actions.loadSyncing()),
+    ]);
   }
+
+  // Main loop that will refresh UI as needed
   setTimeout(refreshAll, intervalRates.continueRefreshAllTxRate);
+
+  return Promise.all(promises);
 }
 
 function refreshLong() {
   store.dispatch(settings.actions.getExchangeRates());
   setTimeout(refreshLong, intervalRates.continueRefreshLongRate);
 }
+
+const historyForAddress = () => {
+
+};
 
 export function startSync() {
   store.dispatch(network.actions.getGasPrice());
@@ -120,11 +124,15 @@ export function startSync() {
 
   // deployed tokens
   const known = deployedTokens[+chainId];
+
   if (known) {
     known.forEach((token) => store.dispatch(tokens.actions.addToken(token)));
   }
 
-  refreshAll();
+  refreshAll().then(() => {
+    store.dispatch(network.actions.loadAddressesTransactions(store.getState().accounts.get('accounts').map((account) => account.get('id'))));
+  });
+
   setTimeout(refreshLong, 3 * intervalRates.second);
   store.dispatch(connecting(false));
 }
@@ -133,7 +141,23 @@ export function stopSync() {
   // TODO
 }
 
-export function start() {
+function newWalletVersionCheck() {
+  getWalletVersion().then((versionDetails) => {
+    if (!versionDetails.isLatest) {
+      const params = [
+        `A new version of Webchain Wallet is available (${versionDetails.tag}).`,
+        'info',
+        20 * 1000,
+        'Update',
+        screen.actions.openLink(versionDetails.downloadLink),
+      ];
+
+      store.dispatch(screen.actions.showNotification(...params));
+    }
+  });
+}
+
+export const start = () => {
   try {
     store.dispatch(readConfig());
     store.dispatch(settings.actions.loadSettings());
@@ -142,7 +166,8 @@ export function start() {
   }
   store.dispatch(listenElectron());
   store.dispatch(screen.actions.gotoScreen('welcome'));
-}
+  newWalletVersionCheck();
+};
 
 export function waitForServices() {
   const unsubscribe = store.subscribe(() => {
