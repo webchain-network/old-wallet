@@ -83,7 +83,7 @@ class MultiCreateTransaction extends React.Component {
   }
 
   onChangeGasLimit(value) {
-    this.setTransaction('gasLimit', value || DEFAULT_GAS_LIMIT);
+    this.setTransaction(DEFAULT_GAS_LIMIT);
   }
 
   onChangeAmount(amount) {
@@ -186,7 +186,7 @@ export default connect(
     const gasPrice = state.network.get('gasPrice');
 
     const fiatRate = state.wallet.settings.get('localeRate');
-    const currency = state.wallet.settings.get('localeCurrency');
+    const currency = 'USD';
 
     const useLedger = account.get('hardware', false);
     const ledgerConnected = state.ledger.get('connected');
@@ -198,7 +198,7 @@ export default connect(
 
     return {
       amount: ownProps.amount || '0',
-      gasLimit: ownProps.gasLimit || DEFAULT_GAS_LIMIT,
+      gasLimit:  DEFAULT_GAS_LIMIT,
       token: 'WEB',
       selectedFromAccount: account.get('id'),
       getBalanceForAddress: (address, token) => {
