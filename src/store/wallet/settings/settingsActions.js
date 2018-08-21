@@ -34,7 +34,7 @@ export function getExchangeRates() {
     getRates.call().then((result) => {
       dispatch({
         type: ActionTypes.EXCHANGE_RATES,
-        rates: result,
+        rates: {'USD':result.market_data.current_price.usd},
       });
     });
   };
