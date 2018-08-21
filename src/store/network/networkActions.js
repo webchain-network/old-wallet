@@ -4,10 +4,14 @@ import BigNumber from 'bignumber.js';
 import { intervalRates } from '../../store/config';
 import createLogger from '../../utils/logger';
 import ActionTypes from './actionTypes';
+import history from '../wallet/history';
 
 const log = createLogger('networkActions');
 
-let watchingHeight = false;
+const handleFailedToFetch = (err) => {
+  if (err.message.includes('Failed to fetch')) { return; }
+  throw err;
+};
 
 export function switchChain({ chain, chainId }) {
   return (dispatch, getState) => {
@@ -20,85 +24,80 @@ export function switchChain({ chain, chainId }) {
 }
 
 export function loadHeight(watch) {
-  return (dispatch, getState, api) =>
-    api.geth.eth.getBlockNumber().then((result) => {
+  return (dispatch, getState, api) => {
+    return api.geth.eth.getBlockNumber().then((result) => {
       dispatch({
         type: ActionTypes.BLOCK,
         height: result,
       });
-      if (watch && !watchingHeight) {
-        watchingHeight = true;
-        setTimeout(() => dispatch(loadHeight(true)), intervalRates.continueLoadHeightRate);
-      }
-    });
+    }).catch(handleFailedToFetch);
+  };
 }
 
-// TODO: remove it ?
-// export function loadNetworkVersion() {
-//   return (dispatch, getState, api) =>
-//     api.geth.net.version().then((result) => {
-//       dispatch({
-//         type: ActionTypes.PEER_COUNT,
-//         id: `${parseInt(result, 10) + 60}`,
-//       });
-
-//       if (getState().launcher.get('chain').get('id') !== result) {
-//         // TODO: our full node on not expected chain - should we alarm ?
-
-//       }
-//     });
-// }
-
 export function loadPeerCount() {
-  return (dispatch, getState, api) =>
-    api.geth.net.peerCount().then((result) => {
-      if (getState().network.get('peerCount') !== convert.toNumber(result)) {
-        dispatch({
-          type: ActionTypes.PEER_COUNT,
-          peerCount: result,
-        });
-      }
+  return (dispatch, getState, api) => {
+    return api.geth.net.peerCount().then((result) => {
+      dispatch({
+        type: ActionTypes.PEER_COUNT,
+        peerCount: result,
+      });
+    }).catch(handleFailedToFetch);
+  };
+}
+
+export function loadAddressesTransactions(addresses) {
+  return (dispatch, getState, api) => {
+    const addressTransactionPromises = addresses.map((address) => {
+      return api.geth.eth.getAddressTransactions(address, 0, 0, 'tf', 'sc', -1, -1, false);
+    }).toJS();
+
+    Promise.all(addressTransactionPromises).then((transactionsByAccount) => {
+      const results = transactionsByAccount.reduce((m, r) => m.concat(r), []);
+      const uniqueTransactions = Array.from(new Set(results));
+      if (results.length === 0) { return; }
+
+      const trackedTxs = getState().wallet.history.get('trackedTransactions');
+      const untrackedResults = uniqueTransactions.filter((txHash) => {
+        const isAlreadyTracked = !trackedTxs.find((tx) => txHash === tx.get('hash'));
+        return isAlreadyTracked;
+      });
+
+      if (untrackedResults.length === 0) { return; }
+
+      return api.geth.ext.getTransactions(untrackedResults).then((txes) => {
+        return dispatch(history.actions.trackTxs(txes.map((tx) => tx.result)));
+      });
     });
+  };
 }
 
 export function loadSyncing() {
   return (dispatch, getState, api) => {
-    const repeat = getState().launcher.getIn(['geth', 'type']) === 'local';
     return api.geth.eth.getSyncing().then((result) => {
-      // const syncing = getState().network.get('sync').get('syncing');
       if (typeof result === 'object') {
-        // TODO: hz, remove it ?
-        // if (!syncing) {
-        //     dispatch(loadNetworkVersion());
-        // }
-
-        dispatch({
+        return dispatch({
           type: ActionTypes.SYNCING,
           syncing: true,
           status: result,
         });
-        if (repeat) {
-          setTimeout(() => dispatch(loadSyncing()), intervalRates.continueLoadSyncRate);
-        }
-      } else {
-        dispatch({
-          type: ActionTypes.SYNCING,
-          syncing: false,
-        });
-        setTimeout(() => dispatch(loadHeight(true)), intervalRates.continueLoadSyncRate);
       }
-    });
+
+      dispatch({
+        type: ActionTypes.SYNCING,
+        syncing: false,
+      });
+    }).catch(handleFailedToFetch);
   };
 }
 
 export function getGasPrice() {
   return (dispatch, getState, api) => {
-    api.geth.eth.gasPrice().then((result) => {
+    return api.geth.eth.gasPrice().then((result) => {
       dispatch({
         type: ActionTypes.GAS_PRICE,
         value: result,
       });
-    }).catch((error) => log.error(error));
+    }).catch(handleFailedToFetch);
   };
 }
 
