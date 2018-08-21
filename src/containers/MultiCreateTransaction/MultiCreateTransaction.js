@@ -83,7 +83,7 @@ class MultiCreateTransaction extends React.Component {
   }
 
   onChangeGasLimit(value) {
-    this.setTransaction('gasLimit', DEFAULT_GAS_LIMIT);
+    this.setTransaction('gasLimit', value || DEFAULT_GAS_LIMIT);
   }
 
   onChangeAmount(amount) {
@@ -130,10 +130,10 @@ class MultiCreateTransaction extends React.Component {
             amount={this.state.transaction.amount}
             gasLimit={this.state.transaction.gasLimit}
             txFee={this.props.getTxFeeForGasLimit(this.state.transaction.gasLimit)}
-            txFeeFiat={null}
+            txFeeFiat={this.props.getTxFeeFiatForGasLimit(this.state.transaction.gasLimit)}
 
             balance={this.props.getBalanceForAddress(this.state.transaction.from, this.state.transaction.token)}
-            fiatBalance={null}
+            fiatBalance={this.props.getFiatForAddress(this.state.transaction.from, this.state.transaction.token)}
 
             currency={this.props.currency}
             tokenSymbols={this.props.tokenSymbols}
@@ -186,7 +186,7 @@ export default connect(
     const gasPrice = state.network.get('gasPrice');
 
     const fiatRate = state.wallet.settings.get('localeRate');
-    const currency = '';
+    const currency = state.wallet.settings.get('localeCurrency');
 
     const useLedger = account.get('hardware', false);
     const ledgerConnected = state.ledger.get('connected');
@@ -222,7 +222,7 @@ export default connect(
         return newBalance.getFiat(fiatRate).toString();
       },
       getTxFeeForGasLimit: (gasLimit) => new Wei(gasPrice.mul(gasLimit).value()).getEther().toString(),
-      getTxFeeFiatForGasLimit: (gasLimit) => null,
+      getTxFeeFiatForGasLimit: (gasLimit) => new Wei(gasPrice.mul(gasLimit).value()).getFiat(fiatRate).toString(),
       currency,
       gasPrice,
       tokenSymbols,
