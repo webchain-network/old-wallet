@@ -49,7 +49,7 @@ export function loadAddressesTransactions(addresses) {
   return (dispatch, getState, api) => {
     const addressTransactionPromises = addresses.map((address) => {
       return api.geth.eth.getAddressTransactions(address, 0, 0, 'tf', 'sc', -1, -1, false);
-    }).toJS();
+    });
 
     Promise.all(addressTransactionPromises).then((transactionsByAccount) => {
       const results = transactionsByAccount.reduce((m, r) => m.concat(r), []);
