@@ -6,7 +6,8 @@ import { fromJS } from 'immutable';
 import { Wei, convert } from 'emerald-js';
 import { etherToWei } from 'lib/convert';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import { CreateTransaction, Page } from 'emerald-js-ui';
+import CreateTransaction  from '../../components/tx/CreateTransaction';
+import {Page} from 'emerald-js-ui';
 import { Back } from 'emerald-js-ui/lib/icons3';
 import { connect } from 'react-redux';
 import accounts from 'store/vault/accounts';
@@ -115,10 +116,6 @@ class MultiCreateTransaction extends React.Component {
       transaction: this.state.transaction,
       allTokens: this.props.allTokens,
     });
-  }
-
-  renderWithExtraParams(component){
-    
   }
 
   getPage() {
