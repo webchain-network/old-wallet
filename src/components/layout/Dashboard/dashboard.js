@@ -22,37 +22,20 @@ const Dashboard = (props) => {
   const { connecting, statusMessage } = props;
 
   if (connecting) {
-    document.body.style.backgroundColor = '#141417';
-    let messageBlock = <span style={styles.statusMessage}><CircularProgress size={25} /> {statusMessage}</span>;
-
-    const body = <div>
-      <Row center="xs">
-        <Col xs={12}>
-          <img src={logoText} style={{height: '42px'}} />
-        </Col>
-      </Row>
-      <Row center="xs" style={{paddingTop: '40px', height: '40px'}}>
-        <Col xs>
-          {messageBlock}
-        </Col>
-      </Row>
-    </div>;
-
     return (
       <div>
-        <Grid style={{maxWidth: '1150px', backgroundColor: '#141417'}}>
-          <Row center="xs" middle="xs" style={{paddingTop: '6%'}}>
-            <Col xs>
-              <LogoIcon width="250" height="250" />
+        <Grid>
+          <Row center="xs">
+            <Col xs={12}>
+              <CircularProgress size={50} />
+              <div style={styles.statusMessage}>{statusMessage}</div>
             </Col>
           </Row>
-          {body}
         </Grid>
       </div>
     );
   }
 
-  document.body.style.backgroundColor = theme.palette.canvasColor;
   return (
     <div>
       <Header />
