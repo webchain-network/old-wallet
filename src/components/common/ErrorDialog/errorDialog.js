@@ -29,7 +29,7 @@ const ErrorDialog = ({ open, error, message, handleClose, handleSubmit }) => {
       onRequestClose={handleClose}
     >
       <p>
-        <strong>ERROR:</strong> An unexpected error has occured. Please restart & update emerald wallet.
+        <strong>ERROR:</strong> An unexpected error has occured. Please restart & update Webchain wallet.
       </p>
       <p>
         The error was: {message}
@@ -62,7 +62,7 @@ export default connect(
       const title = encodeURIComponent(error.message);
       const body = encodeURIComponent(`\`\`\` \n${error.stack}\n \`\`\``);
 
-      const buttonLink = `https://github.com/ETCDEVTeam/emerald-wallet/issues/new?title=${title}&body=${body}`;
+      const buttonLink = `https://github.com/webchain-network/webchain-wallet/issues/new?title=${title}&body=${body}`;
 
       dispatch(screen.actions.openLink(buttonLink));
     },
