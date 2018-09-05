@@ -160,7 +160,9 @@ class MultiCreateTransaction extends React.Component {
             onChangePassword={this.onChangePassword}
             useLedger={this.props.useLedger}
             onSubmit={this.onSubmitSignTxForm}
-            onCancel={this.props.onCancel} />);
+            onCancel={this.props.onCancel}
+          />
+        );
       case PAGES.DETAILS:
         return (
           <TransactionShow hash={this.state.transaction.hash} accountId={this.state.transaction.from}/>
