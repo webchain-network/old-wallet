@@ -1,36 +1,62 @@
 import { fromJS } from 'immutable';
 import { EthRpc, JsonRpc } from 'emerald-js';
-import { refreshTrackedTransactions } from './actions';
+import { processPending, refreshTransaction } from './actions';
 import { loadTransactions } from './historyStorage';
 import ActionTypes from './actionTypes';
 
 
-describe('historyActions/refreshTrackedTransactions', () => {
+describe('historyActions/refreshTransaction', () => {
   const getState = () => ({
-    network: fromJS({
-      currentBlock: {
-        height: 100,
-      },
-    }),
     wallet: {
-      settings: fromJS({
-        numConfirmations: 10,
-      }),
       history: fromJS({
         chainId: 'morden',
-        trackedTransactions: [{numConfirmations: 0, hash: '0x123'}],
+        trackedTransactions: [],
       }),
     },
   });
 
   it('should call eth.getTransaction rpc endpoint', () => {
-    const mockGetTransactions = jest.fn(() => Promise.resolve([]));
-    const ethRpc = { geth: { ext: { getTransactions: mockGetTransactions } } };
+    const fakeTransport = {
+      request: () => Promise.resolve({
+        result: null,
+      }),
+    };
+
+    const ethRpc = new EthRpc(new JsonRpc(fakeTransport));
     const dispatch = jest.fn();
 
     const hash = '0x123';
-    return refreshTrackedTransactions(hash)(dispatch, getState, ethRpc).then(() => {
-      expect(mockGetTransactions).toHaveBeenCalled();
+    return refreshTransaction(hash)(dispatch, getState, { geth: ethRpc }).then(() => {
+      expect(dispatch).toBeCalledWith({
+        type: ActionTypes.TRACKED_TX_NOTFOUND,
+        hash,
+      });
     });
+  });
+});
+
+describe('historyActions/processPending', () => {
+  it('should persist txs', () => {
+    const getState = () => {
+      return {
+        wallet: {
+          history: fromJS({
+            trackedTransactions: [{hash: '0x123'}],
+            chainId: 1,
+          }),
+        },
+      };
+    };
+    const dispatch = jest.fn();
+
+    const before = loadTransactions('chain-1-trackedTransactions');
+    expect(before).toHaveLength(0);
+
+    // do
+    processPending([{}])(dispatch, getState);
+
+    // assert
+    const after = loadTransactions('chain-1-trackedTransactions');
+    expect(after).toHaveLength(1);
   });
 });
