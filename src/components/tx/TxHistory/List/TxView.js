@@ -76,7 +76,6 @@ export const TxView = (props) => {
     color: muiTheme.palette.secondaryTextColor,
   };
   let symbol = 'WEB';
-  let balance = txValue;
 
   if (token) {
     const decodedTxData = decoder.decodeData(tx.get('data'));
@@ -96,7 +95,7 @@ export const TxView = (props) => {
       <TableRowColumn style={{ ...tables.mediumStyle, paddingLeft: '0', ...styles.tablePadding }}>
         {txValue && <AccountBalance
           symbol="WEB"
-          showFiat={ showFiat }
+          showFiat={ true }
           balance={ txValue }
           onClick={ openTx }
           withAvatar={ false }
