@@ -120,32 +120,30 @@ export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
  *
  * @param address
  */
-export function loadTokensBalances(addresses: string) {
+export function loadTokensBalances(address: string) {
   return (dispatch: any, getState: any, api: any) => {
     const tokens = getState().tokens.get('tokens').toJS();
     // build batch call request
-    const batch = [];
-    tokens.forEach((token) => addresses.forEach((addr) => {
-      batch.push({
-        id: `${addr}+${token.address}`,
+    const batch = tokens.map((token) => {
+      return {
+        id: token.address,
         to: token.address,
-        data: tokenContract.functionToData('balanceOf', { _owner: addr }),
-      });
-    }));
+        data: tokenContract.functionToData('balanceOf', { _owner: address }),
+      };
+    });
 
     return api.geth.ext.batchCall(batch).then((results) => {
-      const tokenBalances = [];
-      tokens.forEach((token) => addresses.forEach((addr) => {
-        tokenBalances.push({
+      const balances = tokens.map((token) => {
+        return {
           tokenAddress: token.address,
-          accountAddress: addr,
-          amount: results[`${addr}+${token.address}`].result,
-        });
-      }));
+          amount: results[token.address].result,
+        };
+      });
 
       dispatch({
         type: ActionTypes.SET_TOKENS_BALANCES,
-        tokenBalances,
+        accountId: address,
+        balances,
       });
     });
   };
