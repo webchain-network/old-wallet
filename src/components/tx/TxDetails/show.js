@@ -51,14 +51,14 @@ export const TransactionShow = (props: Props) => {
 
   return (
     <Page title="Transaction Details" leftIcon={ <Back onClick={() => goBack(account)} /> }>
-      {/* <Row>
+      <Row>
         <div style={styles.left}>
           <div style={fieldNameStyle}>Date</div>
         </div>
         <div style={styles.right}>
           {transaction.get('timestamp') ? toDate(transaction.get('timestamp')) : null}
         </div>
-      </Row> */}
+      </Row>
       <Row>
         <div style={styles.left}>
           <div style={fieldNameStyle}>Value</div>
