@@ -5,7 +5,7 @@ import { fromJS } from 'immutable';
 import ledger from '../../../store/ledger';
 import screen from '../../../store/wallet/screen';
 import Accounts from '../../../store/vault/accounts';
-import ImportAccount from './ImportAccount';
+import ImportAccount from './importAccount';
 import WaitDialog from '../WaitDialog';
 
 const Container = (props) => {

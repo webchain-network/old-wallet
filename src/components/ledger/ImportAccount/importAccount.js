@@ -9,7 +9,7 @@ import { Form, Row, styles as formStyles } from 'elements/Form';
 import AddrList from './addrlist';
 import Pager from './pager';
 
-import styles from './ImportAccount.scss';
+import styles from './importAccount.scss';
 
 type Props = {
   onInit: Function,
