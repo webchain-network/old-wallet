@@ -1,6 +1,6 @@
 const { spawn, spawnSync } = require('child_process');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 const os = require('os');
 
 const { checkExists } = require('../utils');
@@ -111,13 +111,11 @@ class LocalConnector {
             if (err1) {
               resolve();
             } else {
-              fs.copy(emeraldHomeDir, webchainHomeDir, (err2) => {
-                if (err2) {
-                  log.error(err2);
-                } else {
-                  resolve();
-                }
-              });
+              fs.copy(emeraldHomeDir, webchainHomeDir).then(() => {
+                resolve();
+              }, (err2) => {
+                log.error(err2);
+              }); 
             }
           });
         } else {
