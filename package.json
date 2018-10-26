@@ -5,7 +5,7 @@
     "email": "support@webchain.network"
   },
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.0-2",
   "description": "Webchain - Webchain Network Wallet",
   "main": "./electron/main.js",
   "moduleRoots": [
