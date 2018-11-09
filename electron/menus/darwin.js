@@ -4,7 +4,7 @@ const createAboutPage = require('../about');
 
 module.exports = function (window) {
   return [{
-    label: 'Webchain',
+    label: 'Emerald',
     submenu: [
       {
         label: 'About',

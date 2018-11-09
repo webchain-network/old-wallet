@@ -20,7 +20,6 @@ export const TextField = ({ rightIcon, error, style, leftIcon, fieldStyle, ...ot
   const container = {
     boxSizing: 'border-box',
     border: '1px solid',
-    backgroundColor: '#fff',
     borderColor: '#DDDDDD',
     borderRadius: '1px',
     paddingLeft: '10px',

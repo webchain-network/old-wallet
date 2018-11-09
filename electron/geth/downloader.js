@@ -6,7 +6,7 @@ const { DefaultGeth } = require('./config');
 
 function newGethDownloader(notify, dir) {
   const suffix = os.platform() === 'win32' ? '.exe' : '';
-  const fileName = `webchaind${suffix}`;
+  const fileName = `geth${suffix}`;
   const config = getPlatformConfig(DefaultGeth);
 
   const downloader = new Downloader(config, fileName, dir, signers.publicKeys);

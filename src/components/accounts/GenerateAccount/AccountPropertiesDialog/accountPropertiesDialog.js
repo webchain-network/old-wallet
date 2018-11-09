@@ -38,7 +38,7 @@ class AccountPropertiesDialog extends React.Component {
               <div style={ formStyles.fieldName }>Account name</div>
             </div>
             <div style={ formStyles.right }>
-              <div style={{ width: '100%', backgroundColor: '#fff' }}>
+              <div style={{ width: '100%' }}>
                 <Input
                   onChange={ this.onInputChange }
                   hintText="if needed"

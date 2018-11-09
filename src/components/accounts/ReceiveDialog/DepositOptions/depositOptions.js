@@ -17,7 +17,8 @@ class DepositOptions extends React.Component {
     const { defaultValue } = this.props;
     return (
       <ToggleButtonGroup name="options" type="radio" defaultValue={ 1 }>
-        {/* <ToggleButton value={ 1 }>WEB</ToggleButton> */}
+        <ToggleButton value={ 1 }>ETC</ToggleButton>
+        <Button onClick={this.openShapeshift.bind(this)}>ShapeShift</Button>
       </ToggleButtonGroup>
     );
   }

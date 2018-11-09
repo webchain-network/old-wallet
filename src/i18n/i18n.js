@@ -11,7 +11,7 @@ const resBundle = require(
 
 i18n
   // .use(Cache)
-  // .use(LanguageDetector)
+  .use(LanguageDetector)
   .init({
     fallbackLng: 'en-US',
 

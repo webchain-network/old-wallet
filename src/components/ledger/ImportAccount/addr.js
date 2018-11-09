@@ -59,7 +59,7 @@ const Addr = ({ addr, alreadyAdded, selectedValue, onSelected, ...otherProps }) 
       <TableRowColumn style={tables.mediumStyle}>{ addr.get('hdpath') }</TableRowColumn>
       <TableRowColumn style={tables.mediumStyle}>
         {balance && <AccountBalance
-          symbol="WEB"
+          symbol="ETC"
           balance={ balance }
           showFiat={ true }
           withAvatar={ false }

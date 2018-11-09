@@ -1,5 +1,5 @@
 language: node_js
-node_js: 6
+node_js: 8
 os:
   - linux
 env:
@@ -60,6 +60,8 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
+    - build-essential
+    - libudev-dev
     - libusb-1.0-0
     - libusb-1.0-0-dev
     # - gcc-multilib

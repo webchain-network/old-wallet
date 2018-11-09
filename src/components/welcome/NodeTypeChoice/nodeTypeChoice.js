@@ -5,16 +5,15 @@ import cx from 'classnames';
 import { Button, Card } from 'emerald-js-ui';
 
 import { useRpc } from '../../../store/launcher/launcherActions';
-import { Node1, MainnetLocal } from '../../../lib/rpc/gethProviders';
+import { GastrackerMainnet, MainnetLocal } from '../../../lib/rpc/gethProviders';
 import FullNodeLogo from './fullNodeLogo';
 import RemoteNodeLogo from './remoteNodeLogo';
 
 import classes from './nodeTypeChoice.scss';
-import theme from '../../../theme.json';
 
 const NodeTypeChoice = ({ useFullNode, useRemoteNode }) => {
   return (
-    <Card style={{backgroundColor: theme.palette.canvasColor}}>
+    <Card>
       <div className={ classes.container }>
         <div className={ classes.title }>Select how you're going to connect to the network</div>
         <div className={ classes.optionsContainer }>
@@ -63,7 +62,7 @@ export default connect(
       dispatch(useRpc(MainnetLocal));
     },
     useRemoteNode: () => {
-      dispatch(useRpc(Node1));
+      dispatch(useRpc(GastrackerMainnet));
     },
   })
 )(NodeTypeChoice);

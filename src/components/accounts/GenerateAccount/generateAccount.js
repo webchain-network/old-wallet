@@ -149,7 +149,7 @@ class GenerateAccount extends React.Component<Props, State> {
     const { t, backLabel, muiTheme } = this.props;
     if (!page) { return null; }
     return (
-      <div>
+      <div style={{border: `1px solid ${muiTheme.palette.borderColor}`}} >
         {this.getPage()}
       </div>
     );

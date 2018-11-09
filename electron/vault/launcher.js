@@ -1,6 +1,6 @@
 const { spawn, spawnSync } = require('child_process');
 const path = require('path');
-const fs = require('fs-extra');
+const fs = require('fs');
 const os = require('os');
 
 const { checkExists } = require('../utils');
@@ -15,7 +15,7 @@ class LocalConnector {
 
   emeraldExecutable() {
     const suffix = os.platform() === 'win32' ? '.exe' : '';
-    return path.resolve(path.join(this.bin, `webchain-cli${suffix}`));
+    return path.resolve(path.join(this.bin, `emerald${suffix}`));
   }
 
   // It would be nice to refactor so we can reuse functions
@@ -30,10 +30,10 @@ class LocalConnector {
   migrateIfNotExists() {
     return new Promise((resolve, reject) => {
       const bin = this.emeraldExecutable();
-      log.debug('Checking if webchain exists:', bin);
+      log.debug('Checking if emerald exists:', bin);
       checkExists(bin).then((exists) => {
         if (!exists) {
-          log.debug('webchain-cli not found');
+          log.debug('emerald not found');
           // check that included binary path exists
           // if it does exist, move it to this.bin/
           const cargoEmeraldPath = path.join(process.env.HOME, '.cargo', 'bin', 'emerald');
@@ -60,7 +60,7 @@ class LocalConnector {
           });
         } else {
           // Assuming the emerald found is valid (perms, etc).
-          log.debug('OK: webchain exists: ', bin);
+          log.debug('OK: emerald exists: ', bin);
           resolve(true);
         }
       });
@@ -100,31 +100,6 @@ class LocalConnector {
     });
   }
 
-  migrateToWebchainDir() {
-    return new Promise((resolve, reject) => {
-      const appData = (process.env.APPDATA || os.homedir());
-      const emeraldHomeDir = path.join(appData, '.emerald');
-      const webchainHomeDir = path.join(appData, '.webchain-vault');
-      fs.access(webchainHomeDir, fs.constants.F_OK, (err) => {
-        if (err) {
-          fs.access(emeraldHomeDir, fs.constants.F_OK, (err1) => {
-            if (err1) {
-              resolve();
-            } else {
-              fs.copy(emeraldHomeDir, webchainHomeDir).then(() => {
-                resolve();
-              }, (err2) => {
-                log.error(err2);
-              }); 
-            }
-          });
-        } else {
-          resolve();
-        }
-      });
-    });
-  }
-
   start() {
     return new Promise((resolve, reject) => {
       const bin = this.emeraldExecutable();
@@ -136,10 +111,8 @@ class LocalConnector {
           const options = [
             '-v',
             'server',
-            '127.0.0.1',
-            '20224',
           ];
-          log.debug(`Webchain-cli bin: ${bin}, args: ${options}`);
+          log.debug(`Emerald bin: ${bin}, args: ${options}`);
           this.proc = spawn(bin, options);
           resolve(this.proc);
         }
@@ -149,9 +122,9 @@ class LocalConnector {
 
   launch() {
     return new Promise((resolve, reject) => {
-      log.info('Starting Webchain Connector...');
+      log.info('Starting Emerald Connector...');
       this.migrateIfNotExists()
-        .then(this.migrateToWebchainDir.bind(this))
+        .then(this.importKeyFiles.bind(this))
         .then(this.start.bind(this))
         .then(resolve)
         .catch(reject);
@@ -170,7 +143,7 @@ class LocalConnector {
         this.proc = null;
       });
       this.proc.on('error', (err) => {
-        log.error('Failed to shutdown Webchain Connector', err);
+        log.error('Failed to shutdown Emerald Connector', err);
         reject(err);
       });
       this.proc.kill();

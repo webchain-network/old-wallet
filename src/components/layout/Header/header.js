@@ -5,7 +5,6 @@ import SyncWarning from '../../../containers/SyncWarning';
 import Status from './Status';
 import Total from './Total';
 import { separateThousands } from '../../../lib/convert';
-import logoText from '../../../logoText.png';
 
 const styles = {
   appBarRight: {
@@ -45,7 +44,8 @@ const Header = (props) => {
   const EmeraldTitle = () => {
     return (
       <div>
-        <img src={logoText} style={{height: '1.4rem'}}/>
+        <span style={{color: muiTheme.palette.primary1Color}}>Emerald </span>
+        <span style={{color: muiTheme.palette.secondaryTextColor}}>Wallet</span>
       </div>
     );
   };
@@ -71,30 +71,27 @@ const Header = (props) => {
     <FlatButton
       hoverColor="transparent"
       onTouchTap={ openSettings }
-      style={{color: muiTheme.palette.primary1Color}}
+      style={{color: muiTheme.palette.secondaryTextColor}}
       label="Settings"
       labelStyle={styles.buttons.label}
-      icon={<SettingsIcon style={{color: muiTheme.palette.primary1Color}}/>}
+      icon={<SettingsIcon style={{color: muiTheme.palette.secondaryTextColor}}/>}
     />);
 
   return (
     <div>
       <AppBar
         title={<EmeraldTitle />}
-        style={{backgroundColor: '#141417', borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
+        style={{backgroundColor: muiTheme.palette.alternateTextColor, borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
+        titleStyle={{fontSize: '16px'}}
         showMenuIconButton={false}
         iconStyleRight={styles.appBarRight}
         zDepth={0}
-        children={
-          <div style={{display: 'flex', flex: '1.5 1 0%', justifyContent: 'space-between'}}>
-            <div style={styles.appBarRight}>
-              <Total showFiat={showFiat} />
-              <span style={{color: '#7d7d7e', fontSize: '1.5rem', padding: '0 1rem'}}>|</span>
-              <BlockDisplay />
-            </div>
-            <div style={styles.appBarRight}>
-              <Status />
-            </div>
+        iconElementRight={
+          <div style={styles.appBarRight}>
+            <Total showFiat={showFiat} />
+            <BlockDisplay />
+            <Status />
+            <SettingsButton />
           </div>
         }
       />

@@ -72,18 +72,18 @@ export class AccountShow extends React.Component {
                     showFiat={ showFiat }
                     coinsStyle={{fontSize: '20px', lineHeight: '24px'}}
                     balance={ balance }
-                    symbol="WEB"
+                    symbol="ETC"
                   />
                 </div>
               </Row>
 
-              {/* <Row>
+              <Row>
                 <div style={ styles.left }>
                 </div>
                 <div style={ styles.right }>
                   <TokenBalances balances={ tokensBalances }/>
                 </div>
-              </Row> */}
+              </Row>
 
               <Row>
                 <div style={styles.left}>
@@ -124,7 +124,7 @@ export class AccountShow extends React.Component {
                     <ButtonGroup>
                       <Button
                         primary
-                        label="Add WEB"
+                        label="Deposit"
                         onClick={ showReceiveDialog }
                       />
                       <Button

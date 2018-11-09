@@ -2,10 +2,10 @@ export const Networks = [
   {
     geth: {
       type: 'local',
-      url: 'http://127.0.0.1:39573',
+      url: 'http://127.0.0.1:8545',
     },
     chain: {
-      id: 101,
+      id: 61,
       name: 'mainnet',
     },
     title: 'Mainnet',
@@ -14,26 +14,50 @@ export const Networks = [
   {
     geth: {
       type: 'remote',
-      url: 'http://node1.webchain.network:39573',
+      url: 'https://web3.gastracker.io',
     },
     chain: {
-      id: 101,
+      id: 61,
       name: 'mainnet',
     },
-    title: 'Mainnet (Node 1)',
-    id: 'node1/mainnet',
+    title: 'Mainnet (gastracker.io)',
+    id: 'gastracker/mainnet',
   },
   {
     geth: {
       type: 'remote',
-      url: 'http://node2.webchain.network:39573',
+      url: 'https://mew.epool.io/',
     },
     chain: {
-      id: 101,
+      id: 61,
       name: 'mainnet',
     },
-    title: 'Mainnet (Node 2)',
-    id: 'node2/mainnet',
+    title: 'Mainnet (epool.io)',
+    id: 'epool/mainnet',
+  },
+  {
+    geth: {
+      type: 'local',
+      url: 'http://127.0.0.1:8545',
+    },
+    chain: {
+      id: 62,
+      name: 'morden',
+    },
+    title: 'Morden Testnet',
+    id: 'local/morden',
+  },
+  {
+    geth: {
+      type: 'remote',
+      url: 'https://web3.gastracker.io/morden',
+    },
+    chain: {
+      id: 62,
+      name: 'morden',
+    },
+    title: 'Morden (gastracker.io)',
+    id: 'remote/morden',
   },
 ];
 

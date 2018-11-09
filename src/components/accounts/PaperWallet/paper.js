@@ -22,7 +22,7 @@ export const PaperWallet = (props) => {
 
   const Wallet = (
     <div className={styles.container}>
-      <div className={styles.title}>MY WEBCHAIN WALLET</div>
+      <div className={styles.title}>MY EMERALD WALLET</div>
       <div className={styles.main}>
         <div className={styles.addressBlock}>
           <div>

@@ -17,7 +17,7 @@ const Render = ({ rpcType, terms }) => {
     activeStep = 1;
     step = <NodeTypeChoice/>;
   } else {
-    activeStep = 1;
+    activeStep = 2;
     step = <OpenWallet/>;
   }
 
@@ -43,7 +43,7 @@ const Render = ({ rpcType, terms }) => {
       <Row>
         <Col xs={12}>
           <Stepper activeStep={activeStep}>
-            { steps.map((s, idx) => s) }
+            { steps }
           </Stepper>
         </Col>
       </Row>

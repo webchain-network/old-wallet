@@ -1,10 +1,13 @@
 // @flow
+import {convert} from 'emerald-js';
+
 import createLogger from '../../../utils/logger';
 import type { Transaction } from './types';
 import ActionTypes from './actionTypes';
 import { address as isAddress} from '../../../lib/validators';
 import { storeTransactions, loadTransactions } from './historyStorage';
-import { allTrackedTxs, selectByHash } from './selectors';
+import { allTrackedTxs } from './selectors';
+
 
 const log = createLogger('historyActions');
 const txStoreKey = (chainId) => `chain-${chainId}-trackedTransactions`;
@@ -20,29 +23,36 @@ function loadPersistedTransactions(state): Array<Transaction> {
   return loadTransactions(txStoreKey(currentChainId(state)));
 }
 
-export function trackTx(tx) {
-  return (dispatch, getState) => {
-    persistTransactions(getState());
-    return dispatch(trackTxAction(tx));
-  };
+function updateAndTrack(dispatch, getState, api, txs) {
+  const pendingTxs = txs.filter((tx) => !tx.blockNumber);
+  const nonPendingTxs = txs.filter((tx) => pendingTxs.indexOf(tx) === -1);
+
+  let returnPromise;
+
+  if (pendingTxs.length !== 0) {
+    dispatch({type: ActionTypes.TRACK_TXS, txs: pendingTxs});
+  }
+
+  if (nonPendingTxs.length !== 0) {
+    const blockNumbers = nonPendingTxs.map((tx) => tx.blockNumber);
+    returnPromise = api.geth.ext.getBlocksByNumbers(blockNumbers).then((blocks) => {
+      return nonPendingTxs.map((tx) => ({
+        ...tx,
+        timestamp: blocks.find(({ hash }) => hash === tx.blockHash).timestamp,
+      }));
+    })
+      .then((transactions) => {
+        dispatch({type: ActionTypes.TRACK_TXS, txs: transactions});
+      });
+  }
+
+  persistTransactions(getState());
+  return returnPromise;
 }
 
-export function trackTxAction(tx) {
-  return {
-    type: ActionTypes.TRACK_TX,
-    tx,
-  };
-}
 
-export function processPending(transactions: Array<any>) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: ActionTypes.PENDING_TX,
-      txList: transactions,
-    });
-    persistTransactions(getState());
-  };
-}
+export function trackTx(tx) { return (...args) => updateAndTrack(...args, [tx]); }
+export function trackTxs(txs) { return (...args) => updateAndTrack(...args, txs); }
 
 export function init(chainId: number) {
   return (dispatch, getState) => {
@@ -63,85 +73,53 @@ export function init(chainId: number) {
   };
 }
 
-export function refreshTransactions(hashes: Array<string>) {
-  return (dispatch, getState, api) => {
-    api.geth.ext.getTransactions(hashes).then((txs) => {
-      const found = [];
-      txs.forEach((t) => {
-        if (t.result && typeof t.result === 'object') {
-          found.push(t.result);
-        }
-      });
+const txUnconfirmed = (state, tx) => {
+  const currentBlock = state.network.get('currentBlock').get('height');
+  const txBlockNumber = tx.get('blockNumber');
 
-      dispatch({
-        type: ActionTypes.UPDATE_TXS,
-        transactions: found,
-      });
+  if (!txBlockNumber) {
+    return true;
+  }
 
-      // update timestamps
-      const state = getState();
-      found.forEach((t) => {
-        const tx = selectByHash(state, t.hash);
-        if (tx && !tx.get('timestamp')) {
-          api.geth.eth.getBlock(tx.get('blockNumber'))
-            .then((block) => dispatch({
-              type: ActionTypes.UPDATE_TX,
-              tx: { hash: t.hash, timestamp: block.timestamp },
-            }));
-        }
-      });
-    });
-  };
-}
+  const numConfirmsForTx = txBlockNumber - currentBlock;
 
-export function refreshTransaction(hash: string) {
-  return (dispatch, getState, api) =>
-    api.geth.eth.getTransaction(hash).then((result) => {
-      if (!result) {
-        log.info(`No tx for hash ${hash}`);
-        dispatch({
-          type: ActionTypes.TRACKED_TX_NOTFOUND,
-          hash,
-        });
-      } else if (typeof result === 'object') {
-        dispatch({
-          type: ActionTypes.UPDATE_TX,
-          tx: result,
-        });
-
-        /** TODO: Check for input data **/
-        if ((result.creates !== undefined) && (isAddress(result.creates) === undefined)) {
-          dispatch({
-            type: 'CONTRACT/UPDATE_CONTRACT',
-            tx: result,
-            address: result.creates,
-          });
-        }
-      }
-      persistTransactions(getState());
-    });
-}
+  const requiredConfirms = state.wallet.settings.get('numConfirmations');
+  return requiredConfirms < numConfirmsForTx;
+};
 
 /**
  * Refresh only tx with totalRetries <= 10
  */
 export function refreshTrackedTransactions() {
-  return (dispatch, getState) => {
-    const hashes = allTrackedTxs(getState())
+  return (dispatch, getState, api) => {
+    const state = getState();
+
+    const hashes = allTrackedTxs(state)
       .filter((tx) => tx.get('totalRetries', 0) <= 10)
+      .filter((tx) => txUnconfirmed(state, tx))
       .map((tx) => tx.get('hash'));
 
-    chunk(hashes.toArray(), 20).forEach((group) => dispatch(refreshTransactions(group)));
-  };
-}
+    if (hashes.size === 0) {
+      return;
+    }
 
-/**
- * Split an array into chunks of a given size
- */
-function chunk(array, chunkSize) {
-  const groups = [];
-  for (let i = 0; i < array.length; i += chunkSize) {
-    groups.push(array.slice(i, i + chunkSize));
-  }
-  return groups;
+    return api.geth.ext.getTransactions(hashes).then((results) => {
+      const transactions = results.map((r) => r.result).filter((tx) => tx && tx.blockNumber);
+
+      if (transactions.length === 0) { return; }
+
+      return api.geth.ext.getBlocksByNumbers(transactions.map((tx) => tx.blockNumber)).then((blocks) => {
+        return transactions.map((tx) => ({
+          ...tx,
+          timestamp: blocks.find(({ hash }) => hash === tx.blockHash).timestamp,
+        }));
+      });
+    }).then((transactions) => {
+      if (!transactions || transactions.length === 0) { return; }
+
+      dispatch({ type: ActionTypes.UPDATE_TXS, transactions });
+
+      return persistTransactions(getState());
+    });
+  };
 }

@@ -10,8 +10,8 @@ import { Networks, findNetwork } from '../../../../lib/networks';
 class ExtendedMenuItem extends React.Component {
   render() {
     const {muiTheme, checked, onClick, net} = this.props;
-    const networkType = net.geth.type === 'local' ? 'Full Node' : 'Light Node';
-    const textColor = checked ? muiTheme.palette.primary1Color : muiTheme.palette.alternateTextColor;
+    const networkType = net.geth.type === 'local' ? 'Full Node' : 'Remote Node';
+    const textColor = checked ? muiTheme.palette.primary1Color : muiTheme.palette.secondaryTextColor;
     return (
       <div
         onClick={onClick}
@@ -42,7 +42,7 @@ function getStyles(props) {
       height: muiTheme.spacing.desktopToolbarHeight, /* gagarin55: this is extremely important hack to align DropDownMenu vertically */
     },
     label: {
-      color: muiTheme.palette.primary1Color,
+      color: muiTheme.palette.secondaryTextColor,
       fontSize: '16px',
       paddingRight: '10px',
     },
@@ -56,12 +56,12 @@ class NetworkSelectorRender extends React.Component {
     if (connecting) { // shanejonas: the wrapping span's here are to get around some coloring issues with material-ui's dropdown + iconbutton
       icon =
         <span>
-          <NetworkDisconnectedIcon style={{color: muiTheme.palette.alternateTextColor}}/>
+          <NetworkDisconnectedIcon style={{color: muiTheme.palette.secondaryTextColor}}/>
         </span>;
     } else {
       icon =
         <span>
-          <NetworkIcon style={{color: muiTheme.palette.primary1Color}}/>
+          <NetworkIcon style={{color: muiTheme.palette.secondaryTextColor}}/>
         </span>;
     }
 
@@ -82,11 +82,13 @@ class NetworkSelectorRender extends React.Component {
         style={ styles.main }
         underlineStyle={{ display: 'none' }}
         menuStyle={{
-          backgroundColor: '#141417',
+          border: `1px solid ${muiTheme.palette.borderColor}`,
+          backgroundColor: muiTheme.palette.alternateTextColor,
           color: muiTheme.palette.secondaryTextColor,
           paddingTop: '12px',
           paddingBottom: '12px',
           maxWidth: '280px',
+          boxShadow: `${muiTheme.palette.secondaryTextColor} 0px 0px 50px 0px`,
         }}
         iconStyle={{left: '-40px', marginLeft: '20px', stroke: muiTheme.palette.secondaryTextColor, color: muiTheme.palette.secondaryTextColor}}
         iconButton={icon}

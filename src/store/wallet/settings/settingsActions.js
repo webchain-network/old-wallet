@@ -20,7 +20,7 @@ export function loadSettings() {
         show: showHiddenAccounts,
       });
 
-      const numConfirmations = 5;
+      const numConfirmations = localStorage.getItem('numConfirmations') || 12;
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
         numConfirmations: parseInt(numConfirmations, 10),
@@ -34,7 +34,7 @@ export function getExchangeRates() {
     getRates.call().then((result) => {
       dispatch({
         type: ActionTypes.EXCHANGE_RATES,
-        rates: {'USD':result.market_data.current_price.usd},
+        rates: result,
       });
     });
   };

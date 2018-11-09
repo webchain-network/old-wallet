@@ -18,7 +18,7 @@ type Props = {
 };
 
 const Total = ({ total, showFiat, fiatAmount, fiatCurrency, muiTheme }: Props) => {
-  let totalFormatted = `${total} WEB`;
+  let totalFormatted = `${total} ETC`;
   if (showFiat && fiatAmount) {
     totalFormatted = `${totalFormatted} - ${fiatAmount} ${fiatCurrency}`;
   }
@@ -32,7 +32,7 @@ const Total = ({ total, showFiat, fiatAmount, fiatCurrency, muiTheme }: Props) =
         fontWeight: 'normal',
         fontSize: '16px',
       }}
-      /*icon={<EtcSimple style={{color: muiTheme.palette.secondaryTextColor}}/>}*/
+      icon={<EtcSimple style={{color: muiTheme.palette.secondaryTextColor}}/>}
     />
   );
 };

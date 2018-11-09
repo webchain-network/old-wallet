@@ -20,7 +20,7 @@ describe('networkReducer', () => {
     state = networkReducer(state, {
       type: ActionTypes.SWITCH_CHAIN,
       chain: 'mainnet',
-      chainId: 101,
+      chainId: 61,
     });
 
     // assert

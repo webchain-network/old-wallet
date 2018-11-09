@@ -80,7 +80,7 @@ export class ImportMnemonic extends React.Component {
           <div style={ formStyles.right }>
             <div style={{width: '100%'}}>
               <div className={ styles.mnemonicLabel }>HD derivation path</div>
-              <div style={{backgroundColor: '#fff'}}>
+              <div>
                 <Field
                   name="hdpath"
                   component={ HdPathFormField }

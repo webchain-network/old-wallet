@@ -11,7 +11,7 @@ import ImportMnemonic from '../../components/accounts/add/ImportMnemonic';
 
 const ImportMnemonicWrapper = ({muiTheme, ...props}) => {
   return (
-    <div>
+    <div style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
       <ImportMnemonic {...props} />
     </div>
   );

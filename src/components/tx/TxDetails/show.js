@@ -67,7 +67,7 @@ export const TransactionShow = (props: Props) => {
           <div style={{display: 'flex'}}>
             <div>
               <div className={ classes.value }>
-                { transaction.get('value') ? `${new Wei(transaction.get('value')).getEther()} WEB` : '--' }
+                { transaction.get('value') ? `${new Wei(transaction.get('value')).getEther()} ETC` : '--' }
               </div>
               {showFiat && <div className={ classes.value }>
                 { fiatAmount }
@@ -141,7 +141,7 @@ export const TransactionShow = (props: Props) => {
         </div>
       </Row>
 
-      {/* <Row>
+      <Row>
         <div style={styles.left}>
           <div style={fieldNameStyle}>Input Data</div>
         </div>
@@ -150,7 +150,7 @@ export const TransactionShow = (props: Props) => {
             <TxInputData data={transaction.get('data')} />
           </div>
         </div>
-      </Row> */}
+      </Row>
 
       <Row>
         <div style={styles.left}>

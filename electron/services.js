@@ -9,7 +9,7 @@ const { getBinDir, getLogDir, isValidChain } = require('./utils');
 
 require('es6-promise').polyfill();
 
-const LOCAL_RPC_URL = 'http://localhost:39573';
+const LOCAL_RPC_URL = 'http://localhost:8545';
 
 const SERVICES = {
   CONNECTOR: 'connector',
@@ -36,7 +36,7 @@ const LAUNCH_TYPE = {
 const DEFAULT_SETUP = {
   connector: {
     launchType: LAUNCH_TYPE.LOCAL_RUN,
-    url: 'http://127.0.0.1:20224',
+    url: 'http://127.0.0.1:1920',
   },
 
   geth: {
@@ -57,7 +57,7 @@ class Services {
     this.emerald = new Vault(
       new VaultJsonRpcProvider(
         new JsonRpc(
-          new HttpTransport('http://127.0.0.1:20224'))));
+          new HttpTransport('http://127.0.0.1:1920'))));
     log.info(`Run services from ${getBinDir()}`);
   }
 
@@ -65,33 +65,31 @@ class Services {
      * Configure services with new settings
      *
      * @param settings - plain JavaScript object with settings
-     * @returns {Promise}
+     *
      */
   useSettings(settings) {
-    return new Promise((resolve, reject) => {
-      if (!isValidChain(settings.chain)) {
-        this.gethStatus = STATUS.WRONG_SETTINGS;
-        this.connectorStatus = STATUS.WRONG_SETTINGS;
-        reject(`Wrong chain ${JSON.stringify(settings.chain)}`);
-      }
+    if (!isValidChain(settings.chain)) {
+      this.gethStatus = STATUS.WRONG_SETTINGS;
+      this.connectorStatus = STATUS.WRONG_SETTINGS;
+      return Promise.reject(new Error(`Wrong chain ${JSON.stringify(settings.chain)}`));
+    }
 
-      // Set desired chain
-      this.setup.chain = settings.chain;
+    // Set desired chain
+    this.setup.chain = settings.chain;
 
-      // Set Geth
-      this.setup.geth = settings.geth;
+    // Set Geth
+    this.setup.geth = settings.geth;
 
-      if (this.setup.geth.type === 'remote') {
-        this.setup.geth.launchType = LAUNCH_TYPE.REMOTE_URL;
-      } else if (this.setup.geth.type === 'local') {
-        this.setup.geth.launchType = LAUNCH_TYPE.AUTO;
-      } else {
-        this.setup.geth.launchType = LAUNCH_TYPE.NONE;
-      }
+    if (this.setup.geth.type === 'remote') {
+      this.setup.geth.launchType = LAUNCH_TYPE.REMOTE_URL;
+    } else if (this.setup.geth.type === 'local') {
+      this.setup.geth.launchType = LAUNCH_TYPE.AUTO;
+    } else {
+      this.setup.geth.launchType = LAUNCH_TYPE.NONE;
+    }
 
-      log.debug('New Services setup', this.setup);
-      resolve(this.setup);
-    });
+    log.debug('New Services setup', this.setup);
+    return Promise.resolve(this.setup);
   }
 
   start() {
@@ -132,11 +130,8 @@ class Services {
   }
 
   startNoneRpc() {
-    return new Promise((resolve, reject) => {
-      log.info('use NONE Webchaind');
-      this.notify.error('Webchain connection type is not configured');
-      resolve(new NoneGeth());
-    });
+    this.notify.error('Ethereum connection type is not configured');
+    return new NoneGeth();
   }
 
   startRemoteRpc() {
@@ -154,29 +149,25 @@ class Services {
   }
 
   startAutoRpc() {
-    return new Promise((resolve, reject) => {
-      this.tryExistingGeth(LOCAL_RPC_URL).then((chain) => {
-        this.setup.chain = chain;
-        log.info('Use Local Existing RPC API');
+    return this.tryExistingGeth(LOCAL_RPC_URL).then((chain) => {
+      this.setup.chain = chain;
+      log.info('Use Local Existing RPC API');
 
-        this.gethStatus = STATUS.READY;
-        this.setup.geth.url = LOCAL_RPC_URL;
-        this.setup.geth.clientVersion = chain.clientVersion;
-        this.setup.geth.type = 'local';
+      this.gethStatus = STATUS.READY;
+      this.setup.geth.url = LOCAL_RPC_URL;
+      this.setup.geth.clientVersion = chain.clientVersion;
+      this.setup.geth.type = 'local';
 
-        this.notify.info('Use Local Existing RPC API');
-        this.notify.chain(this.setup.chain.name, this.setup.chain.id);
-        this.notifyEthRpcStatus();
+      this.notify.info('Use Local Existing RPC API');
+      this.notify.chain(this.setup.chain.name, this.setup.chain.id);
+      this.notifyEthRpcStatus();
 
 
-        resolve(new LocalGeth(null, getLogDir(), this.setup.chain.name, 39573));
-      }).catch((e) => {
-        log.error(e);
-        log.info("Can't find existing RPC. Try to launch");
-        this.startLocalRpc()
-          .then(resolve)
-          .catch(reject);
-      });
+      return new LocalGeth(null, getLogDir(), this.setup.chain.name, 8545);
+    }).catch((e) => {
+      log.error(e);
+      log.info("Can't find existing RPC. Try to launch");
+      return this.startLocalRpc();
     });
   }
 
@@ -184,35 +175,37 @@ class Services {
     return new Promise((resolve, reject) => {
       const gethDownloader = newGethDownloader(this.notify, getBinDir());
       gethDownloader.downloadIfNotExists().then(() => {
-        this.notify.info('Launching Webchaind backend');
+        this.notify.info('Launching Geth backend');
         this.gethStatus = STATUS.STARTING;
-        this.geth = new LocalGeth(getBinDir(), getLogDir(), this.setup.chain.name, 39573);
+        this.geth = new LocalGeth(getBinDir(), getLogDir(), this.setup.chain.name, 8545);
 
         this.geth.launch().then((geth) => {
           geth.on('exit', (code) => {
             this.gethStatus = STATUS.NOT_STARTED;
-            log.error(`webchaind process exited with code: ${code}`);
+            log.error(`geth process exited with code: ${code}`);
           });
           if (geth.pid > 0) {
             waitRpc(this.geth.getUrl()).then((clientVersion) => {
               this.gethStatus = STATUS.READY;
               log.info(`RPC is ready: ${clientVersion}`);
+
               this.setup.geth.url = this.geth.getUrl();
               this.setup.geth.type = 'local';
+              this.setup.geth.clientVersion = clientVersion;
 
-              this.notify.info('Local Webchaind RPC API is ready');
+              this.notify.info('Local Geth RPC API is ready');
               this.notify.chain(this.setup.chain.name, this.setup.chain.id);
               this.notifyEthRpcStatus();
 
               resolve(this.geth);
             }).catch(reject);
           } else {
-            reject(new Error('Webchaind not launched'));
+            reject(new Error('Geth not launched'));
           }
         }).catch(reject);
       }).catch((err) => {
-        log.error('Unable to download Webchaind', err);
-        this.notify.info(`Unable to download Webchaind: ${err}`);
+        log.error('Unable to download Geth', err);
+        this.notify.info(`Unable to download Geth: ${err}`);
         reject(err);
       });
     });
@@ -222,16 +215,17 @@ class Services {
     this.gethStatus = STATUS.NOT_STARTED;
     this.notifyEthRpcStatus('not ready');
 
-    if (this.setup.geth.launchType === LAUNCH_TYPE.NONE) {
-      return this.startNoneRpc();
-    } else if (this.setup.geth.launchType === LAUNCH_TYPE.REMOTE_URL) {
-      return this.startRemoteRpc();
-    } else if (this.setup.geth.launchType === LAUNCH_TYPE.AUTO
-            || this.setup.geth.launchType === LAUNCH_TYPE.LOCAL_RUN) {
-      return this.startAutoRpc();
-    }
     return new Promise((resolve, reject) => {
-      reject(new Error(`Invalid Webchaind launch type ${this.setup.geth.launchType}`));
+      if (this.setup.geth.launchType === LAUNCH_TYPE.NONE) {
+        return resolve(this.startNoneRpc());
+      } else if (this.setup.geth.launchType === LAUNCH_TYPE.REMOTE_URL) {
+        return this.startRemoteRpc().then(resolve).catch(reject);
+      } else if (this.setup.geth.launchType === LAUNCH_TYPE.AUTO
+                 || this.setup.geth.launchType === LAUNCH_TYPE.LOCAL_RUN) {
+        return this.startAutoRpc().then(resolve).catch(reject);
+      }
+
+      return reject(new Error(`Invalid Geth launch type ${this.setup.geth.launchType}`));
     });
   }
 
@@ -241,32 +235,50 @@ class Services {
       this.notifyConnectorStatus();
 
       this.connector = new LocalConnector(getBinDir(), this.setup.chain);
-      this.connector.launch().then((emerald) => {
-        this.connectorStatus = STATUS.STARTING;
-        emerald.on('exit', (code) => {
-          this.connectorStatus = STATUS.NOT_STARTED;
-          log.error(`Webchain Connector process exited with code: ${code}`);
-          this.connector.proc = null;
+
+      const onVaultReady = () => {
+        this.emerald.currentVersion().then((version) => {
+          this.setup.connector.version = version;
+
+          this.connectorStatus = STATUS.READY;
+          this.notifyConnectorStatus();
+          resolve(this.connector);
         });
+      };
+
+      return this.connector.launch().then((emerald) => {
+        this.connectorStatus = STATUS.STARTING;
+
+        emerald.on('exit', (code) => {
+          if (!this.startedExternally) {
+            this.connectorStatus = STATUS.NOT_STARTED;
+            log.error(`Emerald Connector process exited with code: ${code}`);
+            this.connector.proc = null;
+          }
+        });
+
         emerald.on('uncaughtException', (e) => {
           log.error((e && e.stack) ? e.stack : e);
         });
-        const logTargetDir = getLogDir();
-        log.debug('Webchain log target dir:', logTargetDir);
-        emerald.stderr.on('data', (data) => {
-          log.debug(`[webchain-cli] ${data}`); // always log emerald data
-          if (/Connector started on/.test(data)) {
-            // call rpc to get current version of emerald vault
-            this.emerald.currentVersion().then((version) => {
-              this.setup.connector.version = version;
-            });
 
-            this.connectorStatus = STATUS.READY;
-            this.notifyConnectorStatus();
-            resolve(this.connector);
+        const logTargetDir = getLogDir();
+        log.debug('Emerald log target dir:', logTargetDir);
+
+        emerald.stderr.on('data', (data) => {
+          log.debug(`[emerald] ${data}`); // always log emerald data
+
+          if (data.includes('KeyFile storage error')) {
+            // connect to the one that already exists
+            log.info('Got the error we wanted');
+            this.startedExternally = true;
+            return onVaultReady();
+          }
+
+          if (/Connector started on/.test(data)) {
+            return onVaultReady();
           }
         });
-      }).catch(reject);
+      });
     });
   }
 

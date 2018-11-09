@@ -2,42 +2,28 @@
 import React from 'react';
 
 const LogoIcon = (props: { height: string, width: string }) => (
-  <svg width={props.width} height={props.height} viewBox="0 0 87.62 48.069" xmlnsXlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient x2="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(-29.1516 29.1516) rotate(60.9 -10.003 -1.412)" id="a">
-        <stop offset="0" stopColor="#004c91"/>
-        <stop offset="51.7" stopColor="#00c2fc"/>
-        <stop offset="76.5" stopColor="#00c2fc"/>
-        <stop offset="90.7" stopColor="#00f2ff"/>
-        <stop offset="100" stopColor="#00f2ff"/>
-      </linearGradient>
-      <linearGradient x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 -46.01406 -46.01406 0 146.817 267.623)" id="b">
-        <stop offset="0" stopColor="#004c91"/>
-        <stop offset="60.3" stopColor="#00c5ff"/>
-        <stop offset="100" stopColor="#00c5ff"/>
-      </linearGradient>
-      <linearGradient x2="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 -556.17966 -556.17966 0 947.111 696.656)" id="c">
-        <stop offset="0" stopColor="#004c91"/>
-        <stop offset="60.3" stopColor="#00c5ff"/>
-        <stop offset="100" stopColor="#00c5ff"/>
-      </linearGradient>
-      <clipPath id="d">
-        <path d="M181.057 229.161h12.6L176.572 263h-12.6z"/>
-      </clipPath>
-      <linearGradient xlinkHref="#a" id="e" gradientUnits="userSpaceOnUse" gradientTransform="scale(-29.1516 29.1516) rotate(60.9 -10.003 -1.412)" x2="1"/>
-      <clipPath id="f">
-        <path d="M144.574 229.161h-12.599L149.059 263h12.6z"/>
-      </clipPath>
-      <linearGradient xlinkHref="#b" id="g" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 -46.01406 -46.01406 0 146.817 267.623)" x2="1"/>
-      <linearGradient xlinkHref="#c" id="h" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 -556.17966 -556.17966 0 947.111 696.656)" x2="1"/>
-    </defs>
-    <g clipPath="url(#d)" transform="matrix(1.42052 0 0 1.42052 -187.473 -325.528)">
-      <path d="M181.057 229.161h12.6L176.572 263h-12.6z" fill="url(#e)"/>
+  <svg width={props.width} height={props.height} viewBox="0 0 20 36" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs></defs>
+    <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+      <g id="header" transform="translate(-274.000000, -14.000000)">
+        <g id="Group">
+          <g transform="translate(275.000000, 14.000000)">
+            <g id="logotype" transform="translate(0.000000, 1.000000)">
+              <path d="M1.5,21 L9,24 L16.5,21 L9,33 L1.5,21 Z M1.5,13 L9,1 L16.5,13 L9,10 L1.5,13 Z M1,17 L9,13 L17,17 L9,21 L1,17 Z" id="Mask" stroke="#47B04B">
+              </path>
+              <polygon id="Path-4" fill="#47B04B" fillRule="nonzero" points="8.5 1 8.5 10 9.5 10 9.5 1"></polygon>
+              <polygon id="Path-4" fill="#47B04B" fillRule="nonzero" points="8.5 24 8.5 33 9.5 33 9.5 24"></polygon>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="9" cy="1" r="1"></circle>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="9" cy="33" r="1"></circle>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="17" cy="21" r="1"></circle>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="17" cy="13" r="1"></circle>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="1" cy="21" r="1"></circle>
+              <circle id="Oval-3" stroke="#47B04B" fill="#FFFFFF" cx="1" cy="13" r="1"></circle>
+            </g>
+          </g>
+        </g>
+      </g>
     </g>
-    <g clipPath="url(#f)" transform="matrix(1.42052 0 0 1.42052 -187.473 -325.528)">
-      <path d="M144.574 229.161h-12.599L149.059 263h12.6z" fill="url(#g)"/>
-    </g>
-    <path d="M858.281 411.143l115.934 229.634h152.297l-115.94-229.634z" transform="matrix(.11752 0 0 .11752 -69.012 -27.237)" fill="url(#h)"/>
   </svg>
 );
 

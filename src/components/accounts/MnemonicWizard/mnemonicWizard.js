@@ -99,7 +99,7 @@ class MnemonicWizard extends React.Component {
     const { page, mnemonic, formData } = this.state;
     if (!page) { return null; }
     return (
-      <div>
+      <div style={{border: `1px solid ${muiTheme.palette.borderColor}`}} >
         {this.getPage()}
       </div>
     );

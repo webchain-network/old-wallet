@@ -75,7 +75,8 @@ export const TxView = (props) => {
     lineHeight: '19px',
     color: muiTheme.palette.secondaryTextColor,
   };
-  let symbol = 'WEB';
+  let symbol = 'ETC';
+  let balance = txValue;
 
   if (token) {
     const decodedTxData = decoder.decodeData(tx.get('data'));
@@ -92,19 +93,20 @@ export const TxView = (props) => {
 
   return (
     <TableRow selectable={false}>
-      <TableRowColumn style={{ ...tables.mediumStyle, paddingLeft: '0', ...styles.tablePadding }}>
+      <TableRowColumn style={{ width: 100, paddingLeft: '0', ...styles.tablePadding }}>
         {txValue && <AccountBalance
-          symbol="WEB"
-          showFiat={ true }
-          balance={ txValue }
+          fiatStyle={fiatStyle}
+          symbol={ symbol }
+          showFiat={ showFiat }
+          balance={ balance }
           onClick={ openTx }
           withAvatar={ false }
         /> }
       </TableRowColumn>
-      <TableRowColumn style={{...tables.mediumStyle, ...link, ...styles.tablePadding}} >
+      <TableRowColumn style={{width: 60, ...link, ...styles.tablePadding}} >
         { txStatus }
       </TableRowColumn>
-      <TableRowColumn>
+      <TableRowColumn style={{paddingLeft: '5px'}}>
         <AddressAvatar
           addr={tx.get('from')}
           primary={fromAccount.get('name')}
@@ -112,9 +114,9 @@ export const TxView = (props) => {
         />
       </TableRowColumn>
       <TableRowColumn className={classes.columnArrow} style={{textOverflow: 'inherit', ...styles.tablePadding}}>
-        <ArrowRightIcon color="#DDDDDD" />
+        <ArrowRightIcon style={{color: muiTheme.palette.secondaryTextColor}} />
       </TableRowColumn>
-      <TableRowColumn style={styles.tablePadding}>
+      <TableRowColumn style={{paddingLeft: '5px', ...styles.tablePadding}}>
         {tx.get('to') &&
         <AddressAvatar
           addr={tx.get('to')}

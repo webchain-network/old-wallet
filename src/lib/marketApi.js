@@ -1,12 +1,12 @@
 import 'isomorphic-fetch';
 
-const url = 'https://api.coingecko.com/api/v3/coins/webchain?localization=en';
-const currency = 'WEB';
+const url = (cur) => `https://min-api.cryptocompare.com/data/price?fsym=${cur}&extraParams=emerald&tsyms=USD,EUR,RUB,CNY,KRW,AUD`;
+const currency = 'ETC';
 
 export class MarketApi {
   call() {
     return new Promise((resolve, reject) => {
-      this.getRates().then((json) => {
+      this.getRates(currency).then((json) => {
         if (json) {
           resolve(json);
         } else {
@@ -16,9 +16,9 @@ export class MarketApi {
     });
   }
 
-  getRates() {
-   return fetch(url)
-    .then((response) => response.json());
+  getRates(curr) {
+    return fetch(url(curr))
+      .then((response) => response.json());
   }
 }
 

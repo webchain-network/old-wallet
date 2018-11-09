@@ -7,13 +7,10 @@ import CircularProgress from 'material-ui/CircularProgress';
 import TransactionsHistory from '../../../components/tx/TxHistory';
 import AccountsList from '../../../components/accounts/AccountList';
 import Header from './header';
-import { LogoIcon } from '../../../elements/Icons';
-import logoText from '../../../logoText.png';
-import theme from '../../../theme.json';
 
 const styles = {
   statusMessage: {
-    color: '#00c2fc',
+    color: '#999',
     marginTop: '15px',
   },
 };

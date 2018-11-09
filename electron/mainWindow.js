@@ -12,7 +12,7 @@ let menu;
 
 const createWindow = function (openDevTools) {
   // Create the browser window.
-  mainWindow = new electron.BrowserWindow({ width: 1200, height: 650 });
+  mainWindow = new electron.BrowserWindow({ width: 1200, height: 650, minWidth: 1200, minHeight: 650 });
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -26,13 +26,7 @@ const createWindow = function (openDevTools) {
     mainWindow.webContents.openDevTools();
     devtron.install();
   }
-  // Prevent opening external links in electron.
-  mainWindow.webContents.on('will-navigate', (e, _url) => {
-    e.preventDefault();
-    electron.shell.openExternal(_url);
-  });
 
-  // Emitted when the window is closed.
   mainWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
@@ -49,7 +43,7 @@ const createWindow = function (openDevTools) {
   electron.Menu.setApplicationMenu(menu);
   mainWindow.setMenu(menu);
 
-  return mainWindow.webContents;
+  return mainWindow;
 };
 
 module.exports = {

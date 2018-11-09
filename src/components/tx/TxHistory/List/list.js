@@ -34,16 +34,15 @@ const TransactionsList = (props: Props) => {
       <Table selectable={ false } fixedHeader={ true } style={{background: muiTheme.palette.alternateTextColor}}>
         <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
           <TableRow>
-            <TableHeaderColumn className={ cx(classes.columnName, classes.amountColumn) } >
+            <TableHeaderColumn className={ cx(classes.columnName, classes.amountColumn) } style={{width: 100}} >
                             Amount
             </TableHeaderColumn>
-            <TableHeaderColumn className={classes.columnName} style={tables.mediumStyle}>
+            <TableHeaderColumn className={classes.columnName} style={{ width: 60 }}>
                             Status
             </TableHeaderColumn>
-            <TableHeaderColumn className={classes.columnName}>From</TableHeaderColumn>
+            <TableHeaderColumn className={classes.columnName} style={{paddingLeft: '5px'}}>From</TableHeaderColumn>
             <TableHeaderColumn className={classes.columnArrow}>&nbsp;</TableHeaderColumn>
-            <TableHeaderColumn className={classes.columnName}>To</TableHeaderColumn>
-            <TableHeaderColumn style={{...tables.shortestStyle }}/>
+            <TableHeaderColumn className={classes.columnName} style={{paddingLeft: '5px'}}>To</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={ false }>
