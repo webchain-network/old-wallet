@@ -1,17 +1,10 @@
 // @flow
-import { convert } from 'emerald-js';
 import BigNumber from 'bignumber.js';
 import { intervalRates } from '../../store/config';
 import createLogger from '../../utils/logger';
 import ActionTypes from './actionTypes';
 import history from '../wallet/history';
-
-const log = createLogger('networkActions');
-
-const handleFailedToFetch = (err) => {
-  if (err.message.includes('Failed to fetch')) { return; }
-  throw err;
-};
+import { dispatchRpcError } from '../wallet/screen/screenActions';
 
 export function switchChain({ chain, chainId }) {
   return (dispatch, getState) => {
@@ -30,7 +23,7 @@ export function loadHeight(watch) {
         type: ActionTypes.BLOCK,
         height: result,
       });
-    }).catch(handleFailedToFetch);
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -41,7 +34,7 @@ export function loadPeerCount() {
         type: ActionTypes.PEER_COUNT,
         peerCount: result,
       });
-    }).catch(handleFailedToFetch);
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -67,7 +60,7 @@ export function loadAddressesTransactions(addresses) {
       return api.geth.ext.getTransactions(untrackedResults).then((txes) => {
         return dispatch(history.actions.trackTxs(txes.map((tx) => tx.result)));
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -86,7 +79,7 @@ export function loadSyncing() {
         type: ActionTypes.SYNCING,
         syncing: false,
       });
-    }).catch(handleFailedToFetch);
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -97,7 +90,7 @@ export function getGasPrice() {
         type: ActionTypes.GAS_PRICE,
         value: result,
       });
-    }).catch(handleFailedToFetch);
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
