@@ -1,1 +1,1 @@
-export {default} from './CreateTransaction'
+export {default} from './CreateTransaction';

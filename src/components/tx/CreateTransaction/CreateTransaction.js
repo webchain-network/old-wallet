@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import ButtonGroup from 'emerald-js-ui/lib/components/ButtonGroup';
-import Button from 'emerald-js-ui/lib/components/Button';
-import FormFieldWrapper from 'emerald-js-ui/lib/components/CreateTransaction/FormFieldWrapper';
-import FromField from 'emerald-js-ui//lib/components/CreateTransaction/FromField';
-import FormLabel from 'emerald-js-ui/lib/components/CreateTransaction/FormLabel';
-import TokenField from 'emerald-js-ui/lib/components/CreateTransaction/TokenField';
-import ToField from 'emerald-js-ui/lib/components/CreateTransaction/ToField';
-import AmountField from 'emerald-js-ui/lib/components/CreateTransaction/AmountField';
+import { ButtonGroup, Button } from 'emerald-js-ui';
+import FormFieldWrapper from './FormFieldWrapper';
+import FromField from './FromField';
+import FormLabel from './FormLabel';
+import TokenField from './TokenField';
+import ToField from './ToField';
+import AmountField from './AmountField';
+import GasLimitField from './GasLimitField';
 
 function getStyles(muiTheme) {
   return {
@@ -39,6 +39,7 @@ class CreateTransaction extends React.Component {
     onChangeGasLimit: PropTypes.func.isRequired,
     onChangeToken: PropTypes.func.isRequired,
     onEmptyAddressBookClick: PropTypes.func.isRequired,
+    onMaxClicked: PropTypes.func.isRequired,
   };
 
   constructor() {
@@ -86,6 +87,18 @@ class CreateTransaction extends React.Component {
             balance={this.props.balance}
             amount={this.props.amount}
             onChangeAmount={this.props.onChangeAmount}
+            onMaxClicked={this.props.onMaxClicked}
+          />
+        </FormFieldWrapper>
+
+        <FormFieldWrapper>
+          <GasLimitField
+            onChangeGasLimit={this.props.onChangeGasLimit}
+            gasLimit={this.props.gasLimit}
+            txFee={this.props.txFee}
+            token={this.props.token}
+            txFeeFiat={this.props.txFeeFiat}
+            currency={this.props.currency}
           />
         </FormFieldWrapper>
 
@@ -102,4 +115,4 @@ class CreateTransaction extends React.Component {
 }
 
 
-export default CreateTransaction;
+export default muiThemeable()(CreateTransaction);
