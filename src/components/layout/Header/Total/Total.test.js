@@ -1,8 +1,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 import { fromJS } from 'immutable';
-import { Wei } from 'emerald-js';
-import Total from './';
+import { Wei } from '@emeraldplatform/emerald-js';
+import Total from '.';
 
 function createStore() {
   return {

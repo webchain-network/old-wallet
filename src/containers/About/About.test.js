@@ -1,7 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { fromJS } from 'immutable';
-
 import About from './About';
 
 const mockMuiTheme = {
@@ -13,4 +11,3 @@ describe('About page', () => {
     const component = shallow(<About muiTheme={mockMuiTheme}/>);
   });
 });
-

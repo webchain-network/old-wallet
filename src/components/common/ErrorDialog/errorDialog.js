@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Dialog from 'material-ui/Dialog';
-import { Button } from 'emerald-js-ui';
+import Button from 'elements/Button';
 
 import screen from 'store/wallet/screen';
 
-const ErrorDialog = ({ open, error, message, handleClose, handleSubmit }) => {
+const ErrorDialog = ({
+  open, error, message, handleClose, handleSubmit,
+}) => {
   const actions = [
     <Button
       key="submitButton"
@@ -20,7 +22,6 @@ const ErrorDialog = ({ open, error, message, handleClose, handleSubmit }) => {
       onClick={handleClose}
     />,
   ];
-
   return (
     <Dialog
       actions={actions}
@@ -29,7 +30,7 @@ const ErrorDialog = ({ open, error, message, handleClose, handleSubmit }) => {
       onRequestClose={handleClose}
     >
       <p>
-        <strong>ERROR:</strong> An unexpected error has occured. Please restart & update Webchain wallet.
+        <strong>ERROR:</strong> An unexpected error has occurred. Please restart & update Webchain wallet.
       </p>
       <p>
         The error was: {message}

@@ -1,6 +1,7 @@
 // @flow
 import EthereumTx from 'ethereumjs-tx';
-import { convert, Wallet, Address } from 'emerald-js';
+import { convert, Wallet, Address } from '@emeraldplatform/emerald-js';
+import { fromJS } from 'immutable';
 import { loadTokensBalances } from '../tokens/tokenActions';
 import screen from '../../wallet/screen';
 import history from '../../wallet/history';
@@ -8,6 +9,7 @@ import launcher from '../../launcher';
 import network from '../../network';
 import ActionTypes from './actionTypes';
 import createLogger from '../../../utils/logger';
+import { dispatchRpcError } from '../../wallet/screen/screenActions';
 
 const currentChain = (state) => launcher.selectors.getChainName(state);
 
@@ -33,11 +35,11 @@ export function loadAccountBalance(address: string) {
         accountId: address,
         value: result,
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
     // Tokens
-    const tokens = getState().tokens;
+    const { tokens } = getState();
     if (!tokens.get('loading')) {
-      dispatch(loadTokensBalances(address));
+      dispatch(loadTokensBalances([address]));
     }
   };
 }
@@ -47,25 +49,17 @@ export function loadAccountBalance(address: string) {
  */
 function fetchBalances(addresses: Array<string>) {
   return (dispatch, getState, api) => {
-    api.geth.ext.getBalances(addresses).then((balances) => {
-      addresses.forEach((address) => {
-        if (balances[address]) {
-          dispatch({
-            type: ActionTypes.SET_BALANCE,
-            accountId: address,
-            value: balances[address],
-          });
-        }
+    return api.geth.ext.getBalances(addresses).then((balances) => {
+      dispatch({
+        type: ActionTypes.SET_BALANCES,
+        accountBalances: addresses.map((addr) => ({ accountId: addr, balance: balances[addr] })),
       });
-    });
 
-    // ERC20 Tokens
-    const tokens = getState().tokens;
-    if (!tokens.get('loading')) {
-      addresses.forEach((address) => {
-        dispatch(loadTokensBalances(address));
-      });
-    }
+      const { tokens } = getState();
+      if (!tokens.get('loading')) {
+        return dispatch(loadTokensBalances(addresses));
+      }
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -74,28 +68,29 @@ function fetchBalances(addresses: Array<string>) {
  */
 function fetchHdPaths() {
   return (dispatch, getState, api) => {
+    const promises = [];
     const chain = currentChain(getState());
     getState().accounts.get('accounts')
       .filter((a) => a.get('hardware', false))
       .forEach((a) => {
         const address = a.get('id');
-        api.emerald.exportAccount(address, chain).then((result) => {
-          dispatch({
+        promises.push(api.emerald.exportAccount(address, chain).then((result) => {
+          return dispatch({
             type: ActionTypes.SET_HD_PATH,
             accountId: address,
             hdpath: JSON.parse(result).crypto.hd_path,
           });
-        });
+        }));
       });
+
+    return Promise.all(promises);
   };
 }
 
 export function loadAccountsList() {
-  log.debug('Calling loadAccountsList()');
   return (dispatch, getState, api) => {
-    dispatch({
-      type: ActionTypes.LOADING,
-    });
+    dispatch({ type: ActionTypes.LOADING });
+
     const chain = currentChain(getState());
     const showHidden = getState().wallet.settings.get('showHiddenAccounts', false);
     return api.emerald.listAccounts(chain, showHidden).then((result) => {
@@ -103,8 +98,10 @@ export function loadAccountsList() {
         type: ActionTypes.SET_LIST,
         accounts: result,
       });
-      dispatch(fetchHdPaths());
-      dispatch(fetchBalances(result.map((account) => account.address)));
+
+      return dispatch(fetchHdPaths()).then(() => {
+        return dispatch(fetchBalances(result.map((account) => account.address)));
+      });
     });
   };
 }
@@ -117,7 +114,7 @@ export function loadAccountTxCount(accountId: string) {
         accountId,
         value: result,
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -151,7 +148,7 @@ export function createAccount(passphrase: string, name: string = '', description
           name,
           description,
         });
-        dispatch(network.actions.loadAddressTransactions(result, 0, 0, '', '', -1, -1, false));
+        dispatch(network.actions.loadAddressesTransactions(fromJS([result])));
         dispatch(loadAccountBalance(result));
         return result;
       }).catch(screen.actions.catchError(dispatch));
@@ -198,30 +195,28 @@ function getNonce(api, address: string) {
 }
 
 function withNonce(tx: Transaction): (nonce: string) => Promise<Transaction> {
-  return (nonce) => new Promise((resolve, reject) =>
-    resolve(Object.assign({}, tx, { nonce: convert.toHex(nonce) }))
-  );
+  return (nonce) => new Promise((resolve, reject) => resolve(Object.assign({}, tx, { nonce: convert.toHex(nonce) })));
 }
 
 function verifySender(expected) {
-  return (raw: string) =>
-    new Promise((resolve, reject) => {
-      const tx = new EthereumTx(raw);
-      if (tx.verifySignature()) {
-        if (`0x${tx.getSenderAddress().toString('hex').toLowerCase()}` !== expected.toLowerCase()) {
-          log.error(`WRONG SENDER: 0x${tx.getSenderAddress().toString('hex')} != ${expected}`);
-          reject(new Error('Emerald Vault returned signature from wrong Sender'));
-        } else {
-          resolve(raw);
-        }
+  return (raw: string) => new Promise((resolve, reject) => {
+    const tx = new EthereumTx(raw);
+    if (tx.verifySignature()) {
+      if (`0x${tx.getSenderAddress().toString('hex').toLowerCase()}` !== expected.toLowerCase()) {
+        log.error(`WRONG SENDER: 0x${tx.getSenderAddress().toString('hex')} != ${expected}`);
+        reject(new Error('Webchain Vault returned signature from wrong Sender'));
       } else {
-        log.error(`Invalid signature: ${raw}`);
-        reject(new Error('Emerald Vault returned invalid signature for the transaction'));
+        resolve(raw);
       }
-    });
+    } else {
+      log.error(`Invalid signature: ${raw}`);
+      reject(new Error('Webchain Vault returned invalid signature for the transaction'));
+    }
+  });
 }
 
 function signTx(api, tx: Transaction, passphrase: string, chain: string) {
+  log.trace('Calling webchain api to sign tx');
   return api.emerald.signTransaction(tx, passphrase, chain);
 }
 
@@ -236,18 +231,17 @@ export function sendTransaction(from: string, passphrase: string, to: ?string, g
     data,
     nonce: '',
   };
-  const passPhrase = passphrase || ''; // for HW key
   return (dispatch, getState, api) => {
     const chain = currentChain(getState());
     return getNonce(api, from)
       .then(withNonce(originalTx))
-      .then((tx) =>
-        signTx(api, tx, passPhrase, chain)
+      .then((tx) => {
+        return signTx(api, tx, passphrase, chain)
           .then(unwrap)
           .then(verifySender(from))
           .then((signed) => api.geth.eth.sendRawTransaction(signed))
-          .then(onTxSend(dispatch, tx))
-      )
+          .then(onTxSend(dispatch, tx));
+      })
       .catch(screen.actions.catchError(dispatch));
   };
 }
@@ -283,7 +277,7 @@ function readWalletFile(wallet) {
         data.filename = wallet.name;
         resolve(data);
       } catch (e) {
-        reject({error: e});
+        reject({error: e}); // eslint-disable-line
       }
     };
   });
@@ -306,7 +300,7 @@ export function importJson(data, name: string, description: string) {
           type: ActionTypes.ADD_ACCOUNT,
           accountId: result,
         });
-        dispatch(network.actions.loadAddressTransactions(result, 0, 0, '', '', -1, -1, false));
+        dispatch(network.actions.loadAddressesTransactions(fromJS([result])));
         dispatch(loadAccountBalance(result));
         return result;
       }
@@ -328,7 +322,7 @@ export function importMnemonic(passphrase: string, mnemonic: string, hdPath: str
           type: ActionTypes.ADD_ACCOUNT,
           accountId: result,
         });
-        dispatch(network.actions.loadAddressTransactions(result, 0, 0, '', '', -1, -1, false));
+        dispatch(network.actions.loadAddressesTransactions(fromJS([result])));
         dispatch(loadAccountBalance(result));
         return result;
       }
@@ -346,35 +340,39 @@ export function importWallet(wallet, name: string, description: string) {
 }
 
 export function loadPendingTransactions() {
-  return (dispatch, getState, api) =>
-    api.geth.eth.getBlockByNumber('pending', true)
-      .then((result) => {
-        const addrs = getState().accounts.get('accounts')
-          .map((acc) => acc.get('id'));
-        const txes = result.transactions.filter((t) =>
-          (addrs.includes(t.to) || addrs.includes(t.from))
-        );
-        // TODO: dependency on wallet/history module
-        dispatch(history.actions.processPending(txes));
-        for (const tx of txes) {
-          const disp = {
-            type: ActionTypes.PENDING_BALANCE,
-            value: tx.value,
-            gas: tx.gas,
-            gasPrice: tx.gasPrice,
-            from: '',
-            to: '',
-          };
-          if (addrs.includes(tx.from)) {
-            disp.from = tx.from;
-            dispatch(disp);
-          }
-          if (addrs.includes(tx.to)) {
-            disp.to = tx.to;
-            dispatch(disp);
-          }
-        }
-      });
+  return (dispatch, getState, api) => api.geth.eth.getBlockByNumber('pending', true).then((result) => {
+    const addrs = getState().accounts.get('accounts').map((acc) => acc.get('id'));
+    const txes = result.transactions.filter(
+      (t) => addrs.includes(t.to) || addrs.includes(t.from)
+    ).map((tx) => {
+      if (tx.blockNumber) {
+        delete tx.blockNumber;
+      }
+      return tx;
+    });
+    if (txes.length === 0) { return; }
+
+    dispatch(history.actions.trackTxs(txes));
+
+    for (const tx of txes) {
+      const disp = {
+        type: ActionTypes.PENDING_BALANCE,
+        value: tx.value,
+        gas: tx.gas,
+        gasPrice: tx.gasPrice,
+        from: '',
+        to: '',
+      };
+      if (addrs.includes(tx.from)) {
+        disp.from = tx.from;
+        dispatch(disp);
+      }
+      if (addrs.includes(tx.to)) {
+        disp.to = tx.to;
+        dispatch(disp);
+      }
+    }
+  });
 }
 
 export function hideAccount(accountId: string) {

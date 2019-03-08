@@ -1,17 +1,37 @@
 import React from 'react';
+import withStyles from 'react-jss';
 import { required } from 'lib/validators';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Field, reduxForm, SubmissionError, change, formValueSelector } from 'redux-form';
-import { Button, Warning, WarningText } from 'emerald-js-ui';
-
+import {
+  Field, reduxForm, SubmissionError
+} from 'redux-form';
+import { Warning, WarningText } from 'emerald-js-ui';
+import { Page } from '@emeraldplatform/ui';
+import { Back } from '@emeraldplatform/ui-icons';
+import Button from 'elements/Button';
 import TextField from 'elements/Form/TextField';
 import { Form, Row, styles as formStyles } from 'elements/Form';
-import DashboardButton from 'components/common/DashboardButton';
 import accounts from 'store/vault/accounts';
 import screen from 'store/wallet/screen';
 
-import styles from './confirmMnemonic.scss';
+export const styles2 = {
+  confirmLabel: {
+    height: '24px',
+    width: '190px',
+    color: '#191919',
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '24px',
+  },
+  mnemonicLabel: {
+    height: '24px',
+    color: '#191919',
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '24px',
+  },
+};
 
 const validateConfirm = (value, allValues, props, name) => {
   return value === props.formData.mnemonic ? undefined : 'Mnemonic phrase does not match';
@@ -19,15 +39,17 @@ const validateConfirm = (value, allValues, props, name) => {
 
 export class ConfirmMnemonic extends React.Component {
   render() {
-    const { onBack, backLabel, invalid, handleSubmit, error } = this.props;
+    const {
+      onBack, invalid, handleSubmit, error, classes,
+    } = this.props;
     return (
-      <Form caption="Confirm Mnemonic" backButton={ <DashboardButton onClick={ onBack } label={ backLabel }/> }>
+      <Page title="Confirm Mnemonic" leftIcon={ <Back onClick={ onBack } /> }>
         <Row>
           <div style={formStyles.left}>
           </div>
           <div style={formStyles.right}>
             <div style={{width: '100%'}}>
-              <div className={ styles.mnemonicLabel }>Confirm your mnemonic phrase</div>
+              <div className={ classes.mnemonicLabel }>Confirm your mnemonic phrase</div>
               <div>
                 <Field
                   multiLine={ true }
@@ -66,7 +88,7 @@ export class ConfirmMnemonic extends React.Component {
             </div>
           </Row>
         )}
-      </Form>
+      </Page>
     );
   }
 }
@@ -74,7 +96,7 @@ export class ConfirmMnemonic extends React.Component {
 const confirmForm = reduxForm({
   form: 'confirmMnemonic',
   fields: ['mnemonic'],
-})(ConfirmMnemonic);
+})(withStyles(styles2)(ConfirmMnemonic));
 
 
 export default connect(

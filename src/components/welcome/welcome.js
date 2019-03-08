@@ -4,19 +4,19 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 import CircularProgress from 'material-ui/CircularProgress';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import theme from '../../theme.json';
 
-import { LogoIcon } from '../../elements/Icons';
+import { Logo as LogoIcon } from 'emerald-js-ui/lib/icons';
 import InitialSetup from './initialSetup';
-import version from '../../version';
 
 import logoText from '../../logoText.png';
 
-const Render = ({ message, level, ready, needSetup, muiTheme }) => {
+const Render = ({
+  message, level, needSetup, muiTheme,
+}) => {
   let messageBlock = null;
   if (message) {
     const messageStyle = {
-      color: '#00c2fc',
+      color: '#999',
     };
     if (level === 3) {
       messageStyle.color = '#f66';

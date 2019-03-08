@@ -1,19 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { PlayCircle } from 'emerald-js-ui/lib/icons3';
-import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
-import FlatButton from 'material-ui/FlatButton';
+import { PlayCircle } from '@emeraldplatform/ui-icons';
+import { Row, Col } from 'react-flexbox-grid/lib/index';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import launcher from 'store/launcher';
-import { waitForServicesRestart } from 'store/store';
+import Button from '../../elements/Button';
+import screen from '../../store/wallet/screen';
 
-const Render = ({ save, muiTheme }) => {
+const Render = ({ numberOfAccounts, nextPage }) => {
   return (
-    <Row style={{textAlign: 'center'}}>
-      <Col xs={12} style={{marginTop: '3rem', marginBottom: '1.5rem'}}>
+    <Row>
+      <Col xs={12}>
         <div style={{fontWeight: '300'}}>
-          <p style={{fontSize: '1.5rem'}}>
+          <p>
             Welcome to Webchain Wallet<br/>
           </p>
           <p>
@@ -22,27 +20,24 @@ const Render = ({ save, muiTheme }) => {
         </div>
       </Col>
       <Col xs={12}>
-        <FlatButton label="Open Wallet"
-          // icon={<PlayCircle style={{color: muiTheme.palette.alternateTextColor}}/>}
-          style={{backgroundColor: muiTheme.palette.primary1Color, color: muiTheme.palette.alternateTextColor}}
-          onClick={save}/>
+        <Button
+          primary
+          label="Open Wallet"
+          icon={<PlayCircle />}
+          onClick={() => nextPage(numberOfAccounts)}
+        />
       </Col>
     </Row>
   );
 };
 
-
-Render.propTypes = {
-  save: PropTypes.func.isRequired,
-};
-
 const OpenWallet = connect(
   (state, ownProps) => ({
+    numberOfAccounts: state.accounts.get('accounts').size,
   }),
-  (dispatch, ownProps) => ({
-    save: () => {
-      dispatch(launcher.actions.saveSettings());
-      waitForServicesRestart();
+  (dispatch, ownProps, state) => ({
+    nextPage: (numberOfAccounts) => {
+      dispatch(screen.actions.gotoScreen(numberOfAccounts === 0 ? 'landing' : 'home'));
     },
   })
 )(Render);

@@ -145,11 +145,11 @@ class GenerateAccount extends React.Component<Props, State> {
   }
 
   render() {
-    const { page, privateKey, accountId } = this.state;
-    const { t, backLabel, muiTheme } = this.props;
+    const { page } = this.state;
+    const { t, muiTheme } = this.props;
     if (!page) { return null; }
     return (
-      <div>
+      <div style={{border: `1px solid ${muiTheme.palette.borderColor}`}} >
         {this.getPage()}
       </div>
     );

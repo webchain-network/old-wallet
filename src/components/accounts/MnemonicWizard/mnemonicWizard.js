@@ -74,7 +74,6 @@ class MnemonicWizard extends React.Component {
             mnemonic={ mnemonic }
             onContinue={ this.gotoConfirm }
             onBack={ this.gotoGenerate }
-            backLabel="Back"
           />
         );
 
@@ -85,7 +84,6 @@ class MnemonicWizard extends React.Component {
             onContinue={ this.gotoConfirm }
             onBack={ this.gotoImport }
             formData={ formData }
-            backLabel="Back"
           />
         );
 
@@ -95,11 +93,11 @@ class MnemonicWizard extends React.Component {
 
 
   render() {
-    const { gotoDashboard, muiTheme } = this.props;
-    const { page, mnemonic, formData } = this.state;
+    const { muiTheme } = this.props;
+    const { page } = this.state;
     if (!page) { return null; }
     return (
-      <div>
+      <div style={{border: `1px solid ${muiTheme.palette.borderColor}`}} >
         {this.getPage()}
       </div>
     );
@@ -121,4 +119,3 @@ export default connect(
 
   })
 )(muiThemeable()(MnemonicWizard));
-

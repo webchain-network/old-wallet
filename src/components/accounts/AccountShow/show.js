@@ -1,14 +1,18 @@
 import React, {Fragment} from 'react';
+import withStyles from 'react-jss';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import People from 'material-ui/svg-icons/social/people';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import QRCode from 'qrcode.react';
 import TokenUnits from 'lib/tokenUnits';
-import { Button, IdentityIcon, Account as AddressAvatar, ButtonGroup, Page } from 'emerald-js-ui';
+import {
+  ButtonGroup, Account as AddressAvatar, IdentityIcon, Address
+} from 'emerald-js-ui';
+import Button from 'elements/Button';
 import { styles, Row } from 'elements/Form';
-import { Back } from 'emerald-js-ui/lib/icons3';
+import { Back } from '@emeraldplatform/ui-icons';
+import { Page } from '@emeraldplatform/ui';
 import accounts from '../../../store/vault/accounts';
 import tokens from '../../../store/vault/tokens';
 import screen from '../../../store/wallet/screen';
@@ -19,8 +23,17 @@ import AccountEdit from '../AccountEdit';
 import TransactionsList from '../../tx/TxHistory';
 import AccountBalance from '../Balance';
 import SecondaryMenu from '../SecondaryMenu';
-import classes from './show.scss';
 import TokenBalances from '../TokenBalances';
+
+export const styles2 = {
+  transContainer: {
+    marginTop: '20px',
+  },
+  qrCodeContainer: {
+    flexBasis: '30%',
+    backgroundColor: 'white',
+  },
+};
 
 const log = createLogger('AccountShow');
 
@@ -50,8 +63,10 @@ export class AccountShow extends React.Component {
   }
 
   render() {
-    const { account, tokensBalances } = this.props;
-    const { showFiat, goBack, transactions, createTx, showReceiveDialog } = this.props;
+    const { account, tokensBalances, classes } = this.props;
+    const {
+      showFiat, goBack, transactions, createTx, showReceiveDialog,
+    } = this.props;
     // TODO: show pending balance too
     // TODO: we convert Wei to TokenUnits here
     const balance = account.get('balance') ? new TokenUnits(account.get('balance').value(), 18) : null;
@@ -59,7 +74,7 @@ export class AccountShow extends React.Component {
     return (
       <Fragment>
         <Page title="Account" leftIcon={ <Back onClick={goBack} /> }>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '20px' }}>
             <div style={{flexGrow: 2}}>
               <Row>
                 <div id="left-column" style={styles.left}>
@@ -68,6 +83,14 @@ export class AccountShow extends React.Component {
                   </div>
                 </div>
                 <div style={styles.right}>
+                  <Address id={account.get('id')}/>
+                </div>
+              </Row>
+
+              <Row>
+                <div style={ styles.left }>
+                </div>
+                <div style={ styles.right }>
                   <AccountBalance
                     showFiat={ showFiat }
                     coinsStyle={{fontSize: '20px', lineHeight: '24px'}}
@@ -88,13 +111,12 @@ export class AccountShow extends React.Component {
               <Row>
                 <div style={styles.left}>
                   <div style={styles.fieldName}>
-                    <People />
                   </div>
                 </div>
                 <div style={ styles.right }>
                   {!this.state.edit && <AddressAvatar
                     editable
-                    addr={account.get('id')}
+                    id={account.get('id')}
                     description={account.get('description')}
                     name={account.get('name')}
                     onEditClick={this.handleEdit}
@@ -106,8 +128,8 @@ export class AccountShow extends React.Component {
                   />}
                 </div>
               </Row>
-              { account.get('hardware', false) &&
-                <Row>
+              { account.get('hardware', false)
+                && <Row>
                   <div style={styles.left}>
                     <div style={styles.fieldName}>
                       HD Path
@@ -143,8 +165,6 @@ export class AccountShow extends React.Component {
               <QRCode value={ account.get('id') } />
             </div>
           </div>
-
-          <div style={{paddingBottom: '20px'}} />
         </Page>
 
         <div className={ classes.transContainer }>
@@ -174,7 +194,8 @@ export default connect(
     if (account && account.get('id')) {
       transactions = history.selectors.searchTransactions(
         account.get('id'),
-        state.wallet.history.get('trackedTransactions'));
+        state.wallet.history.get('trackedTransactions')
+      );
       tokensBalances = tokens.selectors.balancesByAddress(state.tokens, account.get('id'));
     } else {
       log.warn("Can't find account in general list of accounts", ownProps.account.get('id'));
@@ -189,11 +210,11 @@ export default connect(
   },
   (dispatch, ownProps) => ({
     createTx: () => {
-      const account = ownProps.account;
+      const { account } = ownProps;
       dispatch(screen.actions.gotoScreen('create-tx', account));
     },
     showReceiveDialog: () => {
-      const account = ownProps.account;
+      const { account } = ownProps;
       dispatch(screen.actions.showDialog('receive', account));
     },
     goBack: () => {
@@ -208,4 +229,4 @@ export default connect(
       });
     },
   })
-)(muiThemeable()(AccountShow));
+)(muiThemeable()(withStyles(styles2)(AccountShow)));

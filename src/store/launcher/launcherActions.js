@@ -3,6 +3,7 @@ import { api } from '../../lib/rpc/api';
 // import { waitForServicesRestart } from 'store/store';
 import screen from '../wallet/screen';
 import createLogger from '../../utils/logger';
+import { dispatchRpcError } from '../wallet/screen/screenActions';
 
 const log = createLogger('launcherActions');
 
@@ -16,7 +17,7 @@ function isVaultReady(state) {
 
 export function readConfig() {
   if (typeof window.process !== 'undefined') {
-    const remote = global.require('electron').remote;
+    const { remote } = global.require('electron');
     const launcherConfig = remote.getGlobal('launcherConfig').get();
 
     log.debug(`Got launcher config from electron: ${JSON.stringify(launcherConfig)}`);
@@ -49,7 +50,7 @@ export function loadClientVersion() {
         type: 'LAUNCHER/SETTINGS',
         updated: true,
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -65,6 +66,8 @@ export function useRpc(gethProvider) {
       type: 'LAUNCHER/SETTINGS',
       updated: true,
     });
+
+    return dispatch(saveSettings());
   };
 }
 
@@ -85,8 +88,6 @@ export function saveSettings(extraSettings) {
     const settings = { geth, chain, ...extraSettings };
 
     log.info('Save settings', settings);
-
-    // waitForServicesRestart();
 
     ipcRenderer.send('settings', settings);
 
@@ -116,7 +117,8 @@ export function listenElectron() {
           // Launcher sent chain different from what user has chosen
           // Alert !
           dispatch(screen.actions.showError(
-            new Error(`Launcher connected to invalid chain: [${message.chain}, ${message.chainId}]`)));
+            new Error(`Launcher connected to invalid chain: [${message.chain}, ${message.chainId}]`)
+          ));
         } else {
           dispatch({
             type: 'NETWORK/SWITCH_CHAIN',

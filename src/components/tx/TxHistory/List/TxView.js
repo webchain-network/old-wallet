@@ -1,33 +1,48 @@
 // @flow
 import React from 'react';
+import withStyles from 'react-jss';
 import PropTypes from 'prop-types';
-import { Wei, convert } from 'emerald-js';
+import { convert } from '@emeraldplatform/emerald-js';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import CircularProgress from 'material-ui/CircularProgress';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Account as AddressAvatar } from 'emerald-js-ui';
-import { Forward as ArrowRightIcon } from 'emerald-js-ui/lib/icons3';
+import { Forward as ArrowRightIcon } from '@emeraldplatform/ui-icons';
 import AccountBalance from '../../../accounts/Balance';
 import TokenUnits from '../../../../lib/tokenUnits';
-import { link, tables } from '../../../../lib/styles';
-import classes from './list.scss';
 import i18n from '../../../../i18n/i18n';
 import { TokenAbi } from '../../../../lib/erc20';
 
+// TODO: replace it with own implementation
 const InputDataDecoder = require('ethereum-input-data-decoder');
 
 const decoder = new InputDataDecoder(TokenAbi);
+
+export const styles2 = {
+  columnArrow: {
+    paddingLeft: '0px !important',
+    paddingRight: '0px !important',
+    width: '24px',
+  },
+};
+
 
 const styles = {
   tablePadding: {
     paddingTop: '15px',
     paddingBottom: '15px',
   },
+  txStatus: {
+    cursor: 'pointer',
+  },
 };
 
 
 export const TxView = (props) => {
-  const { token, showFiat, tx, openTx, openAccount, toAccount, fromAccount, numConfirmations, currentBlockHeight, muiTheme } = props;
+  const {
+    token, showFiat, tx, openTx, openAccount, toAccount, fromAccount, numConfirmations, currentBlockHeight, muiTheme,
+  } = props;
+  const { classes } = props;
   const blockNumber = tx.get('blockNumber');
   const confirmationBlockNumber = blockNumber + numConfirmations;
   const successColor = muiTheme.palette.primary1Color;
@@ -76,6 +91,7 @@ export const TxView = (props) => {
     color: muiTheme.palette.secondaryTextColor,
   };
   let symbol = 'WEB';
+  let balance = txValue;
 
   if (token) {
     const decodedTxData = decoder.decodeData(tx.get('data'));
@@ -92,19 +108,20 @@ export const TxView = (props) => {
 
   return (
     <TableRow selectable={false}>
-      <TableRowColumn style={{ ...tables.mediumStyle, paddingLeft: '0', ...styles.tablePadding }}>
+      <TableRowColumn style={{ width: 100, paddingLeft: '0', ...styles.tablePadding }}>
         {txValue && <AccountBalance
-          symbol="WEB"
-          showFiat={ true }
-          balance={ txValue }
+          fiatStyle={fiatStyle}
+          symbol={ symbol }
+          showFiat={ showFiat }
+          balance={ balance }
           onClick={ openTx }
           withAvatar={ false }
         /> }
       </TableRowColumn>
-      <TableRowColumn style={{...tables.mediumStyle, ...link, ...styles.tablePadding}} >
+      <TableRowColumn style={{width: 60, ...styles.txStatus, ...styles.tablePadding}} >
         { txStatus }
       </TableRowColumn>
-      <TableRowColumn>
+      <TableRowColumn style={{paddingLeft: '5px'}}>
         <AddressAvatar
           addr={tx.get('from')}
           primary={fromAccount.get('name')}
@@ -112,11 +129,11 @@ export const TxView = (props) => {
         />
       </TableRowColumn>
       <TableRowColumn className={classes.columnArrow} style={{textOverflow: 'inherit', ...styles.tablePadding}}>
-        <ArrowRightIcon color="#DDDDDD" />
+        <ArrowRightIcon color="secondary"/>
       </TableRowColumn>
-      <TableRowColumn style={styles.tablePadding}>
-        {tx.get('to') &&
-        <AddressAvatar
+      <TableRowColumn style={{paddingLeft: '5px', ...styles.tablePadding}}>
+        {tx.get('to')
+        && <AddressAvatar
           addr={tx.get('to')}
           primary={toAccount.get('name')}
           onAddressClick={() => openAccount(tx.get('to'))}
@@ -138,4 +155,5 @@ TxView.propTypes = {
   numConfirmations: PropTypes.number.isRequired,
 };
 
-export default muiThemeable()(TxView);
+const StyledTxView = withStyles(styles2)(TxView);
+export default muiThemeable()(StyledTxView);

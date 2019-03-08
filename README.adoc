@@ -10,13 +10,27 @@ ifdef::env-github,env-browser[:badges:]
 ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
 ## Development instructions
-The supported `node` version is `v6`. If you run into building errors, please make sure that you are using NodeV6 by running `node --version`. 
+The recommended way to assert that you are using the correct version of node is to use https://github.com/nodenv/nodenv[nodenv], which will shim the `node` and `npm` commands and assert that the `local` version is set to what is specified in https://github.com/ETCDEVTeam/emerald-wallet/blob/master/.node-version[.node-version].
 
-`package.json`: This is where scripts that get run when you use `npm run blah` get defined.
-It'll be helpful to have an idea of what's available and where the magic `npm run` commands
-are coming from. You can run any of those commands without the `npm run` meta-command.
+Once nodenv is installed:
+
+```shell
+$ nodenv install
+```
+
+The required version of `node` >= `v8`.
 
 ### Dependencies
+
+#### Libs
+You need `libudev`, `libusb-1.0-0`, `libusb-1.0-0-dev` installed on Linux
+
+Ubuntu:
+
+```
+sudo apt-get install libudev-dev libusb-1.0-0 libusb-1.0-0-dev
+```
+
 
 ####  NPM packages
 This will install dependencies saved in `package.json` and `flow-typed` repository.

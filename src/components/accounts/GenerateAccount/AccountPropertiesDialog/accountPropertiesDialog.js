@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, LinkButton, Input, Page } from 'emerald-js-ui';
+import {
+  ButtonGroup, Input
+} from 'emerald-js-ui';
+import { Page } from '@emeraldplatform/ui';
 import { Row, styles as formStyles } from '../../../../elements/Form';
+import Button from '../../../../elements/Button';
 
 class AccountPropertiesDialog extends React.Component {
     static propTypes = {
@@ -59,7 +63,8 @@ class AccountPropertiesDialog extends React.Component {
                   onClick={ this.handleSave }
                   label="Save"
                 />
-                <LinkButton
+                <Button
+                  variant="text"
                   onClick={ onSkip }
                   label="Skip"
                 />

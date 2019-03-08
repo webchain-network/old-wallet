@@ -3,17 +3,14 @@ const path = require('path');
 const webpack = require('webpack');
 
 const srcDir = path.join(__dirname, 'src');
-const electronDir = path.join(__dirname, 'electron');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const forElectron = process.argv.indexOf('--for-electron') >= 0;
-
 const config = {
   target: 'electron-renderer', // 'web',
   entry: {
-    index: path.join(srcDir, 'index.js'),
+    index: [path.join(srcDir, 'index.js')],
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({name: 'index', filename: 'index.js'}),
@@ -47,33 +44,9 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'react', 'stage-2', 'flow'],
+            presets: ['env', 'react', 'stage-0', 'flow'],
           },
         },
-      },
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-            },
-          ],
-        }),
-      },
-      {
-        test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'less-loader'],
-        }),
       },
       {
         test: /\.css$/,

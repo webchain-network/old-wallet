@@ -1,10 +1,12 @@
 import React from 'react';
-import { AppBar, FlatButton, LinearProgress } from 'material-ui';
-import { Block as BlockIcon, Settings as SettingsIcon } from 'emerald-js-ui/lib/icons3';
+import { AppBar, LinearProgress } from 'material-ui';
+import { withStyles } from '@material-ui/core';
+import { Block as BlockIcon, Settings as SettingsIcon } from '@emeraldplatform/ui-icons';
 import SyncWarning from '../../../containers/SyncWarning';
 import Status from './Status';
 import Total from './Total';
 import { separateThousands } from '../../../lib/convert';
+import Button from '../../../elements/Button';
 import logoText from '../../../logoText.png';
 
 const styles = {
@@ -23,7 +25,9 @@ const styles = {
 };
 
 const Header = (props) => {
-  const { openSettings, muiTheme, network, showProgress, progress, tip, showFiat } = props;
+  const {
+    openSettings, muiTheme, network, showProgress, progress, tip, showFiat,
+  } = props;
 
   const showProgressBar = (show) => {
     if (!show) {
@@ -50,51 +54,64 @@ const Header = (props) => {
     );
   };
 
-  const BlockDisplay = () => {
+  const blockDisplayStyles = {
+    text: {
+      textTransform: 'none',
+      fontWeight: 'normal',
+      fontSize: '16px',
+      color: '#B1BFB7 !important',
+    },
+  };
+
+  const BlockDisplay = ({classes}) => {
     const displayProgress = parseInt(100 - progress, 10);
     const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : separateThousands(network.currentBlock.height, ' ');
     return (
       <div style={{marginTop: showProgress ? '7px' : null}}>
-        <FlatButton
+        <Button
+          variant="text"
           disabled={true}
           label={label}
-          style={{color: muiTheme.palette.secondaryTextColor, lineHeight: 'inherit'}}
-          labelStyle={styles.buttons.label}
-          icon={<BlockIcon style={{color: muiTheme.palette.secondaryTextColor}}/>}
+          classes={{
+            text: classes.text,
+          }}
+          icon={<BlockIcon />}
         />
         {showProgressBar(showProgress)}
       </div>
     );
   };
 
-  const SettingsButton = () => (
-    <FlatButton
-      hoverColor="transparent"
-      onTouchTap={ openSettings }
-      style={{color: muiTheme.palette.primary1Color}}
+  const StyledBlockDisplay = withStyles(blockDisplayStyles)(BlockDisplay);
+
+  const SettingsButton = ({classes}) => (
+    <Button
+      variant="text"
+      onClick={ openSettings }
       label="Settings"
-      labelStyle={styles.buttons.label}
-      icon={<SettingsIcon style={{color: muiTheme.palette.primary1Color}}/>}
+      classes={{
+        text: classes.text,
+      }}
+      icon={<SettingsIcon />}
     />);
+
+  const StyledSettingsButton = withStyles(blockDisplayStyles)(SettingsButton);
 
   return (
     <div>
       <AppBar
         title={<EmeraldTitle />}
         style={{backgroundColor: '#141417', borderBottom: `1px solid ${muiTheme.palette.borderColor}`}}
+        titleStyle={{fontSize: '16px'}}
         showMenuIconButton={false}
         iconStyleRight={styles.appBarRight}
         zDepth={0}
-        children={
-          <div style={{display: 'flex', flex: '1.5 1 0%', justifyContent: 'space-between'}}>
-            <div style={styles.appBarRight}>
-              <Total showFiat={showFiat} />
-              <span style={{color: '#7d7d7e', fontSize: '1.5rem', padding: '0 1rem'}}>|</span>
-              <BlockDisplay />
-            </div>
-            <div style={styles.appBarRight}>
-              <Status />
-            </div>
+        iconElementRight={
+          <div style={styles.appBarRight}>
+            <Total showFiat={showFiat} />
+            <StyledBlockDisplay />
+            <Status />
+            <StyledSettingsButton />
           </div>
         }
       />

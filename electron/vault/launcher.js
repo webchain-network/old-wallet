@@ -115,7 +115,7 @@ class LocalConnector {
                 resolve();
               }, (err2) => {
                 log.error(err2);
-              }); 
+              });
             }
           });
         } else {

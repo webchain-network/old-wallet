@@ -1,6 +1,6 @@
 import { configure } from '@storybook/react';
 import { muiTheme } from 'storybook-addon-material-ui';
-import theme from 'emerald-js-ui/src/theme.json';
+import theme from '../src/theme';
 import { addDecorator } from '@storybook/react';
 
 function loadStories() {

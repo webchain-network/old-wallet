@@ -11,75 +11,75 @@ storiesOf('Header', module)
   .add('default', () => {
     const s = {
       wallet: {
-        screen: fromJS({})
+        screen: fromJS({}),
       },
       accounts: fromJS({
         accounts: [
           {
-            balance: Wei.Zero
-          }
-        ]
+            balance: Wei.Zero,
+          },
+        ],
       }),
       network: fromJS({
         peerCount: 10,
         currentBlock: {
-          height: 120000
+          height: 120000,
         },
         sync: {
-          highestBlock: 200000
-        }
+          highestBlock: 200000,
+        },
       }),
       launcher: fromJS({
         connecting: false,
         chain: {
-          id: 101,
-          name: 'mainnet'
+          id: 24484,
+          name: 'mainnet',
         },
         geth: {
           url: 'http://127.0.0.1:39573',
-          id: 101,
-          type: 'local'
+          id: 24484,
+          type: 'local',
         }
       })
     };
 
     const store = createStore((state = s, action) => state);
     return (
-        <Provider store={store}>
+      <Provider store={store}>
         <Header />
-        </Provider>
-    )
+      </Provider>
+    );
   })
   .add('connecting', () => {
     const s = {
       wallet: {
-        screen: fromJS({})
+        screen: fromJS({}),
       },
       accounts: fromJS({
         accounts: [
           {
-            balance: Wei.Zero
-          }
-        ]
+            balance: Wei.Zero,
+          },
+        ],
       }),
       network: fromJS({
         peerCount: 10,
         currentBlock: {
-          height: 100000
+          height: 100000,
         },
         sync: {
-          highestBlock: 200000
-        }
+          highestBlock: 200000,
+        },
       }),
       launcher: fromJS({
         connecting: true,
         chain: {
-          id: 101,
+          id: 24484,
           name: 'mainnet'
         },
         geth: {
           url: 'http://127.0.0.1:39573',
-          id: 101,
+          id: 24484,
           type: 'local'
         }
       })
@@ -87,41 +87,41 @@ storiesOf('Header', module)
 
     const store = createStore((state = s, action) => state);
     return (
-        <Provider store={store}>
+      <Provider store={store}>
         <Header />
-        </Provider>
-    )
+      </Provider>
+    );
   })
   .add('gas tracker', () => {
     const s = {
       wallet: {
-        screen: fromJS({})
+        screen: fromJS({}),
       },
       accounts: fromJS({
         accounts: [
           {
-            balance: Wei.Zero
-          }
-        ]
+            balance: Wei.Zero,
+          },
+        ],
       }),
       network: fromJS({
         peerCount: 10,
         currentBlock: {
-          height: 100000
+          height: 100000,
         },
         sync: {
-          highestBlock: 200000
-        }
+          highestBlock: 200000,
+        },
       }),
       launcher: fromJS({
         connecting: true,
         chain: {
-          id: 101,
+          id: 24484,
           name: 'mainnet'
         },
         geth: {
           url: 'https://web3.gastracker.io',
-          id: 101,
+          id: 24484,
           type: 'remote'
         }
       })
@@ -129,8 +129,8 @@ storiesOf('Header', module)
 
     const store = createStore((state = s, action) => state);
     return (
-        <Provider store={store}>
+      <Provider store={store}>
         <Header />
-        </Provider>
-    )
+      </Provider>
+    );
   });

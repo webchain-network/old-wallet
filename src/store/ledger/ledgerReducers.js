@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { convert } from 'emerald-js';
+import { convert } from '@emeraldplatform/emerald-js';
 import TokenUnits from '../../lib/tokenUnits';
 import ActionTypes from './actionTypes';
 
@@ -40,26 +40,20 @@ function onGetAddress(state, action) {
 
 function onSetBalance(state, action) {
   if (action.type === ActionTypes.ADDR_BALANCE) {
-    return updateHd(state, action.hdpath, (addr) =>
-      addr.set('value', new TokenUnits(convert.toBigNumber(action.value), 18))
-    );
+    return updateHd(state, action.hdpath, (addr) => addr.set('value', new TokenUnits(convert.toBigNumber(action.value), 18)));
   }
   return state;
 }
 function onSetTxCount(state, action) {
   if (action.type === ActionTypes.ADDR_TXCOUNT) {
-    return updateHd(state, action.hdpath, (addr) =>
-      addr.set('txcount', action.value)
-    );
+    return updateHd(state, action.hdpath, (addr) => addr.set('txcount', action.value));
   }
   return state;
 }
 
 function onSetPath(state, action) {
   if (action.type === ActionTypes.SET_LIST_HDPATH) {
-    return state.update('addresses', (list) =>
-      list.set(action.index, initialAccount.set('hdpath', action.hdpath))
-    );
+    return state.update('addresses', (list) => list.set(action.index, initialAccount.set('hdpath', action.hdpath)));
   }
   return state;
 }

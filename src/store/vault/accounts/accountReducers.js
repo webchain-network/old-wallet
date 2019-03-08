@@ -1,13 +1,12 @@
 import Immutable from 'immutable';
-import { convert, Wei } from 'emerald-js';
+import { convert, Wei } from '@emeraldplatform/emerald-js';
 import ActionTypes from './actionTypes';
 
 const { toNumber } = convert;
 
 const initial = Immutable.fromJS({
   accounts: [],
-  loading: false,
-
+  loading: true,
 });
 
 const initialAccount = Immutable.Map({
@@ -61,17 +60,13 @@ function onSetAccountsList(state, action) {
       }
       return initialAccount;
     };
-    const updatedList = Immutable.fromJS(action.accounts).map((acc) =>
-      Immutable.fromJS({
-        name: acc.get('name'),
-        description: acc.get('description'),
-        id: acc.get('address'),
-        hardware: acc.get('hardware'),
-        hidden: acc.get('hidden'),
-      })
-    ).map((acc) =>
-      getExisting(acc.get('id')).merge(acc)
-    );
+    const updatedList = Immutable.fromJS(action.accounts).map((acc) => Immutable.fromJS({
+      name: acc.get('name'),
+      description: acc.get('description'),
+      id: acc.get('address'),
+      hardware: acc.get('hardware'),
+      hidden: acc.get('hidden'),
+    })).map((acc) => getExisting(acc.get('id')).merge(acc));
     return state
       .set('accounts', updatedList)
       .set('loading', false);
@@ -81,10 +76,8 @@ function onSetAccountsList(state, action) {
 
 function onUpdateAccount(state, action) {
   if (action.type === ActionTypes.UPDATE_ACCOUNT) {
-    return updateAccount(state, action.address, (acc) =>
-      acc.set('name', action.name)
-        .set('description', action.description)
-    );
+    return updateAccount(state, action.address, (acc) => acc.set('name', action.name)
+      .set('description', action.description));
   }
   return state;
 }
@@ -106,20 +99,35 @@ function onSetBalance(state, action) {
   return state;
 }
 
+function onSetBalances(state, action) {
+  if (action.type === ActionTypes.SET_BALANCES) {
+    const accounts = action.accountBalances.forEach(({accountId, balance}) => {
+      state = updateAccount(state, accountId, (acc) => {
+        // Update balance only if it's changed
+        const newBalance = new Wei(balance);
+        const currentBalance = acc.get('balance');
+        if (currentBalance && currentBalance.equals(newBalance)) {
+          return acc.set('balancePending', null);
+        }
+        return acc
+          .set('balance', newBalance)
+          .set('balancePending', null);
+      });
+    });
+  }
+  return state;
+}
+
 function onSetTxCount(state, action) {
   if (action.type === ActionTypes.SET_TXCOUNT) {
-    return updateAccount(state, action.accountId, (acc) =>
-      acc.set('txcount', toNumber(action.value))
-    );
+    return updateAccount(state, action.accountId, (acc) => acc.set('txcount', toNumber(action.value)));
   }
   return state;
 }
 
 function onSetHdPath(state, action) {
   if (action.type === ActionTypes.SET_HD_PATH) {
-    return updateAccount(state, action.accountId, (acc) =>
-      acc.set('hdpath', action.hdpath)
-    );
+    return updateAccount(state, action.accountId, (acc) => acc.set('hdpath', action.hdpath));
   }
   return state;
 }
@@ -139,7 +147,7 @@ function onPendingBalance(state, action) {
         bal = acc.get('balance').plus(new Wei(action.value));
         return acc.set('balancePending', bal);
       });
-    } else if (action.from) {
+    } if (action.from) {
       return updateAccount(state, action.from, (acc) => {
         bal = acc.get('balance').sub(new Wei(action.value));
         return acc.set('balancePending', bal);
@@ -156,6 +164,7 @@ export default function accountsReducers(state, action) {
   state = onAddAccount(state, action);
   state = onUpdateAccount(state, action);
   state = onSetBalance(state, action);
+  state = onSetBalances(state, action);
   state = onSetTxCount(state, action);
   state = onPendingBalance(state, action);
   state = onSetHdPath(state, action);

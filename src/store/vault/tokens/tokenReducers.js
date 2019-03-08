@@ -1,6 +1,6 @@
 // @flow
 import { fromJS, Map, List } from 'immutable';
-import { convert } from 'emerald-js';
+import { convert } from '@emeraldplatform/emerald-js';
 import TokenUnits from '../../../lib/tokenUnits';
 import ActionTypes from './actionTypes';
 
@@ -36,24 +36,24 @@ function addToken(state, address, name) {
   });
 }
 
-function updateTokenBalance(balances, token, value) {
-  const pos = balances.findKey((tok) => tok.get('address') === token.address);
-
+function updateTokenBalance(tokenBalances, token /* TokenInfo */, value) {
+  const pos = tokenBalances.findIndex((tok) => tok.get('address') === token.address);
   const balance = new TokenUnits(
     convert.toBigNumber(value),
-    convert.toBigNumber(token.decimals));
+    convert.toBigNumber(token.decimals)
+  );
 
   if (pos >= 0) {
-    return balances.update(pos, (tok) =>
-      tok.set('balance', balance)
-        .set('symbol', token.symbol));
+    return tokenBalances.update(pos, (t) => t.set('balance', balance));
   }
+
   const newToken = fromJS({
     address: token.address,
     symbol: token.symbol,
     balance,
   });
-  return balances.push(newToken);
+
+  return tokenBalances.push(newToken);
 }
 
 function updateToken(state, id, f) {
@@ -101,7 +101,8 @@ function onSetTokenList(state, action) {
 function calcToken(tok) {
   const amount = new TokenUnits(
     toBigNumber(tok.get('totalSupply', '0x0')),
-    toBigNumber(tok.get('decimals', '0x0')));
+    toBigNumber(tok.get('decimals', '0x0'))
+  );
 
   return tok.set('total', amount);
 }
@@ -144,16 +145,19 @@ function onSetTokenBalance(state, action) {
 
 function onSetTokensBalances(state, action) {
   if (action.type === ActionTypes.SET_TOKENS_BALANCES) {
-    const address = action.accountId;
     let allBalances = state.get('balances');
-    let addressBalances = allBalances.get(address, new List());
 
-    action.balances.forEach((item) => {
-      const tokenInfo = state.get('tokens').find((t) => t.get('address') === item.tokenAddress);
-      addressBalances = updateTokenBalance(addressBalances, tokenInfo.toJS(), item.amount);
+    action.tokenBalances.forEach(({accountAddress, tokenAddress, amount}) => {
+      const addressBalances = allBalances.get(accountAddress, new List());
+      const tokenInfo = state.get('tokens').find((t) => t.get('address') === tokenAddress);
+      if (tokenInfo) {
+        allBalances = allBalances.set(
+          accountAddress,
+          updateTokenBalance(addressBalances, tokenInfo.toJS(), amount)
+        );
+      }
     });
 
-    allBalances = allBalances.set(address, addressBalances);
     return state.set('balances', allBalances);
   }
   return state;

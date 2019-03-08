@@ -1,4 +1,4 @@
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -33,7 +33,10 @@ class LocalGeth {
             '--rpc-port', this.rpcPort,
             '--rpc-cors-domain', 'http://localhost:8000',
             '--cache=1024',
+            '--rpc-api=eth,net,web3,geth', // need geth here for tx by address
             '--fast', // (auto-disables when at or upon reaching current bc height)
+            '--atxi', // this enables tx by address index in geth > 5.0
+            '--atxi.auto-build', // this enables tx backwards indexing by address index in geth > 5.4
             '--log-dir', logTarget,
           ];
 

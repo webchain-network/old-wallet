@@ -1,16 +1,19 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { ButtonGroup, Button } from 'emerald-js-ui';
+import { ButtonGroup } from 'emerald-js-ui';
 import TextField from 'elements/Form/TextField';
 import { required, address } from 'lib/validators';
 import { Form, Row, styles as formStyles } from 'elements/Form';
+import Button from 'elements/Button';
 
 const titleStyle = {
   fontSize: '18px',
   fontWeight: '400',
 };
 
-const Render = ({ handleSubmit, blockAddress, invalid, pristine, submitting, cancel, title }) => (
+const Render = ({
+  handleSubmit, blockAddress, invalid, pristine, submitting, cancel, title,
+}) => (
   <Form>
     <Row>
       <div style={formStyles.left}>

@@ -3,10 +3,12 @@ import { translate } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-import { Button, Warning, WarningText, WarningHeader, Page } from 'emerald-js-ui';
-import { Back } from 'emerald-js-ui/lib/icons3';
-import muiThemeable from 'material-ui/styles/muiThemeable';
-
+import {
+  Warning, WarningText, WarningHeader
+} from 'emerald-js-ui';
+import { Page } from '@emeraldplatform/ui';
+import { Back } from '@emeraldplatform/ui-icons';
+import Button from 'elements/Button';
 import screen from 'store/wallet/screen';
 import accountsModule from 'store/vault/accounts';
 import { Row, styles as formStyles } from 'elements/Form/index';
@@ -112,5 +114,4 @@ export default connect(
       dispatch(screen.actions.gotoScreen('home'));
     },
   })
-)(translate('accounts')(muiThemeable()(ImportJson)));
-
+)(translate('accounts')(ImportJson));

@@ -1,20 +1,39 @@
 // @flow
 import React from 'react';
+import { ipcRenderer } from 'electron'; // eslint-disable-line import/no-extraneous-dependencies
+import withStyles from 'react-jss';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
-import { Page, Button, Warning, WarningHeader, WarningText } from 'emerald-js-ui';
-import { Back } from 'emerald-js-ui/lib/icons3';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import {
+  Warning, WarningHeader, WarningText
+} from 'emerald-js-ui';
+import { Page } from '@emeraldplatform/ui';
+import { Back } from '@emeraldplatform/ui-icons';
+import Button from 'elements/Button';
 import { Row, styles as formStyles } from 'elements/Form';
 import TextField from 'elements/Form/TextField';
-import { ipcRenderer } from 'electron'; // eslint-disable-line import/no-extraneous-dependencies
 import accounts from 'store/vault/accounts';
 import screen from 'store/wallet/screen';
 import { required, passwordMatch, minLength } from 'lib/validators';
 import CircularProgress from 'material-ui/CircularProgress';
 
-import styles from './importPrivateKey.scss';
+export const styles2 = {
+  passwordLabel: {
+    height: '24px',
+    width: '190px',
+    color: '#191919',
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '24px',
+  },
+  passwordSubLabel: {
+    height: '22px',
+    color: '#191919',
+    fontSize: '14px',
+    lineHeight: '22px',
+  },
+};
 
 function getLoadingIcon(submitting) {
   if (submitting) {
@@ -27,15 +46,17 @@ function getLoadingIcon(submitting) {
 
 export class ImportPrivateKey extends React.Component {
   render() {
-    const { onBack, error, handleSubmit, submitting } = this.props;
+    const {
+      onBack, error, handleSubmit, submitting, classes,
+    } = this.props;
     return (
       <Page title="Import Private Key" leftIcon={ <Back onClick={ onBack }/> }>
         <Row>
           <div style={formStyles.left}/>
           <div style={formStyles.right}>
             <div style={{width: '100%'}}>
-              <div className={styles.passwordLabel}>Enter a strong password</div>
-              <div className={styles.passwordSubLabel}>This password will be required to confirm all account
+              <div className={classes.passwordLabel}>Enter a strong password</div>
+              <div className={classes.passwordSubLabel}>This password will be required to confirm all account
                                     operations.
               </div>
               <div style={{marginTop: '30px'}}>
@@ -81,7 +102,7 @@ export class ImportPrivateKey extends React.Component {
           </div>
           <div style={formStyles.right}>
             <div style={{width: '100%'}}>
-              <div className={ styles.passwordLabel }>Enter a private key</div>
+              <div className={ classes.passwordLabel }>Enter a private key</div>
               <div>
                 <Field
                   name="privateKey"
@@ -119,7 +140,7 @@ export class ImportPrivateKey extends React.Component {
 const importForm = reduxForm({
   form: 'importPrivateKey',
   fields: ['password', 'privateKey'],
-})(ImportPrivateKey);
+})(withStyles(styles2)(ImportPrivateKey));
 
 export default connect(
   (state, ownProps) => ({
@@ -151,5 +172,4 @@ export default connect(
       }
     },
   })
-)(muiThemeable()(importForm));
-
+)(importForm);

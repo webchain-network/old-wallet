@@ -37,8 +37,7 @@ describe('tokenReducer', () => {
     // do
     state = reducer(state, {
       type: ActionTypes.SET_TOKENS_BALANCES,
-      accountId: '0x123456789',
-      balances: [{ tokenAddress: '0x1123', amount: '0x01'}],
+      tokenBalances: [{ accountAddress: '0x123456789', tokenAddress: '0x1123', amount: '0x01'}],
     });
 
     // assert
@@ -66,6 +65,7 @@ describe('tokenReducer', () => {
       token: {
         address: '0x2',
         decimals: '0x2',
+        symbol: 'BEC',
       },
       value: '0x1',
     });
@@ -85,5 +85,6 @@ describe('tokenReducer', () => {
       value: '0x2',
     });
     expect(state.get('balances').get('id1').first().get('symbol')).toEqual('BEC');
+    expect(state.get('balances').get('id1').first().get('balance').value).toEqual(new BigNumber(2));
   });
 });

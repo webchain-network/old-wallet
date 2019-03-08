@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { convert } from 'emerald-js';
+import { convert } from '@emeraldplatform/emerald-js';
 import SignTxForm from './SignTxForm';
 import TokenUnits from '../../../../lib/tokenUnits';
 
@@ -25,6 +25,6 @@ describe('SignTxForm', () => {
 
      * component = shallow(<SignTxForm muiTheme={mockMuiTheme} tx={tx} fee={fee} />);
      * expect(component).toBeDefined();
-     * expect(component.findWhere((n) => n.text() === '100.012')).toHaveLength(1);*/
+     * expect(component.findWhere((n) => n.text() === '100.012')).toHaveLength(1); */
   });
 });

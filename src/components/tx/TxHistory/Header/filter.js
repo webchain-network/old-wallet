@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
-import { ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import { withStyles } from '@material-ui/core/styles';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-/**
- * TODO: After Material-UI v 1.0 release switch to ToggleButton
- * (see: https://github.com/callemall/material-ui/pull/7551)
- *
- */
+const styles = {
+  selected: {
+    boxShadow: 'none',
+  },
+};
 
 type Props = {
   value: string,
@@ -15,8 +17,14 @@ type Props = {
 
 class Filter extends React.Component<Props> {
   render() {
+    const { value, onChange, classes } = this.props;
     return (
-      <ToggleButtonGroup name="options" type="radio" defaultValue={this.props.value || 'ALL'} value={this.props.value} onChange={this.props.onChange}>
+      <ToggleButtonGroup
+        classes={{ selected: classes.selected }}
+        exclusive
+        value={value || 'ALL'}
+        onChange={onChange}
+      >
         <ToggleButton value={'ALL'}>ALL</ToggleButton>
         <ToggleButton value={'IN'}>IN</ToggleButton>
         <ToggleButton value={'OUT'}>OUT</ToggleButton>
@@ -25,4 +33,4 @@ class Filter extends React.Component<Props> {
   }
 }
 
-export default Filter;
+export default withStyles(styles)(Filter);

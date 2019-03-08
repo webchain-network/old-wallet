@@ -1,15 +1,25 @@
-const app = require('electron').app; // eslint-disable-line import/no-extraneous-dependencies
+require('babel-polyfill'); // eslint-disable-line import/no-unresolved
+require('regenerator-runtime/runtime');
+
+const { app, ipcMain } = require('electron'); // eslint-disable-line import/no-extraneous-dependencies
+const path = require('path');
 
 const Settings = require('./settings');
 const mainWindow = require('./mainWindow');
-const Services = require('./services').Services;
-const LedgerApi = require('./ledger').LedgerApi;
+const { Services } = require('./services');
+const { LedgerApi } = require('./ledger');
 const ipc = require('./ipc');
 const log = require('./logger');
+const { startProtocolHandler } = require('./protocol');
+const assertSingletonWindow = require('./singletonWindow');
 
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
 
+if (isDev) {
+  log.warn('START IN DEVELOPMENT MODE');
+  app.setPath('userData', path.resolve('./.emerald-dev/userData'));
+}
 
 const settings = new Settings();
 
@@ -22,26 +32,23 @@ log.info('userData: ', app.getPath('userData'));
 log.info(`Chain: ${JSON.stringify(settings.getChain())}`);
 log.info('Settings: ', settings.toJS());
 
-// This method will be called when Electron has finished
+assertSingletonWindow();
+startProtocolHandler();
+
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  log.info('Starting Webchain...');
-  const webContents = mainWindow.createWindow(isDev);
+  log.info('Starting Webchain', app.getVersion());
+  const browserWindow = mainWindow.createWindow(isDev);
+  const services = new Services(browserWindow.webContents);
+  ipc({ settings, services });
+  app.on('quit', () => services.shutdown());
 
-  const services = new Services(webContents);
   services.useSettings(settings.toJS())
     .then(() => services.start())
-    .catch((err) => log.error('Failed to start Services:', err));
-
-  ipc({ settings, services });
-
-  app.on('quit', () => {
-    return services.shutdown()
-      .then(() => log.info('All services are stopped'))
-      .catch((e) => log.error('Failed to stop services:', e));
-  });
+    .then(() => ipc({ settings, services }));
 });
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

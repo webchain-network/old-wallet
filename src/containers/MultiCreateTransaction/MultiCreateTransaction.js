@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import BigNumber from 'bignumber.js';
 import Tokens from 'store/vault/tokens';
 import { fromJS } from 'immutable';
-import { Wei, convert } from 'emerald-js';
+import { Wei, convert } from '@emeraldplatform/emerald-js';
 import { etherToWei } from 'lib/convert';
-import muiThemeable from 'material-ui/styles/muiThemeable';
-import CreateTransaction  from '../../components/tx/CreateTransaction';
-import {Page} from 'emerald-js-ui';
-import { Back } from 'emerald-js-ui/lib/icons3';
+import { Page } from '@emeraldplatform/ui';
+import { Back } from '@emeraldplatform/ui-icons';
 import { connect } from 'react-redux';
 import accounts from 'store/vault/accounts';
 import network from 'store/network';
@@ -17,6 +15,7 @@ import ledger from 'store/ledger/';
 import { traceValidate } from '../../components/tx/SendTx/utils';
 import SignTxForm from '../../components/tx/SendTx/SignTx';
 import TransactionShow from '../../components/tx/TxDetails';
+import CreateTransaction from '../../components/tx/CreateTransaction';
 
 const { toHex } = convert;
 
@@ -39,10 +38,13 @@ class MultiCreateTransaction extends React.Component {
     accountAddress: PropTypes.string,
     txFee: PropTypes.string.isRequired,
     txFeeFiat: PropTypes.string.isRequired,
+    data: PropTypes.object,
+    mode: PropTypes.string,
+    typedData: PropTypes.object,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onChangeFrom = this.onChangeFrom.bind(this);
     this.onChangeTo = this.onChangeTo.bind(this);
     this.onChangeToken = this.onChangeToken.bind(this);
@@ -52,10 +54,15 @@ class MultiCreateTransaction extends React.Component {
     this.onChangeAmount = this.onChangeAmount.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.getPage = this.getPage.bind(this);
+    this.onMaxClicked = this.onMaxClicked.bind(this);
     this.state = {
       transaction: {},
-      page: PAGES.TX,
+      page: props.mode ? PAGES.PASSWORD : PAGES.TX,
     };
+  }
+
+  get balance() {
+    return this.props.getBalanceForAddress(this.state.transaction.from, this.state.transaction.token);
   }
 
   setTransaction(key, val) {
@@ -84,11 +91,34 @@ class MultiCreateTransaction extends React.Component {
   }
 
   onChangeGasLimit(value) {
-    this.setTransaction(DEFAULT_GAS_LIMIT);
+    this.setTransaction('gasLimit', value || DEFAULT_GAS_LIMIT);
   }
 
   onChangeAmount(amount) {
     this.setTransaction('amount', amount);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      from, to, value, data,
+    } = prevProps;
+    const props = this.props; // eslint-disable-line
+    if (from !== props.from || to !== props.to || value !== props.value || data !== props.data) {
+      this.setState({
+        page: props.mode ? PAGES.PASSWORD : PAGES.TX,
+        transaction: {
+          ...this.state.transaction,
+          from: this.props.selectedFromAccount,
+          token: this.props.tokenSymbols[0],
+          gasPrice: this.props.gasPrice,
+          amount: this.props.amount,
+          to: this.props.to,
+          gasLimit: this.props.gasLimit,
+          data: this.props.data,
+          typedData: this.props.typedData,
+        },
+      });
+    }
   }
 
   componentDidMount() {
@@ -101,6 +131,8 @@ class MultiCreateTransaction extends React.Component {
         amount: this.props.amount,
         to: this.props.to,
         gasLimit: this.props.gasLimit,
+        data: this.props.data,
+        typedData: this.props.typedData,
       },
     });
   }
@@ -116,6 +148,13 @@ class MultiCreateTransaction extends React.Component {
       transaction: this.state.transaction,
       allTokens: this.props.allTokens,
     });
+  }
+
+  onMaxClicked() {
+    const txFee = this.props.getTxFeeForGasLimit(this.state.transaction.gasLimit);
+    const amount = new BigNumber(this.balance).sub(txFee).valueOf();
+
+    this.setTransaction('amount', amount);
   }
 
   getPage() {
@@ -135,7 +174,8 @@ class MultiCreateTransaction extends React.Component {
 
             balance={this.props.getBalanceForAddress(this.state.transaction.from, this.state.transaction.token)}
             fiatBalance={this.props.getFiatForAddress(this.state.transaction.from, this.state.transaction.token)}
-
+            data={this.state.transaction.data}
+            typedData={this.state.transaction.typedData}
             currency={this.props.currency}
             tokenSymbols={this.props.tokenSymbols}
             addressBookAddresses={this.props.addressBookAddresses}
@@ -149,6 +189,7 @@ class MultiCreateTransaction extends React.Component {
             onSubmit={this.onSubmitCreateTransaction}
             onCancel={this.props.onCancel}
             onEmptyAddressBookClick={this.props.onEmptyAddressBookClick}
+            onMaxClicked={this.onMaxClicked}
           />
         );
       case PAGES.PASSWORD:
@@ -159,7 +200,9 @@ class MultiCreateTransaction extends React.Component {
             txFee={this.props.getTxFeeForGasLimit(this.state.transaction.gasLimit)}
             onChangePassword={this.onChangePassword}
             useLedger={this.props.useLedger}
+            typedData={this.state.transaction.typedData}
             onSubmit={this.onSubmitSignTxForm}
+            mode={this.props.mode}
             onCancel={this.props.onCancel}
           />
         );
@@ -200,8 +243,10 @@ export default connect(
     return {
       amount: ownProps.amount || '0',
       gasLimit:  DEFAULT_GAS_LIMIT,
+      typedData: ownProps.typedData,
       token: 'WEB',
       selectedFromAccount: account.get('id'),
+      data: ownProps.data,
       getBalanceForAddress: (address, token) => {
         if (token === 'WEB') {
           const selectedAccount = state.accounts.get('accounts').find((acnt) => acnt.get('id') === address);
@@ -209,12 +254,7 @@ export default connect(
           return newBalance.getEther().toString();
         }
 
-        return state.tokens
-          .get('balances')
-          .get(address)
-          .find((t) => t.get('symbol') === token)
-          .get('balance')
-          .getDecimalized();
+        return Tokens.selectors.balanceByTokenSymbol(state.tokens, token, address).getDecimalized();
       },
       getFiatForAddress: (address, token) => {
         if (token !== 'WEB') { return '??'; }
@@ -247,13 +287,28 @@ export default connect(
       const gasLimit = new Wei(transaction.gasLimit).getValue();
       const gasPrice = transaction.gasPrice.getValue();
 
+      if (transaction.data) {
+        return dispatch(
+          accounts.actions.sendTransaction(
+            transaction.from,
+            transaction.password,
+            transaction.to,
+            toHex(gasLimit),
+            toHex(gasPrice),
+            convert.toHex(toAmount || 0),
+            transaction.data
+          )
+        );
+      }
+
       if (transaction.token !== 'WEB') {
         const decimals = convert.toNumber(tokenInfo.get('decimals'));
         const tokenUnits = convert.toBaseUnits(convert.toBigNumber(transaction.amount), decimals || 18);
         const txData = Tokens.actions.createTokenTxData(
           transaction.to,
           tokenUnits,
-          'true');
+          'true'
+        );
         return dispatch(
           accounts.actions.sendTransaction(
             transaction.from,
@@ -269,21 +324,21 @@ export default connect(
 
       return traceValidate({
         from: transaction.from,
+        password: transaction.password !== '' ? transaction.password : null,
         to: transaction.to,
         gas: toHex(gasLimit),
         gasPrice: toHex(gasPrice),
         value: toHex(toAmount),
-      }, dispatch, network.actions.estimateGas).then(() => {
-        dispatch(ledger.actions.setWatch(false));
-
-        return ledger.actions.closeConnection().then(() => {
-          if (useLedger) {
-            dispatch(screen.actions.showDialog('sign-transaction', transaction));
-          }
+      }, dispatch, network.actions.estimateGas)
+        .then(() => dispatch(ledger.actions.setWatch(false)))
+        .then(() => dispatch(ledger.actions.setConnected(false)))
+        .then(() => ledger.actions.closeConnection())
+        .then(() => (useLedger ? dispatch(screen.actions.showDialog('sign-transaction', transaction)) : null))
+        .then(() => {
           return dispatch(
             accounts.actions.sendTransaction(
               transaction.from,
-              transaction.password,
+              transaction.password !== '' ? transaction.password : null,
               transaction.to,
               toHex(gasLimit),
               toHex(gasPrice),
@@ -291,6 +346,6 @@ export default connect(
             )
           );
         });
-      });
     },
-  }))(MultiCreateTransaction);
+  })
+)(MultiCreateTransaction);

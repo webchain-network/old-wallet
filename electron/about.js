@@ -4,16 +4,27 @@ const path = require('path');
 const url = require('url');
 
 const createAboutPage = () => {
-  const mainWindow = new electron.BrowserWindow({ width: 700, height: 400, titleBarStyle: 'hidden', resizable: false });
+  const browserWindow = new electron.BrowserWindow({
+    width: 700,
+    height: 410,
+    titleBarStyle: 'hidden',
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    show: false,
+  });
+  browserWindow.setMenu(null);
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
+  // and load the about.html.
+  browserWindow.loadURL(url.format({
     pathname: path.join(__dirname, '../app/about.html'),
     protocol: 'file:',
     slashes: true,
   }));
 
-  mainWindow.setMenu(null);
+  browserWindow.once('ready-to-show', () => {
+    browserWindow.show();
+  });
 };
 
 module.exports = createAboutPage;

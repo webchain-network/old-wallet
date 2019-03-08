@@ -1,23 +1,43 @@
 import React from 'react';
+import withStyles from 'react-jss';
 import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
 import { CardText } from 'material-ui/Card';
-import { Row, Col } from 'react-flexbox-grid/lib/index';
-import { Button, IdentityIcon, Account as AddressAvatar, ButtonGroup, Card } from 'emerald-js-ui';
+import {
+  ButtonGroup, Card, Account as AddressAvatar
+} from 'emerald-js-ui';
+import Button from 'elements/Button';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import SecondaryMenu from '../SecondaryMenu';
 import AccountBalance from '../Balance';
 import TokenUnits from '../../../lib/tokenUnits';
 
-import styles from './account.scss';
+const styles2 = {
+  tokensDivider: {
+    backgroundColor: '#F5F5F5',
+    height: '2px',
+    width: '100%',
+    border: 'none',
+  },
+  identityIconContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  actionsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+};
 
 export class Account extends React.Component {
     static propTypes = {
-      tokensBalances: PropTypes.object.isRequired,
       account: PropTypes.object.isRequired,
       openAccount: PropTypes.func.isRequired,
       createTx: PropTypes.func,
       showReceiveDialog: PropTypes.func,
       showFiat: PropTypes.bool,
+      classes: PropTypes.object,
     };
 
     onSendClick = () => this.props.createTx(this.props.account);
@@ -27,8 +47,9 @@ export class Account extends React.Component {
     onAddEtcClick = () => this.props.showReceiveDialog(this.props.account);
 
     render() {
-      const { account, muiTheme } = this.props;
-      const { showFiat } = this.props;
+      const {
+        account, muiTheme, classes, showFiat,
+      } = this.props;
       const fiatStyle = {
         fontSize: '16px',
         lineHeight: '19px',
@@ -37,22 +58,22 @@ export class Account extends React.Component {
 
       // TODO: we convert Wei to TokenUnits here
       const balance = account.get('balance') ? new TokenUnits(account.get('balance').value(), 18) : null;
-
+      const accId = account.get('id');
       return (
         <Card>
           <CardText>
-            <Row>
-              <Col xs={5}>
-                <AddressAvatar
+            <Grid container>
+              <Grid item xs={5}>
+                { accId && <AddressAvatar
                   identity
-                  addr={ account.get('id') }
+                  addr={ accId }
                   description={ account.get('description') }
                   primary={ account.get('name') }
                   onAddressClick={ this.onAddressClick }
-                />
-              </Col>
-              <Col xs={3}>
-                <div className={ styles.identityIconContainer }>
+                /> }
+              </Grid>
+              <Grid item xs={3}>
+                <div className={ classes.identityIconContainer }>
                   <div style={{marginLeft: '10px'}}>
                     {balance && <AccountBalance
                       fiatStyle={fiatStyle}
@@ -63,29 +84,29 @@ export class Account extends React.Component {
                     {!balance && 'loading...'}
                   </div>
                 </div>
-              </Col>
-              <Col xs={4}>
-                <div className={ styles.actionsContainer }>
+              </Grid>
+              <Grid item xs={4}>
+                <div className={ classes.actionsContainer }>
                   <ButtonGroup>
                     <SecondaryMenu account={account} />
                     <Button
                       label="Add WEB"
                       onClick={ this.onAddEtcClick }
-                      style={{background: "rgb(33, 150, 243)"}}
+                      style={{background: 'rgb(33, 150, 243)'}}
                     />
                     <Button
                       label="Send"
                       disabled={ !account.get('balance') }
                       onClick={ this.onSendClick }
-                      style={{background: "rgb(33, 150, 243)"}}
+                      style={{background: 'rgb(33, 150, 243)'}}
                     />
                   </ButtonGroup>
                 </div>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
           </CardText>
         </Card>);
     }
 }
 
-export default muiThemeable()(Account);
+export default muiThemeable()(withStyles(styles2)(Account));

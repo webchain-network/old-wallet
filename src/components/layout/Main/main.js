@@ -8,14 +8,11 @@ import NotificationBar from '../NotificationBar';
 import ErrorDialog from '../../common/ErrorDialog';
 import Dialog from '../../../containers/Dialog';
 
-import './main.scss';
-
 const maxWidth = '1150px';
 
 const Render = translate('common')(({ muiTheme, ...props }) => {
-  document.body.style.backgroundColor = muiTheme.palette.canvasColor;
   return (
-    <div style={{height: '100%'}}>
+    <div style={{height: '100%', backgroundColor: muiTheme.palette.canvasColor}}>
       {props.screen !== 'paper-wallet' && (!props.launcherType || props.launcherType !== 'none') && <Header />}
       <div style={{margin: '20px auto', maxWidth}}>
         <Screen />

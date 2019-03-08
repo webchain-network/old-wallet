@@ -1,9 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import thunkMiddleware from 'redux-thunk';
-import createReduxLogger from 'redux-logger';
-import { createStore as createReduxStore, applyMiddleware, combineReducers } from 'redux';
+import {
+  createStore as createReduxStore,
+  applyMiddleware,
+  combineReducers
+} from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { ipcRenderer } from 'electron';
+import { startProtocolListener } from './protocol';
 
 import { api } from '../lib/rpc/api';
 import { intervalRates } from './config';
@@ -16,7 +20,13 @@ import tokens from './vault/tokens';
 import ledger from './ledger';
 import Addressbook from './vault/addressbook';
 
-import { readConfig, listenElectron, connecting, loadClientVersion } from './launcher/launcherActions';
+import {
+  readConfig,
+  listenElectron,
+  connecting,
+  loadClientVersion
+} from './launcher/launcherActions';
+import { showError } from './wallet/screen/screenActions';
 import launcherReducers from './launcher/launcherReducers';
 import walletReducers from './wallet/walletReducers';
 import deployedTokens from '../lib/deployedTokens';
@@ -24,6 +34,12 @@ import getWalletVersion from '../utils/get-wallet-version';
 import createLogger from '../utils/logger';
 import reduxLogger from '../utils/redux-logger';
 import reduxMiddleware from './middleware';
+
+import {
+  onceServicesStart,
+  onceAccountsLoaded,
+  onceHasAccountsWithBalances
+} from './triggers';
 
 const log = createLogger('store');
 
@@ -64,21 +80,12 @@ export const createStore = (_api) => {
 export const store = createStore(api);
 
 function refreshAll() {
-  let promises = [
+  const promises = [
     store.dispatch(accounts.actions.loadPendingTransactions()),
-    store.dispatch(history.actions.refreshTrackedTransactions()),
     store.dispatch(network.actions.loadHeight(false)),
     store.dispatch(accounts.actions.loadAccountsList()),
+    store.dispatch(history.actions.refreshTrackedTransactions()),
   ];
-
-  const state = store.getState();
-
-  if (state.launcher.getIn(['geth', 'type']) === 'local') {
-    promises = promises.concat([
-      store.dispatch(network.actions.loadPeerCount()),
-      store.dispatch(network.actions.loadSyncing()),
-    ]);
-  }
 
   // Main loop that will refresh UI as needed
   setTimeout(refreshAll, intervalRates.continueRefreshAllTxRate);
@@ -88,60 +95,74 @@ function refreshAll() {
 
 function refreshLong() {
   store.dispatch(settings.actions.getExchangeRates());
+  store.dispatch(network.actions.loadSyncing());
   setTimeout(refreshLong, intervalRates.continueRefreshLongRate);
 }
 
 export function startSync() {
-  store.dispatch(network.actions.getGasPrice());
-  store.dispatch(loadClientVersion());
-  store.dispatch(Addressbook.actions.loadAddressBook());
-  store.dispatch(tokens.actions.loadTokenList());
-
   const state = store.getState();
+
+  const promises = [
+    store.dispatch(network.actions.getGasPrice()),
+    store.dispatch(loadClientVersion()),
+    store.dispatch(Addressbook.actions.loadAddressBook()),
+    store.dispatch(tokens.actions.loadTokenList()),
+  ];
 
   const chain = state.launcher.getIn(['chain', 'name']);
 
   if (chain === 'mainnet') {
-    store.dispatch(ledger.actions.setBaseHD("m/44'/60'/160720'/0'"));
+    promises.push(
+      store.dispatch(ledger.actions.setBaseHD("m/44'/60'/160720'/0'"))
+    );
   } else if (chain === 'morden') {
     // FIXME ledger throws "Invalid status 6804" for 44'/62'/0'/0
-    store.dispatch(ledger.actions.setBaseHD("m/44'/61'/1'/0"));
+    promises.push(store.dispatch(ledger.actions.setBaseHD("m/44'/61'/1'/0")));
   }
 
   if (state.launcher.getIn(['geth', 'type']) !== 'remote') {
     // check for syncing
-    setTimeout(() => store.dispatch(network.actions.loadSyncing()), intervalRates.second); // prod: intervalRates.second
+    setTimeout(
+      () => store.dispatch(network.actions.loadSyncing()),
+      intervalRates.second
+    ); // prod: intervalRates.second
     // double check for syncing
-    setTimeout(() => store.dispatch(network.actions.loadSyncing()), 2 * intervalRates.minute); // prod: 30 * this.second
+    setTimeout(
+      () => store.dispatch(network.actions.loadSyncing()),
+      2 * intervalRates.minute
+    ); // prod: 30 * this.second
   }
 
   const chainId = state.launcher.getIn(['chain', 'id']);
-  store.dispatch(history.actions.init(chainId));
+  promises.push(store.dispatch(history.actions.init(chainId)));
 
   // deployed tokens
   const known = deployedTokens[+chainId];
 
   if (known) {
-    known.forEach((token) => store.dispatch(tokens.actions.addToken(token)));
+    known.forEach((token) => promises.push(store.dispatch(tokens.actions.addToken(token))));
   }
 
-  refreshAll().then(() => {
-    // dispatch them in series
-    const historyForAddress = (a) => {
-      const params = [a.first().get('id'), 0, 0, '', '', -1, -1, false];
-      return store.dispatch(network.actions.loadAddressTransactions(...params))
-        .then(() => {
-          if (a.size > 1) {
-            historyForAddress(a.rest());
-          }
-        });
-    };
-
-    historyForAddress(store.getState().accounts.get('accounts'));
-  });
-
   setTimeout(refreshLong, 3 * intervalRates.second);
-  store.dispatch(connecting(false));
+
+  promises.push(
+    refreshAll()
+      .then(() => store.dispatch(
+        network.actions.loadAddressesTransactions(
+          store
+            .getState()
+            .accounts.get('accounts')
+            .map((account) => account.get('id'))
+        )
+      ))
+      .then(() => store.dispatch(connecting(false)))
+      .catch((err) => {
+        log.error('Failed to do initial sync', err);
+        store.dispatch(showError(err));
+      })
+  );
+
+  return Promise.all(promises);
 }
 
 export function stopSync() {
@@ -172,33 +193,11 @@ export const start = () => {
     log.error(e);
   }
   store.dispatch(listenElectron());
-  store.dispatch(screen.actions.gotoScreen('welcome'));
+  getInitialScreen();
   newWalletVersionCheck();
 };
 
-export function waitForServices() {
-  const unsubscribe = store.subscribe(() => {
-    const state = store.getState();
-    if (state.launcher.get('terms') === 'v1'
-            && state.launcher.getIn(['geth', 'status']) === 'ready'
-            && state.launcher.getIn(['connector', 'status']) === 'ready') {
-      unsubscribe();
-      log.info('All services are ready to use by Wallet');
-      startSync();
-      // If not first run, go right to home when ready.
-      if (state.wallet.screen.get('screen') === 'welcome') { //  && !state.launcher.get('firstRun'))
-        store.dispatch(accounts.actions.loadAccountsList()).then(() => {
-          const loadedAccounts = store.getState().accounts.get('accounts');
-          if (loadedAccounts.count() > 0) {
-            store.dispatch(screen.actions.gotoScreen('home'));
-          } else {
-            store.dispatch(screen.actions.gotoScreen('landing'));
-          }
-        });
-      }
-    }
-  });
-
+function checkStatus() {
   function checkServiceStatus() {
     // hack to make some stuff work in storybook: @shanejonas
     if (!ipcRenderer) {
@@ -206,38 +205,55 @@ export function waitForServices() {
     }
     ipcRenderer.send('get-status');
   }
-  setTimeout(checkServiceStatus, 2000);
-}
 
-export function waitForServicesRestart() {
-  store.dispatch(connecting(true));
-  const unsubscribe = store.subscribe(() => {
-    const state = store.getState();
-    if (state.launcher.getIn(['geth', 'status']) !== 'ready'
-            || state.launcher.getIn(['connector', 'status']) !== 'ready') {
-      unsubscribe();
-      waitForServices();
-    }
-  });
+  setTimeout(checkServiceStatus, 2000);
 }
 
 export function screenHandlers() {
   let prevScreen = null;
-  const unsubscribe = store.subscribe(() => {
+  store.subscribe(() => {
     const state = store.getState();
     const curScreen = state.wallet.screen.get('screen');
     const justOpened = prevScreen !== curScreen;
     prevScreen = curScreen;
-    // if (justOpened) {
-      // if (curScreen === 'add-from-ledger' || curScreen === 'landing-add-from-ledger') {
-      //   store.dispatch(ledger.actions.setWatch(true));
-      //   store.dispatch(ledger.actions.watchConnection());
-      // } else {
-      //   store.dispatch(ledger.actions.setWatch(false));
-      // }
-    // }
+  //   if (justOpened) {
+  //     if (
+  //       curScreen === 'create-tx'
+  //       || curScreen === 'add-from-ledger'
+  //       || curScreen === 'landing-add-from-ledger'
+  //     ) {
+  //       store.dispatch(ledger.actions.setWatch(true));
+  //       store.dispatch(ledger.actions.watchConnection());
+  //     } else {
+  //       store.dispatch(ledger.actions.setWatch(false));
+  //     }
+  //   }
   });
 }
 
-waitForServices();
+startProtocolListener(store);
+
+function getInitialScreen() {
+  // First things first, always go to welcome screen. This shows a nice spinner
+  store.dispatch(screen.actions.gotoScreen('welcome'));
+
+  if (store.getState().launcher.get('firstRun') === true) {
+    return; // stay on the welcome screen.
+  }
+
+  return onceAccountsLoaded(store).then(() => {
+    const accountSize = store.getState().accounts.get('accounts').size;
+
+    if (accountSize === 0) {
+      return store.dispatch(screen.actions.gotoScreen('landing'));
+    }
+
+    return onceHasAccountsWithBalances(store).then(() => {
+      return store.dispatch(screen.actions.gotoScreen('home'));
+    });
+  });
+}
+
+onceServicesStart(store).then(startSync);
+checkStatus();
 screenHandlers();

@@ -1,12 +1,12 @@
 // @flow
-import BigNumber from 'bignumber.js';
+import { Contract } from '@emeraldplatform/contracts';
 import { parseString } from '../../../lib/convert';
 import { TokenAbi } from '../../../lib/erc20';
-import Contract from '../../../lib/contract';
 import { detect as detectTraceCall } from '../../../lib/traceCall';
-import launcher from '../../../store/launcher';
+import launcher from '../../launcher';
 import ActionTypes from './actionTypes';
 import createLogger from '../../../utils/logger';
+import { dispatchRpcError } from '../../wallet/screen/screenActions';
 
 const tokenContract = new Contract(TokenAbi);
 
@@ -38,7 +38,7 @@ export function loadTokenBalanceOf(token: TokenInfo, accountId: string) {
           token,
           value: result,
         });
-      });
+      }).catch(dispatchRpcError(dispatch));
     }
     throw new Error(`Invalid token info ${JSON.stringify(token)}`);
   };
@@ -49,7 +49,7 @@ export function loadTokenBalanceOf(token: TokenInfo, accountId: string) {
  */
 export function loadTokenBalances(token: TokenInfo) {
   return (dispatch, getState, api) => {
-    const accounts = getState().accounts;
+    const { accounts } = getState();
     if (!accounts.get('loading')) {
       // construct batch request
       const batch = [];
@@ -70,7 +70,7 @@ export function loadTokenBalances(token: TokenInfo) {
             token,
           });
         });
-      });
+      }).catch(dispatchRpcError(dispatch));
     }
   };
 }
@@ -91,7 +91,7 @@ export function loadTokenDetails(tokenAddress: string): () => Promise<any> {
         decimals: results.decimals.result,
         symbol: parseString(results.symbol.result),
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -110,7 +110,7 @@ export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
         decimals,
         symbol: parseString(symbol),
       };
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -120,32 +120,34 @@ export function fetchTokenDetails(tokenAddress: string): () => Promise<any> {
  *
  * @param address
  */
-export function loadTokensBalances(address: string) {
+export function loadTokensBalances(addresses: string) {
   return (dispatch: any, getState: any, api: any) => {
     const tokens = getState().tokens.get('tokens').toJS();
     // build batch call request
-    const batch = tokens.map((token) => {
-      return {
-        id: token.address,
+    const batch = [];
+    tokens.forEach((token) => addresses.forEach((addr) => {
+      batch.push({
+        id: `${addr}+${token.address}`,
         to: token.address,
-        data: tokenContract.functionToData('balanceOf', { _owner: address }),
-      };
-    });
+        data: tokenContract.functionToData('balanceOf', { _owner: addr }),
+      });
+    }));
 
     return api.geth.ext.batchCall(batch).then((results) => {
-      const balances = tokens.map((token) => {
-        return {
+      const tokenBalances = [];
+      tokens.forEach((token) => addresses.forEach((addr) => {
+        tokenBalances.push({
           tokenAddress: token.address,
-          amount: results[token.address].result,
-        };
-      });
+          accountAddress: addr,
+          amount: results[`${addr}+${token.address}`].result,
+        });
+      }));
 
       dispatch({
         type: ActionTypes.SET_TOKENS_BALANCES,
-        accountId: address,
-        balances,
+        tokenBalances,
       });
-    });
+    }).catch(dispatchRpcError(dispatch));
   };
 }
 
@@ -200,7 +202,9 @@ export function traceCall(from: string, to: string, gas: string, gasPrice: strin
   return (dispatch, getState, api) => {
     // TODO: We shouldn't detect trace api each time, we need to do it only once
     return detectTraceCall(api.geth).then((constructor) => {
-      const tracer = constructor({ from, to, gas, gasPrice, value, data });
+      const tracer = constructor({
+        from, to, gas, gasPrice, value, data,
+      });
       const call = tracer.buildRequest();
       return api.geth.raw(call.method, call.params)
         .then((result) => tracer.estimateGas(result));

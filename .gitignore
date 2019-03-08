@@ -8,9 +8,10 @@ npm-debug.log
 app/
 dist/
 webchaind
+webchain-cli
 logs/
 coverage/
 flow-typed/
-
 package-lock.json
-webchain-cli
+.emerald-dev
+.webchain-dev
