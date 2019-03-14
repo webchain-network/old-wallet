@@ -19,6 +19,10 @@ class Settings {
       name: 'settings',
       defaults: DEFAULTS,
     });
+
+    if (this.getChain().id === 101) {
+      this.settings.clear();
+    }
   }
 
   /**
