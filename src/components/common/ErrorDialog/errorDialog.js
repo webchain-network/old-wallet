@@ -19,6 +19,7 @@ const ErrorDialog = ({
       key="closeButton"
       label="Close"
       primary={true}
+      style={{marginLeft: '10px'}}
       onClick={handleClose}
     />,
   ];

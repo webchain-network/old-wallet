@@ -31,8 +31,7 @@ export default class Contract {
         });
         const data = Buffer.concat([
           ethAbi.methodID(func.name, types),
-          ethAbi.rawEncode(types, values)]
-        ).toString('hex');
+          ethAbi.rawEncode(types, values)]).toString('hex');
         return `0x${data}`;
       }
       throw new Error(`Function ${name} not found in ABI`);

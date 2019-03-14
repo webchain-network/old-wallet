@@ -55,11 +55,13 @@ class LocalGeth {
     return new Promise((resolve, reject) => {
       if (!this.proc) {
         resolve('not_started');
+        log.debug('Local Webchaind not started');
         return;
       }
       this.proc.on('exit', () => {
         resolve('killed');
         this.proc = null;
+        log.debug('Local Webchaind has been killed');
       });
       this.proc.on('error', (err) => {
         log.error('Failed to shutdown Local Webchaind', err);

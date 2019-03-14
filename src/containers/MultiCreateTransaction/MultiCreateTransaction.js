@@ -225,7 +225,7 @@ class MultiCreateTransaction extends React.Component {
 
 export default connect(
   (state, ownProps) => {
-    const account = ownProps.account;
+    const {account} = ownProps;
     const allTokens = state.tokens.get('tokens').concat([fromJS({address: '', symbol: 'WEB', name: 'WEB'})]).reverse();
     const gasPrice = state.network.get('gasPrice');
 
@@ -242,7 +242,7 @@ export default connect(
 
     return {
       amount: ownProps.amount || '0',
-      gasLimit:  DEFAULT_GAS_LIMIT,
+      gasLimit: DEFAULT_GAS_LIMIT,
       typedData: ownProps.typedData,
       token: 'WEB',
       selectedFromAccount: account.get('id'),

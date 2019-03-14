@@ -1,10 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider } from '@material-ui/core/styles';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import theme from '../../theme';
-
-const muiTheme = getMuiTheme(theme);
+import theme from '../theme';
 
 const Btn = (props) => {
   const {
@@ -19,7 +16,7 @@ const Btn = (props) => {
     ...props.style,
   };
   return (
-    <MuiThemeProvider muiTheme={muiTheme}>
+    <MuiThemeProvider theme={theme}>
       <Button
         color={primary ? 'primary' : 'secondary'}
         href={href}

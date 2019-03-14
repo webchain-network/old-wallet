@@ -54,9 +54,9 @@ class AboutClass extends React.Component {
         <div style={{ fontSize: '14px' }}>
           <div style={{ paddingBottom: '5px' }}>Copyright &copy; 2018-{year} Webchain Network</div>
           <div> Licensed under <a onClick={onLicenseClick} style={styles.links} href="#">Apache License 2.0</a>
-            {/*<span style={{ float: 'right', textAlign: 'right' }}>*/}
-              {/*<a onClick={onHelpClick} style={styles.links} href="#">Help & Support</a>*/}
-            {/*</span>*/}
+            {/* <span style={{ float: 'right', textAlign: 'right' }}> */}
+            {/* <a onClick={onHelpClick} style={styles.links} href="#">Help & Support</a> */}
+            {/* </span> */}
           </div>
         </div>
       </div>
@@ -67,4 +67,3 @@ class AboutClass extends React.Component {
 const About = muiThemeable()(AboutClass);
 
 export default About;
-

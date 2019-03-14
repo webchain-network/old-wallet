@@ -28,7 +28,7 @@ function onSetLocaleCurrency(state, action) {
 
 function onExchangeRates(state, action) {
   if (action.type === ActionTypes.EXCHANGE_RATES) {
-    const localeRate = action.rates[state.get('localeCurrency')];
+    const localeRate = action.rates[state.get('localeCurrency').toLowerCase()];
     return state
       .set('rates', Immutable.fromJS(action.rates))
       .set('localeRate', localeRate);

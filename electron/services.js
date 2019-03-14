@@ -171,7 +171,6 @@ class Services {
       this.notify.chain(this.setup.chain.name, this.setup.chain.id);
       this.notifyEthRpcStatus();
 
-
       return new LocalGeth(null, getLogDir(), this.setup.chain.name, 39573);
     }).catch((e) => {
       log.error(e);
@@ -271,10 +270,10 @@ class Services {
         });
 
         const logTargetDir = getLogDir();
-        log.debug('Webchain log target dir:', logTargetDir);
+        log.info('Webchain log target dir:', logTargetDir);
 
         emerald.stderr.on('data', (data) => {
-          log.debug(`[webchain-cli] ${data}`); // always log emerald data
+          log.info(`[webchain-cli] ${data}`); // always log emerald data
 
           if (data.includes('KeyFile storage error')) {
             // connect to the one that already exists

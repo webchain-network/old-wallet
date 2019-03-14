@@ -73,9 +73,9 @@ export default translate('accounts')(
       showAddressBook: () => {
         dispatch(gotoScreen('address-book'));
       },
-      addToken: () => {
-        dispatch(showDialog('tokens'));
-      },
+      // addToken: () => {
+      //   dispatch(showDialog('tokens'));
+      // },
     })
   )(StyledHeader)
 );

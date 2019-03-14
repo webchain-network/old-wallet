@@ -30,18 +30,18 @@ class LocalConnector {
   migrateIfNotExists() {
     return new Promise((resolve, reject) => {
       const bin = this.emeraldExecutable();
-      log.debug('Checking if webchain exists:', bin);
+      log.info('Checking if webchain exists:', bin);
       checkExists(bin).then((exists) => {
         if (!exists) {
-          log.debug('webchain-cli not found');
+          log.info('webchain-cli not found');
           // check that included binary path exists
           // if it does exist, move it to this.bin/
-          const cargoEmeraldPath = path.join(process.env.HOME, '.cargo', 'bin', 'emerald');
-          log.debug('cargo installed emerald path:', cargoEmeraldPath);
+          const cargoEmeraldPath = path.join(process.env.HOME, '.cargo', 'bin', 'webchain-cli');
+          log.info('cargo installed webchain-cli path:', cargoEmeraldPath);
           checkExists(cargoEmeraldPath).then((emBinaryExists) => {
-            log.debug('cargo installed emerald path exists:', emBinaryExists);
+            log.info('cargo installed webchain-cli path exists:', emBinaryExists);
             if (!emBinaryExists) {
-              reject(new Error('No packaged emerald binary found.'));
+              reject(new Error('No packaged webchain-cli binary found.'));
             }
             const rs = fs.createReadStream(cargoEmeraldPath);
             const ws = fs.createWriteStream(bin);
@@ -60,7 +60,7 @@ class LocalConnector {
           });
         } else {
           // Assuming the emerald found is valid (perms, etc).
-          log.debug('OK: webchain exists: ', bin);
+          log.info('OK: webchain exists: ', bin);
           resolve(true);
         }
       });
@@ -76,7 +76,7 @@ class LocalConnector {
     return new Promise((resolve, reject) => {
       const bin = this.emeraldExecutable();
       const appData = (process.env.APPDATA || os.homedir());
-      const emeraldHomeDir = `${appData}${path.join('/.emerald', this.chain.name, 'keystore/')}`;
+      const emeraldHomeDir = `${appData}${path.join('/.webchain-cli', this.chain.name, 'keystore/')}`;
       fs.access(bin, fs.constants.F_OK | fs.constants.R_OK | fs.constants.X_OK, (err) => {
         if (err) {
           log.error(`File ${bin} doesn't exist or doesn't have execution flag`);
@@ -89,10 +89,10 @@ class LocalConnector {
             '--all',
             emeraldHomeDir,
           ];
-          log.debug(`Emerald bin: ${bin}, args: ${options}`);
+          log.debug(`Webchain-cli bin: ${bin}, args: ${options}`);
           const result = spawnSync(bin, options);
           if (result) {
-            log.debug(`Emerald execution status: ${result.status}`);
+            log.debug(`Webchain-cli execution status: ${result.status}`);
           }
           resolve(result);
         }
@@ -103,7 +103,7 @@ class LocalConnector {
   migrateToWebchainDir() {
     return new Promise((resolve, reject) => {
       const appData = (process.env.APPDATA || os.homedir());
-      const emeraldHomeDir = path.join(appData, '.emerald');
+      const emeraldHomeDir = path.join(appData, '.webchain-cli');
       const webchainHomeDir = path.join(appData, '.webchain-vault');
       fs.access(webchainHomeDir, fs.constants.F_OK, (err) => {
         if (err) {
@@ -163,17 +163,20 @@ class LocalConnector {
     return new Promise((resolve, reject) => {
       if (!this.proc) {
         resolve('not_started');
+        log.debug('Local Connector not started');
         return;
       }
       this.proc.on('exit', () => {
         resolve('killed');
         this.proc = null;
+        log.debug('Webchain Connector has been killed');
       });
       this.proc.on('error', (err) => {
         log.error('Failed to shutdown Webchain Connector', err);
         reject(err);
       });
       this.proc.kill();
+      setTimeout(() => resolve('pended'), 3000);
     });
   }
 }

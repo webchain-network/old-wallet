@@ -24,7 +24,9 @@ export const renderFileField = ({ input, name, meta: { touched, error } }) => {
   );
 };
 
-export const renderTextField = ({ input, label, type, disabled, meta: { touched, error } }) => (
+export const renderTextField = ({
+  input, label, type, disabled, meta: { touched, error },
+}) => (
   <div>
     <label>{label}</label>
     <div>
@@ -33,7 +35,9 @@ export const renderTextField = ({ input, label, type, disabled, meta: { touched,
   </div>
 );
 
-export const renderCodeField = ({ input, label, type, rows, meta: { touched, error } }) => {
+export const renderCodeField = ({
+  input, label, type, rows, meta: { touched, error },
+}) => {
   const style = {
     fontFamily: 'monospace',
     letterSpacing: '.02em',
@@ -63,7 +67,9 @@ export const renderCodeField = ({ input, label, type, rows, meta: { touched, err
 };
 
 
-export const renderSelectField = ({ input, label, type, meta: { touched, error } }) => (
+export const renderSelectField = ({
+  input, label, type, meta: { touched, error },
+}) => (
   <div>
     <label>{label}</label>
     <div>
@@ -73,17 +79,16 @@ export const renderSelectField = ({ input, label, type, meta: { touched, error }
 );
 
 
-export const renderCheckboxField = ({ input, label, options, meta: { touched, error } }) => (
+export const renderCheckboxField = ({
+  input, label, options, meta: { touched, error },
+}) => (
   <div>
     <label>{label}</label>
-    {options.map((option, index) =>
-      <Checkbox label={option} value={option} key={index}
-        onCheck={ (event) => {
-          const value = [...input.value];
-          if (event.target.checked) { value.push(option); } else { value.splice(value.indexOf(option), 1); }
-          return input.onChange(value);
-        }}/>
-    )}
+    {options.map((option, index) => <Checkbox label={option} value={option} key={index}
+      onCheck={ (event) => {
+        const value = [...input.value];
+        if (event.target.checked) { value.push(option); } else { value.splice(value.indexOf(option), 1); }
+        return input.onChange(value);
+      }}/>)}
   </div>
 );
-

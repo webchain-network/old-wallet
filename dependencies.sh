@@ -8,11 +8,11 @@ exit_if_emerald_installed() {
     echo "Asserting correct version of emerald is installed"
 
     # emerald command exists in path?
-    if [ -x "$(command -v emerald)" ]; then
+    if [ -x "$(command -v webchain-cli)" ]; then
 
         # emerald is the correct version?
         if [ "emerald --version" = EMERALD_CLI_VER ]; then
-            echo "emerald $EMERALD_CLI_VER is already installed. Skipping."
+            echo "webchain-cli $EMERALD_CLI_VER is already installed. Skipping."
             exit 0
         fi
     fi
@@ -27,22 +27,22 @@ ensure_cargo_installed() {
 }
 
 install_emerald() {
-    echo "Installing emerald with cargo..."
-    echo "$ cargo install --vers $EMERALD_CLI_VER emerald-cli"
+    echo "Installing webchain-cli with cargo..."
+    echo "$ cargo install --vers $EMERALD_CLI_VER webchain-cli"
     export RUSTFLAGS="-C target-feature=+crt-static"
-    cargo install --vers $EMERALD_CLI_VER emerald-cli -f
+    cargo install --vers $EMERALD_CLI_VER webchain-cli -f
     unset RUSTFLAGS
 
     # Get location of emerald.
     # Should be ~/.cargo/bin/emerald, hopefully.
-    emerald_path=$(which emerald)
-    echo "Emerald installed to [$emerald_path]"
+    emerald_path=$(which webchain-cli)
+    echo "webchain-cli installed to [$emerald_path]"
 
     # We'll just put it in the project base dir for now.
     # Note that this assumes CI's $CWD is in the project root.
-    echo "Copying emerald from [$emerald_path] to project directory [$(pwd)]..."
-    cp "$emerald_path" ./emerald
-    chmod +x emerald
+    echo "Copying webchain-cli from [$emerald_path] to project directory [$(pwd)]..."
+    cp "$emerald_path" ./webchain-cli
+    chmod +x webchain-cli
 
     unset emerald_path
 }

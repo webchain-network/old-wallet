@@ -31,6 +31,7 @@ class TransactionsHistory extends React.Component<Props, State> {
       displayedTransactions: this.props.transactions,
     };
   }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.transactions) {
       this.setState({
@@ -39,17 +40,20 @@ class TransactionsHistory extends React.Component<Props, State> {
       });
     }
   }
+
   onSearchChange = (e) => {
     return this.setState({
       displayedTransactions: searchTransactions(e.target.value, this.props.transactions),
     });
   }
+
   onTxFilterChange = (value) => {
     this.setState({
       txFilter: value,
       displayedTransactions: filterTransactions(value, this.props.accountId, this.props.transactions, this.props.accounts),
     });
   }
+
   render() {
     return (
       <Card>

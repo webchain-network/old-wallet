@@ -1,7 +1,6 @@
 import 'isomorphic-fetch';
 
 const url = 'https://api.coingecko.com/api/v3/coins/webchain?localization=en';
-const currency = 'WEB';
 
 export class MarketApi {
   call() {
@@ -17,8 +16,10 @@ export class MarketApi {
   }
 
   getRates() {
-   return fetch(url)
-    .then((response) => response.json());
+    return fetch(url)
+      .then((response) => response.json().then((data) => {
+        return new Promise((resolve) => resolve(data.market_data.current_price));
+      }));
   }
 }
 

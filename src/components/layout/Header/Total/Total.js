@@ -43,7 +43,6 @@ const Total = ({
       disabled={true}
       label={totalFormatted}
       classes={classes}
-      icon={<EtcSimple />}
     />
   );
 };

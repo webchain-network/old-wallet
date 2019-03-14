@@ -25,7 +25,9 @@ class ImportAccount extends React.Component<Props> {
   }
 
   render() {
-    const { hdbase, changeBaseHD, muiTheme, selected } = this.props;
+    const {
+      hdbase, changeBaseHD, muiTheme, selected,
+    } = this.props;
     const { onAddSelected, onCancel, onDashboard } = this.props;
     return (
       <Form

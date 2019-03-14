@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid/lib/index';
 import CircularProgress from 'material-ui/CircularProgress';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import { Logo as LogoIcon } from 'emerald-js-ui/lib/icons';
+import { LogoIcon } from '../../elements/Icons/index';
 import InitialSetup from './initialSetup';
 
 import logoText from '../../logoText.png';
@@ -52,7 +52,9 @@ const Render = ({
 
   document.body.style.backgroundColor = '#141417';
   return (
-    <Grid id="welcome-screen" style={{maxWidth: '1150px', backgroundColor: '#141417'}}>
+    <Grid id="welcome-screen" style={{
+      position: 'absolute', top: 0, left: 0, paddingTop: '80px', width: '100%', backgroundColor: '#141417',
+    }}>
       <Row center="xs" middle="xs" style={{paddingTop: '6%'}}>
         <Col xs>
           <LogoIcon width="250" height="250" />
