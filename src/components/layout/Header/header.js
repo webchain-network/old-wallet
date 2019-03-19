@@ -64,8 +64,9 @@ const Header = (props) => {
   };
 
   const BlockDisplay = ({classes}) => {
+    const blocksLeft = tip - network.currentBlock.height;
     const displayProgress = parseInt(100 - progress, 10);
-    const label = showProgress ? `${separateThousands(tip - network.currentBlock.height)} blocks left (${displayProgress}%)` : separateThousands(network.currentBlock.height, ' ');
+    const label = showProgress ? `${separateThousands(blocksLeft || 0)} blocks left` : separateThousands(network.currentBlock.height, ' ');
     return (
       <div style={{marginTop: showProgress ? '7px' : null}}>
         <Button

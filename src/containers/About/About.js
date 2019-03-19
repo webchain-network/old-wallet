@@ -1,7 +1,7 @@
 import React from 'react';
 import { ipcRenderer } from 'electron'; // eslint-disable-line import/no-extraneous-dependencies
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import { Logo as EtcLogo } from 'emerald-js-ui/lib/icons';
+import { LogoIcon as EtcLogo } from '../../elements/Icons';
 import Button from '../../elements/Button';
 import {version} from '../../../package.json';
 
@@ -35,7 +35,7 @@ class AboutClass extends React.Component {
     };
     return (
       <div style={{ padding: '30px', position: 'relative' }}>
-        <div style={{ position: 'absolute', top: '-100px', right: '-175px' }}>
+        <div style={{ position: 'absolute', top: '-30px', right: '0' }}>
           <EtcLogo height="350px" width="350px" />
         </div>
         <h2 style={{

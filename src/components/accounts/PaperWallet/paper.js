@@ -74,9 +74,6 @@ export const styles2 = {
   logoContainer: {
     minWidth: '33px',
   },
-  logoIcon: {
-    transform: 'rotate(-90deg)',
-  },
 };
 
 export const PaperWallet = (props) => {
