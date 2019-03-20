@@ -13,14 +13,14 @@ export function loadSettings() {
         currency: localeCurrency,
       });
 
-      const localStorageShowHiddenAccounts = localStorage.getItem('showHiddenAccounts') || 'false';
+      const localStorageShowHiddenAccounts = 'false';
       const showHiddenAccounts = JSON.parse(localStorageShowHiddenAccounts);
       dispatch({
         type: ActionTypes.SET_SHOW_HIDDEN_ACCOUNTS,
         show: showHiddenAccounts,
       });
 
-      const numConfirmations = localStorage.getItem('numConfirmations') || 12;
+      const numConfirmations = 3;
       dispatch({
         type: ActionTypes.NUM_CONFIRMATIONS,
         numConfirmations: parseInt(numConfirmations, 10),

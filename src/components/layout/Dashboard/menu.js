@@ -101,12 +101,12 @@ class DashboardMenu extends React.Component {
           onRequestClose={this.handleRequestClose}
         >
           <List style={{border: `1px solid ${muiTheme.palette.borderColor}`}}>
-            <ListItem button onClick={importLedger}>
-              <ListItemIcon>
-                <LedgerIcon />
-              </ListItemIcon>
-              <ListItemText primary="Ledger Nano S" secondary="Use Ledger hardware key to manage signatures" />
-            </ListItem>
+            {/* <ListItem button onClick={importLedger}> */}
+            {/* <ListItemIcon> */}
+            {/* <LedgerIcon /> */}
+            {/* </ListItemIcon> */}
+            {/* <ListItemText primary="Ledger Nano S" secondary="Use Ledger hardware key to manage signatures" /> */}
+            {/* </ListItem> */}
             <ListItem button onClick={ generate }>
               <ListItemIcon>
                 <KeypairIcon />

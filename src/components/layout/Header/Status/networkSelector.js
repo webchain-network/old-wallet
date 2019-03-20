@@ -25,7 +25,7 @@ class ExtendedMenuItem extends React.Component {
         onClick={onClick}
         style={{
           cursor: 'pointer',
-          padding: '5px 80px 5px 40px',
+          padding: '5px 40px 5px 40px',
           fontSize: '14px',
           borderLeft: checked ? `5px solid ${muiTheme.palette.primary1Color}` : '',
           marginLeft: checked ? '' : '5px',
@@ -151,7 +151,7 @@ class NetworkSelectorRender extends React.Component {
             text: classes.buttonText,
           }}
         />
-        <Popper open={open} anchorEl={this.anchorEl} transition disablePortal>
+        <Popper open={open} anchorEl={this.anchorEl} style={{ zIndex: 1111 }} transition>
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}

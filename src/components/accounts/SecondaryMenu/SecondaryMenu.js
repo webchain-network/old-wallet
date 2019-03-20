@@ -69,8 +69,8 @@ export const SecondaryMenu = ({
           <ListItemText primary='PRINT' />
         </MenuItem> }
 
-      { !account.get('hidden') && renderHide(chain, account, onHide, colors) }
-      { account.get('hidden') && renderUnhide(chain, account, onUnhide) }
+      {/* { !account.get('hidden') && renderHide(chain, account, onHide, colors) } */}
+      {/* { account.get('hidden') && renderUnhide(chain, account, onUnhide) } */}
 
     </IconMenu>
   );

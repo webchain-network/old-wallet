@@ -112,7 +112,7 @@ const Header = (props) => {
             <Total showFiat={showFiat} />
             <StyledBlockDisplay />
             <Status />
-            <StyledSettingsButton />
+            {/* <StyledSettingsButton /> */}
           </div>
         }
       />
