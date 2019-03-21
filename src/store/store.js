@@ -79,6 +79,23 @@ export const createStore = (_api) => {
 
 export const store = createStore(api);
 
+function updateTransactionHistory() {
+  return refreshAll()
+    .then(() => store.dispatch(
+      network.actions.loadAddressesTransactions(
+        store
+          .getState()
+          .accounts.get('accounts')
+          .map((account) => account.get('id'))
+      )
+    ))
+    .then(() => store.dispatch(connecting(false)))
+    .catch((err) => {
+      log.error('Failed to do initial sync', err);
+      store.dispatch(showError(err));
+    });
+}
+
 function refreshAll() {
   const promises = [
     store.dispatch(accounts.actions.loadPendingTransactions()),
@@ -96,6 +113,9 @@ function refreshAll() {
 function refreshLong() {
   store.dispatch(settings.actions.getExchangeRates());
   store.dispatch(network.actions.loadSyncing());
+
+  updateTransactionHistory();
+
   setTimeout(refreshLong, intervalRates.continueRefreshLongRate);
 }
 
@@ -146,20 +166,7 @@ export function startSync() {
   setTimeout(refreshLong, 3 * intervalRates.second);
 
   promises.push(
-    refreshAll()
-      .then(() => store.dispatch(
-        network.actions.loadAddressesTransactions(
-          store
-            .getState()
-            .accounts.get('accounts')
-            .map((account) => account.get('id'))
-        )
-      ))
-      .then(() => store.dispatch(connecting(false)))
-      .catch((err) => {
-        log.error('Failed to do initial sync', err);
-        store.dispatch(showError(err));
-      })
+    updateTransactionHistory()
   );
 
   return Promise.all(promises);
