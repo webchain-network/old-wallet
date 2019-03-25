@@ -18,13 +18,13 @@ function protocolHandler(event, url) {
 }
 
 function startProtocolHandler() {
-  app.setAsDefaultProtocolClient('ethereum');
+  app.setAsDefaultProtocolClient('webchain');
 
   app.on('will-finish-launching', () => {
     app.on('open-url', protocolHandler);
   });
 
-  if (process.argv[1] && process.argv[1].includes('ethereum:')) {
+  if (process.argv[1] && process.argv[1].includes('webchain:')) {
     protocolHandler(null, process.argv[1]);
   }
 }
