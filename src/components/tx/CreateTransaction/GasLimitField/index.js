@@ -48,7 +48,7 @@ class GasLimitField extends React.Component {
           min="21000"
           onChange={this.onChangeGasLimit}
         />
-        <div style={getStyles(this.props.muiTheme)}>{this.props.txFee} ETC   /   {this.props.txFeeFiat} {this.props.currency}</div>
+        <div style={getStyles(this.props.muiTheme)}>{this.props.txFee} WEB   /   {this.props.txFeeFiat} {this.props.currency}</div>
       </Fragment>
     );
   }
