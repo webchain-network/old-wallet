@@ -5,7 +5,7 @@
     "email": "support@webchain.network"
   },
   "private": false,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Webchain - Webchain Network Wallet",
   "main": "./electron/main.js",
   "moduleRoots": [
@@ -164,7 +164,9 @@
     "asar": true,
     "extraResources": [
       "./webchain-cli",
-      "./webchain-cli.exe"
+      "./webchain-cli.exe",
+      "./webchaind",
+      "./webchaind.exe"
     ],
     "mac": {
       "category": "public.app-category.developer-tools"

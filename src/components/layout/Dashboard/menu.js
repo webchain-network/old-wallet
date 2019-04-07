@@ -137,12 +137,12 @@ class DashboardMenu extends React.Component {
               </ListItemIcon>
               <ListItemText primary={ t('add.importMnemonic.title') } secondary={ t('add.importMnemonic.subtitle') } />
             </ListItem>
-            {/* <ListItem button onClick={ this.handleAddToken }> */}
-            {/* <ListItemIcon> */}
-            {/* <TokenIcon /> */}
-            {/* </ListItemIcon> */}
-            {/* <ListItemText primary={ t('add.token.title') } secondary={ t('add.token.subtitle') } /> */}
-            {/* </ListItem> */}
+            <ListItem button onClick={ this.handleAddToken }>
+              <ListItemIcon>
+                <TokenIcon />
+              </ListItemIcon>
+              <ListItemText primary={ t('add.token.title') } secondary={ t('add.token.subtitle') } />
+            </ListItem>
             <ListItem button onClick={ addressBook }>
               <ListItemIcon>
                 <BookIcon />

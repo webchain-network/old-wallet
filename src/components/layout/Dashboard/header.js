@@ -64,18 +64,18 @@ export default translate('accounts')(
       importPrivateKey: () => {
         dispatch(gotoScreen('import-private-key'));
       },
-      importLedger: () => {
-        dispatch(gotoScreen('add-from-ledger'));
-      },
+      // importLedger: () => {
+      //   dispatch(gotoScreen('add-from-ledger'));
+      // },
       importMnemonic: () => {
         dispatch(gotoScreen('import-mnemonic'));
       },
       showAddressBook: () => {
         dispatch(gotoScreen('address-book'));
       },
-      // addToken: () => {
-      //   dispatch(showDialog('tokens'));
-      // },
+      addToken: () => {
+        dispatch(showDialog('tokens'));
+      },
     })
   )(StyledHeader)
 );
