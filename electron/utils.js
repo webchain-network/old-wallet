@@ -67,7 +67,7 @@ function deleteIfExists(filePath) {
 
 const knownChains = [
   { name: 'mainnet', id: 24484 },
-  { name: 'morden', id: 111 },
+  { name: 'morden', id: 24485 },
 ];
 
 function isValidChain(chain) {

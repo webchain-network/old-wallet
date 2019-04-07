@@ -25,7 +25,7 @@ module.exports = class NodeChecker {
         if (result.hash === WEB_MAINNET_GENESIS) {
           resolve({ chain: 'mainnet', chainId: 24484 });
         } else if (result.hash === WEB_MORDEN_GENESIS) {
-          resolve({ chain: 'morden', chainId: 111 });
+          resolve({ chain: 'morden', chainId: 24485 });
         } else {
           resolve({ chain: 'unknown', chainId: 0 });
         }
