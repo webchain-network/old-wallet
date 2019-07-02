@@ -133,11 +133,11 @@ export function startSync() {
 
   if (chain === 'mainnet') {
     promises.push(
-      store.dispatch(ledger.actions.setBaseHD("m/44'/60'/160720'/0'"))
+      store.dispatch(ledger.actions.setBaseHD("m/44'/227'/0'/0/0"))
     );
   } else if (chain === 'morden') {
     // FIXME ledger throws "Invalid status 6804" for 44'/62'/0'/0
-    promises.push(store.dispatch(ledger.actions.setBaseHD("m/44'/61'/1'/0")));
+    promises.push(store.dispatch(ledger.actions.setBaseHD("m/44'/227'/0'/0/0")));
   }
 
   if (state.launcher.getIn(['geth', 'type']) !== 'remote') {

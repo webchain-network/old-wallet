@@ -179,7 +179,7 @@ export default connect(
   (state, ownProps) => ({
     initialValues: {
       mnemonic: ownProps.mnemonic,
-      hdpath: "m/44'/60'/160720'/0'",
+      hdpath: "m/44'/227'/0'/0/0",
     },
   }),
   (dispatch, ownProps) => ({
