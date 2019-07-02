@@ -74,7 +74,7 @@ export function checkConnected() {
   return (dispatch, getState) => {
     return connection().then((ledgerApi) => {
       return ledgerApi.getStatus()
-        .then(() => ledgerApi.getAddress("m/44'/60'/160720'/0'"))
+        .then(() => ledgerApi.getAddress("m/44'/227'/0'/0/0"))
         .then(() => dispatch(setConnected(true)))
         .catch((err) => {
           log.debug('Cannot get ledger status. Ensure the ledger has the etc app open');
