@@ -1,4 +1,4 @@
-Webchain - Webchain Network Wallet
+MintMe Coin - Wallet
 =================================
 
 :rootdir: .
