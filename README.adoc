@@ -46,7 +46,8 @@ This will install dependencies saved in `package.json` and `flow-typed` reposito
 $ npm run setup
 ```
 #### Compiling on Windows
-For Windows, you need Microsoft Visual Studio Build tools 2015 at minimum, 2017 recommended.
+
+You need Microsoft Visual Studio Build tools 2015 at minimum, 2017 recommended.
 ```
 npm install --global --production windows-build-tools
 ```
