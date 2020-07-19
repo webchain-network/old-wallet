@@ -20,6 +20,12 @@ $ nodenv install
 
 The required version of `node` >= `v8`.
 
+Alternatively, you can use nvm:
+```
+nvm install 8.12.0
+nvm use 8.12.0
+```
+
 ### Dependencies
 
 #### Libs
@@ -39,7 +45,11 @@ This will install dependencies saved in `package.json` and `flow-typed` reposito
 ```shell
 $ npm run setup
 ```
-
+#### Compiling on Windows
+For Windows, you need Microsoft Visual Studio Build tools 2015 at minimum, 2017 recommended.
+```
+npm install --global --production windows-build-tools
+```
 
 #### Webchaind and webchain-cli
 ##### Webchaind
