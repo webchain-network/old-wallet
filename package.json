@@ -5,7 +5,7 @@
     "email": "support@webchain.network"
   },
   "private": false,
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Webchain - Webchain Network Wallet",
   "main": "./electron/main.js",
   "moduleRoots": [
@@ -126,8 +126,8 @@
     "babel-runtime": "^6.23.0",
     "copy-webpack-plugin": "^4.5.3",
     "cross-env": "^5.1.1",
-    "css-loader": "0.28.0",
-    "electron": "4.0.2",
+    "css-loader": "^0.28.0",
+    "electron": "^4.0.4",
     "electron-builder": "20.38.5",
     "electron-rebuild": "^1.8.2",
     "enzyme": "3.3.0",
@@ -146,16 +146,20 @@
     "identity-obj-proxy": "^3.0.0",
     "imports-loader": "0.7.1",
     "jest": "22.2.1",
+    "mini-css-extract-plugin": "^0.9.0",
     "minimist": "^1.2.0",
     "node-abi": "^2.5.1",
+    "node-sass": "^4.5.3",
     "react-test-renderer": "^15.6.1",
     "recursive-readdir-sync": "^1.0.6",
+    "sass": "^1.26.10",
+    "sass-loader": "^6.0.5",
     "shebang-loader": "0.0.1",
     "storybook-addon-material-ui": "0.8.2",
-    "style-loader": "0.16.1",
+    "style-loader": "^0.16.1",
     "url-loader": "^1.1.2",
-    "usb": "1.5.0",
-    "webpack": "2.6.1"
+    "usb": "^1.5.0",
+    "webpack": "^2.6.1"
   },
   "build": {
     "appId": "com.ethereumclassic.emeraldwallet",
