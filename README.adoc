@@ -65,6 +65,8 @@ try to install cargo if you've already got it), but it will
 use cargo's `-f` flag to force install `webchain-cli` and copy that version to the
 project directory.
 
+**NOTE:** In order to successfully compile webchain-cli, it is recommended that you use Rust version 1.40.0, and have LLVM 9.0.0(if on Windows) or higher installed.
+
 ### Run for development
 
 Firstly: a couple things aren't working right.
