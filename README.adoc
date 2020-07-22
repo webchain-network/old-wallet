@@ -1,6 +1,6 @@
 This is old wallet, for typical usage try this one instead https://github.com/mintme-com/wallet/releases
 
-The only advantage of old wallet is that you can run your own node locally, so if you want this feature and you don't mind ocassional poor performance, you can keep using old one.
+The only advantage of old wallet is that you can run your own node locally, so if you want this feature and you don't mind occasional poor performance, you can keep using old one.
 
 MintMe Coin - Old Wallet
 =================================
