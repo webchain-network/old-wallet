@@ -14,7 +14,7 @@ class LocalGeth {
     this.bin = bin;
     this.logDir = logDir;
     this.network = network || 'morden';
-    this.rpcPort = rpcPort || 39573;
+    this.rpcPort = rpcPort || 39573 || 31440;
   }
 
   launch() {
