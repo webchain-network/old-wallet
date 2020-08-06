@@ -37,6 +37,22 @@ const DefaultGeth = {
         },
       ],
     },
+    {
+      platform: 'mac',
+      binaries: [
+        {
+          type: 'https',
+          pack: 'zip',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac-amd64.zip',
+        },
+      ],
+      signatures: [
+        {
+          type: 'pgp',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac-amd64.zip.asc',
+        },
+      ],
+    },
   ],
 };
 
