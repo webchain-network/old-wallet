@@ -43,13 +43,13 @@ const DefaultGeth = {
         {
           type: 'https',
           pack: 'zip',
-          url: 'https://github.com/driconrikus/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip',
+          url: 'https://github.com/mintme-com/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip',
         },
       ],
       signatures: [
         {
           type: 'pgp',
-          url: 'https://github.com/driconrikus/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip.asc',
+          url: 'https://github.com/mintme-com/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip.asc',
         },
       ],
     },
