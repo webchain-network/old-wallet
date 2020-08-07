@@ -38,7 +38,7 @@ const DefaultGeth = {
       ],
     },
     {
-      platform: 'mac',
+      platform: 'osx',
       binaries: [
         {
           type: 'https',
