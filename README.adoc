@@ -138,10 +138,11 @@ Some preliminary things to try in case you run into issues:
  * OSX: `~/Library/Application Support/WebchainWallet`
  * Linux: `~/.config/WebchainWallet`
  * Windows: `%APPDATA%\WebchainWallet`
-- APP_GIT_ENV Error:
-`https://github.com/driconrikus/old-wallet/releases/tag/v1.2.3`
-`export PATH=$PATH:$PWD/janusbin`
-`export APP_VERSION_GIT_TAG="$(janus version -format 'TAG_OR_NIGHTLY')"`
+- APP_GIT_ENV Error when running npm run dist:
+
+```https://github.com/driconrikus/old-wallet/releases/tag/v1.2.3
+export PATH=$PATH:$PWD/janusbin
+export APP_VERSION_GIT_TAG="$(janus version -format 'TAG_OR_NIGHTLY')"```
 
 
 ## Run tests
