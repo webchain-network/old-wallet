@@ -24,6 +24,12 @@ $ nodenv install
 
 The required version of `node` >= `v8`.
 
+Alternatively, you can use nvm:
+```
+nvm install 8.12.0
+nvm use 8.12.0
+```
+
 ### Dependencies
 
 #### Libs
@@ -43,7 +49,12 @@ This will install dependencies saved in `package.json` and `flow-typed` reposito
 ```shell
 $ npm run setup
 ```
+#### Compiling on Windows
 
+You need Microsoft Visual Studio Build tools 2015 at minimum, 2017 recommended.
+```
+npm install --global --production windows-build-tools
+```
 
 #### Webchaind and webchain-cli
 ##### Webchaind
@@ -57,6 +68,8 @@ project's base dir. Note: this command is idempotent __for rust and cargo__ (it 
 try to install cargo if you've already got it), but it will
 use cargo's `-f` flag to force install `webchain-cli` and copy that version to the
 project directory.
+
+**NOTE:** In order to successfully compile webchain-cli, it is recommended that you use Rust version 1.40.0, and have LLVM 9.0.0(if on Windows) or higher installed.
 
 ### Run for development
 
@@ -129,7 +142,12 @@ Some preliminary things to try in case you run into issues:
  * OSX: `~/Library/Application Support/WebchainWallet`
  * Linux: `~/.config/WebchainWallet`
  * Windows: `%APPDATA%\WebchainWallet`
-
+- APP_GIT_ENV Error when running npm run dist:
+```
+curl -sL https://raw.githubusercontent.com/ethereumproject/janus/master/get.sh | bash
+export PATH=$PATH:$PWD/janusbin
+export APP_VERSION_GIT_TAG="$(janus version -format 'TAG_OR_NIGHTLY')"
+```
 
 
 ## Run tests

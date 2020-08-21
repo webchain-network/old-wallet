@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-
 const srcDir = path.join(__dirname, 'src');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -83,9 +82,18 @@ const config = {
           },
         },
       },
+      {
+        test: /\.scss$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader',
+        ]
+    },
     ],
   },
 };
+
 
 
 module.exports = config;

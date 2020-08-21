@@ -11,13 +11,13 @@ const DefaultGeth = {
         {
           type: 'https',
           pack: 'zip',
-          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.4.0/webchaind-0.4.0-win64.zip',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-win64.zip',
         },
       ],
       signatures: [
         {
           type: 'pgp',
-          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.4.0/webchaind-0.4.0-win64.zip.asc',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-win64.zip.asc',
         },
       ],
     },
@@ -27,13 +27,29 @@ const DefaultGeth = {
         {
           type: 'https',
           pack: 'zip',
-          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.4.0/webchaind-0.4.0-linux-amd64.zip',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-linux-amd64.zip',
         },
       ],
       signatures: [
         {
           type: 'pgp',
-          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.4.0/webchaind-0.4.0-linux-amd64.zip.asc',
+          url: 'https://github.com/webchain-network/webchaind/releases/download/v0.8.0/webchaind-0.8.0-linux-amd64.zip.asc',
+        },
+      ],
+    },
+    {
+      platform: 'osx',
+      binaries: [
+        {
+          type: 'https',
+          pack: 'zip',
+          url: 'https://github.com/mintme-com/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip',
+        },
+      ],
+      signatures: [
+        {
+          type: 'pgp',
+          url: 'https://github.com/mintme-com/webchaind/releases/download/v0.8.0/webchaind-0.8.0-mac.zip.asc',
         },
       ],
     },
